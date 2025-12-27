@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Mail, Linkedin, Github, Twitter } from "lucide-react"
+import { Mail, Linkedin, Github, Send } from "lucide-react"
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -41,33 +41,36 @@ export default function Contact() {
 
             <div className="space-y-4 mb-8">
               <a
-                href="mailto:your.email@example.com"
+                href="mailto:nupheaoeun@gmail.com" target="_blank"
                 className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail size={20} className="text-primary" />
-                <span>your.email@example.com</span>
+                <span>nupheaoeun@gmail.com</span>
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/ouen-nuphea/" target="_blank"
                 className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
               >
                 <Linkedin size={20} className="text-primary" />
-                <span>linkedin.com/in/yourprofile</span>
+                <span>https://www.linkedin.com/in/ouen-nuphea/</span>
               </a>
               <a
-                href="#"
+                href="https://github.com/Oeun-nuphea" target="_blank"
                 className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
               >
                 <Github size={20} className="text-primary" />
-                <span>github.com/yourprofile</span>
+                <span>https://github.com/Oeun-nuphea</span>
               </a>
               <a
-                href="#"
+                href="https://t.me/oeunnuphea"
+                target="_blank"
                 className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
               >
-                <Twitter size={20} className="text-primary" />
-                <span>@yourhandle</span>
+                <Send size={20} className="text-primary" />
+                <span>https://t.me/oeunnuphea</span>
               </a>
+
+
             </div>
           </div>
 
@@ -129,7 +132,7 @@ export default function Contact() {
                   />
                 </div>
                 <button
-                  type="submit"
+                  type="submit" disabled
                   className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-accent transition-colors"
                 >
                   Send Message

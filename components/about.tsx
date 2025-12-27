@@ -12,7 +12,7 @@ export default function About() {
           <p>
             I specialize in creating responsive, user-friendly web applications using modern frameworks and best
             practices. I'm particularly interested in{" "}
-            <span className="text-foreground font-semibold">React, Node.js, and database design</span>, and I'm always
+            <span className="text-foreground font-semibold">Vue.js, Node.js, and database design</span>, and I'm always
             exploring new technologies to expand my skillset.
           </p>
           <p>

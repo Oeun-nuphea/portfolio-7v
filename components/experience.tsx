@@ -2,28 +2,14 @@ export default function Experience() {
   const experiences = [
     {
       title: "Web Development Intern",
-      company: "[Company Name]",
-      period: "[Start Date] – [End Date]",
+      company: "SAIRL (RUPP Lab)",
+      period: "2025-08 – present",
       description:
-        "Contributed to the development of client-facing web applications using React and Node.js. Collaborated with the team to fix bugs, implement features, and improve application performance.",
+        "Contributed to the development of client-facing web applications using Vue and PHP. Collaborated with the team to fix bugs, implement features, and improve application performance.",
       achievements: [
-        "Developed 3+ responsive web components using React and Tailwind CSS",
-        "Improved page load time by 25% through optimization techniques",
-        "Participated in code reviews and learned best practices from senior developers",
+        "Developing responsive web components using Vue, Typescript and Tailwind CSS",
       ],
-    },
-    {
-      title: "Freelance Web Developer",
-      company: "Self-Employed",
-      period: "[Start Date] – Present",
-      description:
-        "Building custom websites and web applications for small businesses and startups. Managing projects from requirements gathering through deployment and maintenance.",
-      achievements: [
-        "Delivered 5+ projects successfully with high client satisfaction",
-        "Implemented responsive designs that increased mobile traffic by 40%",
-        "Maintained websites with zero downtime and regular updates",
-      ],
-    },
+    }
   ]
 
   return (

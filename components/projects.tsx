@@ -1,38 +1,39 @@
+
 export default function Projects() {
   const projects = [
     {
-      title: "E-Commerce Platform",
+      title: "Internship Center",
+      image: '/internship.png',
       description:
-        "A full-featured e-commerce application with product catalog, shopping cart, and secure payment integration.",
-      technologies: ["React", "Node.js", "PostgreSQL", "Stripe"],
+        "Built a responsive internship platform enabling student applications, employer posting.",
+      technologies: ["HTML", "CSS", "Bootstrap"],
       features: [
-        "Product filtering and search",
+        "Job filtering and search",
         "User authentication and profiles",
-        "Payment processing",
-        "Order management",
       ],
-      link: "#",
-      demo: "#",
+      link: "https://github.com/Oeun-nuphea/internship-center",
+      demo: "https://internship-center-g3.vercel.app/",
     },
     {
-      title: "Social Media Dashboard",
+      title: "Blog Dashboard",
+      image: '/blog.png',
       description:
-        "Analytics dashboard for tracking social media metrics and insights across multiple platforms in real-time.",
-      technologies: ["Next.js", "TypeScript", "GraphQL", "MongoDB"],
+        "Frontend interface for a blog platform, designed to display posts, categories, and user interactions in a clean and responsive layout.",
+      technologies: ["HTML", "CSS", "Javascript"],
       features: [
-        "Real-time data updates",
-        "Interactive charts and graphs",
-        "Multi-platform integration",
-        "Custom analytics reports",
+        "Display blog posts with categories and tags",
+        "Responsive design for mobile and desktop",
+        "User-friendly navigation and search",
       ],
-      link: "#",
+      link: "https://github.com/G4ANT/blog",
       demo: "#",
     },
     {
-      title: "Task Management App",
+      title: "E-commerce",
+      image: '/blog.png',
       description:
         "Collaborative task management tool with real-time collaboration, team workspaces, and progress tracking.",
-      technologies: ["React", "Firebase", "Tailwind CSS", "WebSockets"],
+      technologies: ["Vue", "Nodejs", "MongoDB", ],
       features: [
         "Real-time collaboration",
         "Team workspaces",
@@ -56,7 +57,7 @@ export default function Projects() {
             >
               <div className="h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
                 <img
-                  src={`/.jpg?height=192&width=384&query=${project.title}`}
+                  src={project.image}
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
@@ -84,13 +85,13 @@ export default function Projects() {
                 </div>
                 <div className="flex gap-2">
                   <a
-                    href={project.link}
+                    href={project.link} target="_blank"
                     className="flex-1 px-4 py-2 text-sm bg-primary text-primary-foreground rounded hover:bg-accent transition-colors text-center font-medium"
                   >
                     View Code
                   </a>
                   <a
-                    href={project.demo}
+                    href={project.demo} target="_blank"
                     className="flex-1 px-4 py-2 text-sm border border-primary text-primary rounded hover:bg-primary/10 transition-colors text-center font-medium"
                   >
                     Live Demo

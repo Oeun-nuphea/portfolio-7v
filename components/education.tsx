@@ -2,18 +2,22 @@ export default function Education() {
   const education = [
     {
       degree: "Bachelor of Science in Information Technology",
-      school: "[Your University Name]",
-      period: "[Expected Graduation: 20XX]",
+      school: "Royal University of Phnom penh",
+      period: "Expected Graduation: 2026",
       details: [
-        "GPA: [Your GPA]",
-        "Relevant Coursework: Data Structures, Web Development, Database Management, Software Engineering",
       ],
     },
     {
-      degree: "Full-Stack Web Development Certification",
-      school: "[Certificate Program Name]",
-      period: "[Year Completed]",
+      degree: "Full-Stack Web Development ",
+      school: "ANT Training Center",
+      period: "Expected completion: 2026/07",
       details: ["Comprehensive training in modern web development", "Hands-on projects and real-world applications"],
+    },
+    {
+      degree: "Python Programming ",
+      school: "RUPP",
+      period: "2024 - 2025",
+      details: ["Learned Python fundamentals and programming concepts", "Studied practical Python applications"],
     },
   ]
 
