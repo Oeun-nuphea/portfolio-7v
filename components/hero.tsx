@@ -24,6 +24,7 @@ export default function Hero() {
     saveAs(content, "CVs.zip");
   };
 
+  
   return (
     <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
       <div className="text-center">
