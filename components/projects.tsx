@@ -30,18 +30,18 @@ export default function Projects() {
     },
     {
       title: "E-commerce",
-      image: '/blog.png',
+      image: '/e-commerce.png',
       description:
-        "Collaborative task management tool with real-time collaboration, team workspaces, and progress tracking.",
-      technologies: ["Vue", "Nodejs", "MongoDB", ],
+        "Full-featured e-commerce platform with product management, shopping cart, secure checkout, and order tracking.",
+      technologies: ["Tailwind", "Vue", "Nodejs", "MongoDB", ""],
       features: [
-        "Real-time collaboration",
-        "Team workspaces",
-        "Task prioritization",
-        "Progress tracking and analytics",
+        "Product browsing and search",
+        "Shopping cart and checkout",
+        "User authentication",
+        "Order management and tracking",
       ],
-      link: "#",
-      demo: "#",
+      link: "https://github.com/orgs/e-commerce-fullstack/repositories",
+      demo: "https://e-commerce-six-delta-78.vercel.app/",
     },
   ]
 
