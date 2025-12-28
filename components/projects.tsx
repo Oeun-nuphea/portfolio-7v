@@ -33,7 +33,7 @@ export default function Projects() {
       image: '/e-commerce.png',
       description:
         "Full-featured e-commerce platform with product management, shopping cart, secure checkout, and order tracking.",
-      technologies: ["Tailwind", "Vue", "Nodejs", "MongoDB", ""],
+      technologies: ["Tailwind", "Vue", "Nodejs", "MongoDB", "Vercel", "Render"],
       features: [
         "Product browsing and search",
         "Shopping cart and checkout",
