@@ -24,7 +24,6 @@ export default function Hero() {
     saveAs(content, "CVs.zip");
   };
 
-  
   return (
     <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
       <div className="text-center">
@@ -36,7 +35,8 @@ export default function Hero() {
         </h1>
 
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-          Passionate IT student crafting innovative digital solutions with modern technologies and clean code
+          Passionate IT student crafting innovative digital solutions with
+          modern technologies and clean code
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
