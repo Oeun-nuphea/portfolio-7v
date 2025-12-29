@@ -41,7 +41,7 @@ export default function Projects() {
         "Order management and tracking",
       ],
       link: "https://github.com/orgs/e-commerce-fullstack/repositories",
-      demo: "https://e-commerce-six-delta-78.vercel.app/",
+      demo: "https://e-smart-shop.vercel.app/",
     },
   ]
 
