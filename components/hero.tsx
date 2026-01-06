@@ -76,7 +76,7 @@ export default function Hero() {
             className="text-lg sm:text-xl text-muted-foreground max-w-xl mb-10 leading-relaxed"
           >
             Passionate IT student crafting innovative digital solutions with modern
-            technologies and clean code
+            technologies and clean code. 
           </motion.p>
 
           {/* Buttons */}
