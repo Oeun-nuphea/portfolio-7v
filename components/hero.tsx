@@ -25,41 +25,68 @@ export default function Hero() {
   };
 
   return (
-    <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-      <div className="text-center">
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground mb-6 text-pretty">
-          Oeun Nuphea
-        </h1>
-        <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 drop-shadow-lg">
-          Full Stack
-        </h1>
+    <section className="relative overflow-hidden pt-32 pb-24 px-6 lg:px-8">
+      {/* background */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-background via-muted/40 to-background" />
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl" />
+      <div className="absolute top-1/3 -right-40 w-96 h-96 bg-pink-500/30 rounded-full blur-3xl" />
 
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-          Passionate IT student crafting innovative digital solutions with
-          modern technologies and clean code
-        </p>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        {/* Left */}
+        <div className="text-center lg:text-left">
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="#projects"
-            className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-accent transition-colors"
-          >
-            View My Work
-          </a>
-          <a
-            href="#contact"
-            className="px-8 py-3 bg-secondary text-secondary-foreground rounded-lg font-semibold hover:bg-muted transition-colors border border-border"
-          >
-            Get In Touch
-          </a>
-          <button
-            onClick={downloadZip}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition"
-          >
-            Download CVs
-          </button>
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-4">
+            Oeun Nuphea
+          </h1>
+
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+            Full Stack
+          </h2>
+
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mb-10 leading-relaxed">
+            Passionate IT student crafting innovative digital solutions with modern
+            technologies and clean code
+          </p>
+
+          <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+            <a
+              href="#projects"
+              className="px-8 py-3 rounded-xl font-semibold bg-foreground text-background hover:opacity-90 transition"
+            >
+              View My Work
+            </a>
+
+            <a
+              href="#contact"
+              className="px-8 py-3 rounded-xl font-semibold border border-border bg-background hover:bg-muted transition"
+            >
+              Get In Touch
+            </a>
+
+            <button
+              onClick={downloadZip}
+              className="px-8 py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:brightness-110 transition"
+            >
+              Download CVs
+            </button>
+          </div>
+        </div>
+
+        {/* Right */}
+        <div className="flex justify-center lg:justify-end">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500 via-pink-500 to-red-500 blur-2xl opacity-50" />
+            <div className="relative p-2 rounded-full bg-background/60 backdrop-blur border border-border shadow-2xl">
+              <img
+                src="/OUENNUPHEA.jpg"
+                alt="Oeun Nuphea"
+                className="w-72 h-72 lg:w-120 lg:h-120 rounded-full object-cover object-[50%_20%]"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
   );
 }
