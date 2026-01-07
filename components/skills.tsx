@@ -14,7 +14,7 @@ export default function Skills() {
     },
     {
       category: "Tools & Platforms",
-      skills: ["Git/GitHub", "Docker", "Vercel", "AWS Basics", "VS Code", "Figma", "Linux"],
+      skills: ["Git/GitHub", "Basic Docker", "VS Code", "Figma", "Linux"],
     },
   ]
 
