@@ -1,3 +1,44 @@
+# name: Telegram Notify
+
+# on:
+#   push:
+#   pull_request:
+#   create:
+
+# jobs:
+#   notify:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Send Telegram message
+#         run: |
+#           EVENT_NAME="${{ github.event_name }}"
+#           REPO="${{ github.repository }}"
+#           ACTOR="${{ github.actor }}"
+          
+#           # Clean up branch name (removes refs/heads/)
+#           BRANCH=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+
+#           if [ "$EVENT_NAME" = "push" ]; then
+#             COMMIT_MSG="${{ github.event.head_commit.message }}"
+#             MESSAGE="<b>🔔 Push Event</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Branch:</b> $BRANCH%0A<b>Commit:</b> $COMMIT_MSG"
+
+#           elif [ "$EVENT_NAME" = "pull_request" ]; then
+#             ACTION="${{ github.event.action }}"
+#             PR_TITLE="${{ github.event.pull_request.title }}"
+#             PR_NUM="${{ github.event.pull_request.number }}"
+#             MESSAGE="<b>🔀 PR $ACTION</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>PR:</b> #$PR_NUM - $PR_TITLE"
+
+#           elif [ "$EVENT_NAME" = "create" ]; then
+#             TYPE="${{ github.event.ref_type }}"
+#             NAME="${{ github.event.ref }}"
+#             MESSAGE="<b>🫣 New $TYPE</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Name:</b> $NAME"
+#           fi
+
+#           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+#             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+#             -d parse_mode="HTML" \
+#             -d text="$MESSAGE"
+
 name: Telegram Notify
 
 on:
@@ -11,30 +52,36 @@ jobs:
     steps:
       - name: Send Telegram message
         run: |
-          EVENT_NAME="${{ github.event_name }}"
-          REPO="${{ github.repository }}"
+          # 1. Setup Variables
+          REPO_NAME="${{ github.repository }}"
+          REPO_URL="https://github.com/${{ github.repository }}"
           ACTOR="${{ github.actor }}"
+          EVENT_NAME="${{ github.event_name }}"
           
-          # Clean up branch name (removes refs/heads/)
-          BRANCH=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
+          # Clean Branch Name (removes 'refs/heads/' or 'refs/tags/')
+          BRANCH=$(echo "${{ github.ref }}" | sed -e 's|refs/heads/||' -e 's|refs/tags/||')
 
+          # 2. Logic for different events
           if [ "$EVENT_NAME" = "push" ]; then
-            COMMIT_MSG="${{ github.event.head_commit.message }}"
-            MESSAGE="<b>🔔 Push Event</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Branch:</b> $BRANCH%0A<b>Commit:</b> $COMMIT_MSG"
+            # Get only the first line of the commit message
+            COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+            MESSAGE="✨ <b>New Push!</b> ✨%0A%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>👤 By:</b> $ACTOR%0A<b>🌿 Branch:</b> <code>$BRANCH</code>%0A<b>📝 Message:</b> $COMMIT_MSG"
 
           elif [ "$EVENT_NAME" = "pull_request" ]; then
             ACTION="${{ github.event.action }}"
             PR_TITLE="${{ github.event.pull_request.title }}"
             PR_NUM="${{ github.event.pull_request.number }}"
-            MESSAGE="<b>🔀 PR $ACTION</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>PR:</b> #$PR_NUM - $PR_TITLE"
+            PR_URL="${{ github.event.pull_request.html_url }}"
+            MESSAGE="🤝 <b>PR Notification</b> 🤝%0A%0A<b>Status:</b> $ACTION%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>🔢 PR:</b> <a href='$PR_URL'>#$PR_NUM</a>%0A<b>👤 Actor:</b> $ACTOR%0A<b>💭 Title:</b> $PR_TITLE"
 
           elif [ "$EVENT_NAME" = "create" ]; then
             TYPE="${{ github.event.ref_type }}"
-            NAME="${{ github.event.ref }}"
-            MESSAGE="<b>🫣 New $TYPE</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Name:</b> $NAME"
+            MESSAGE="🌱 <b>New $TYPE Created!</b> 🌱%0A%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>👤 By:</b> $ACTOR%0A<b>📍 Name:</b> <code>$BRANCH</code>"
           fi
 
+          # 3. Send to Telegram
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
             -d parse_mode="HTML" \
+            -d disable_web_page_preview="true" \
             -d text="$MESSAGE"
