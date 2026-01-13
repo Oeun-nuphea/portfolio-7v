@@ -61,8 +61,7 @@ export default function Projects() {
           {projects.map((project) => (
             <div
               key={project.title}
-              className="bg-background rounded-lg overflow-hidden border border-border hover:border-primary transition-colors"
-            >
+              className="bg-background rounded-lg overflow-hidden border border-border hover:border-primary transition-colors">
               <div className="h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
                 <img
                   src={project.image}
