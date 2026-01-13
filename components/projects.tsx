@@ -63,8 +63,7 @@ export default function Projects() {
               <div className="h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
                 <img
                   src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover"/>
+                  alt={project.title} className="w-full h-full object-cover"/>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-foreground mb-2">
