@@ -17,6 +17,7 @@ export default function Skills() {
       skills: ["Git/GitHub", "Basic Docker", "VS Code", "Figma", "Linux"],
     },
   ]
+  
 
   return (
     <section id="skills" className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
