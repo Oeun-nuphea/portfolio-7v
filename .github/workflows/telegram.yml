@@ -20,7 +20,7 @@ jobs:
 
           if [ "$EVENT_NAME" = "push" ]; then
             COMMIT_MSG="${{ github.event.head_commit.message }}"
-            MESSAGE="<b>📌 Push Event</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Branch:</b> $BRANCH%0A<b>Commit:</b> $COMMIT_MSG"
+            MESSAGE="<b>🔔 Push Event</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Branch:</b> $BRANCH%0A<b>Commit:</b> $COMMIT_MSG"
 
           elif [ "$EVENT_NAME" = "pull_request" ]; then
             ACTION="${{ github.event.action }}"
@@ -31,7 +31,7 @@ jobs:
           elif [ "$EVENT_NAME" = "create" ]; then
             TYPE="${{ github.event.ref_type }}"
             NAME="${{ github.event.ref }}"
-            MESSAGE="<b>🆕 New $TYPE</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Name:</b> $NAME"
+            MESSAGE="<b>🫣 New $TYPE</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Name:</b> $NAME"
           fi
 
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
