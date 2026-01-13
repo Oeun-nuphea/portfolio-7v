@@ -14,27 +14,27 @@ jobs:
           EVENT_NAME="${{ github.event_name }}"
           REPO="${{ github.repository }}"
           ACTOR="${{ github.actor }}"
-          REF="${{ github.ref }}"
-
-          MESSAGE=""
+          
+          # Clean up branch name (removes refs/heads/)
+          BRANCH=$(echo "${{ github.ref }}" | sed 's|refs/heads/||')
 
           if [ "$EVENT_NAME" = "push" ]; then
-            COMMIT_MESSAGE="${{ github.event.head_commit.message || 'No commit message' }}"
-            MESSAGE="📌 Push Event\nRepository: $REPO\nActor: $ACTOR\nBranch: $REF\nCommit: $COMMIT_MESSAGE"
+            COMMIT_MSG="${{ github.event.head_commit.message }}"
+            MESSAGE="<b>📌 Push Event</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Branch:</b> $BRANCH%0A<b>Commit:</b> $COMMIT_MSG"
 
           elif [ "$EVENT_NAME" = "pull_request" ]; then
             ACTION="${{ github.event.action }}"
-            PR_TITLE="${{ github.event.pull_request.title || 'No title' }}"
-            PR_NUMBER="${{ github.event.pull_request.number || 'N/A' }}"
-            PR_BRANCH="${{ github.event.pull_request.head.ref || 'N/A' }}"
-            MESSAGE="🔀 Pull Request $ACTION\nRepository: $REPO\nActor: $ACTOR\nPR #$PR_NUMBER: $PR_TITLE\nBranch: $PR_BRANCH"
+            PR_TITLE="${{ github.event.pull_request.title }}"
+            PR_NUM="${{ github.event.pull_request.number }}"
+            MESSAGE="<b>🔀 PR $ACTION</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>PR:</b> #$PR_NUM - $PR_TITLE"
 
           elif [ "$EVENT_NAME" = "create" ]; then
-            REF_TYPE="${{ github.event.ref_type }}"
-            REF_NAME="${{ github.event.ref }}"
-            MESSAGE="🆕 $REF_TYPE Created\nRepository: $REPO\nActor: $ACTOR\n$REF_TYPE: $REF_NAME"
+            TYPE="${{ github.event.ref_type }}"
+            NAME="${{ github.event.ref }}"
+            MESSAGE="<b>🆕 New $TYPE</b>%0A<b>Repo:</b> $REPO%0A<b>Actor:</b> $ACTOR%0A<b>Name:</b> $NAME"
           fi
 
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d parse_mode="HTML" \
             -d text="$MESSAGE"
