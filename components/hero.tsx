@@ -73,8 +73,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-            className="text-lg sm:text-xl text-muted-foreground max-w-xl mb-10 leading-relaxed"
-          >
+            className="text-lg sm:text-xl text-muted-foreground max-w-xl mb-10 leading-relaxed">
             Passionate IT student crafting innovative digital solutions with modern
             technologies and clean code. 
           </motion.p>
