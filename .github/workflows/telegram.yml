@@ -86,27 +86,23 @@ jobs:
             COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -n 1 | cut -c1-50)
             COMMIT_URL="${{ github.event.head_commit.url }}"
             ACTION_LINE="📝 <b>Msg:</b> <a href='$COMMIT_URL'>$COMMIT_MSG</a>"
-            MESSAGE="✨ <b>New Push</b> ✨\n\n<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>\n<b>👤 By:</b> $ACTOR\n<b>🌿 Branch:</b> $BRANCH\n$ACTION_LINE"
+            MESSAGE="✨ <b>New Push</b> ✨%0A%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>👤 By:</b> $ACTOR%0A<b>🌿 Branch:</b> $BRANCH%0A$ACTION_LINE"
 
           elif [ "$EVENT_NAME" = "pull_request" ]; then
             ACTION="${{ github.event.action }}"
             PR_URL="${{ github.event.pull_request.html_url }}"
             PR_NUM="${{ github.event.pull_request.number }}"
-            MESSAGE="🤝 <b>PR Update</b>\n\n<b>Status:</b> $ACTION\n<b>📂 Repo:</b> $REPO_NAME\n<b>🔢 PR:</b> <a href='$PR_URL'>#$PR_NUM</a>\n<b>👤 Actor:</b> $ACTOR"
+            MESSAGE="🤝 <b>PR Update</b>%0A%0A<b>Status:</b> $ACTION%0A<b>📂 Repo:</b> $REPO_NAME%0A<b>🔢 PR:</b> <a href='$PR_URL'>#$PR_NUM</a>%0A<b>👤 Actor:</b> $ACTOR"
 
           elif [ "$EVENT_NAME" = "create" ]; then
-            MESSAGE="🌱 <b>New ${{ github.event.ref_type }}</b>\n\n<b>📂 Repo:</b> $REPO_NAME\n<b>👤 By:</b> $ACTOR\n<b>📍 Name:</b> ${{ github.event.ref }}"
+            MESSAGE="🌱 <b>New ${{ github.event.ref_type }}</b>%0A%0A<b>📂 Repo:</b> $REPO_NAME%0A<b>👤 By:</b> $ACTOR%0A<b>📍 Name:</b> ${{ github.event.ref }}"
           fi
 
-          # 3. Final API Call using JSON (This fixes the "General Chat" issue)
-          # Note: We use \n for newlines here because JSON handles them better than %0A
-          
+          # 3. Final API Call (Using -F for form-data)
+          # This is the most robust way to send thread_id
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"chat_id\": \"${{ secrets.TELEGRAM_CHAT_ID }}\",
-              \"message_thread_id\": ${{ secrets.TELEGRAM_TOPIC_ID }},
-              \"text\": \"$MESSAGE\",
-              \"parse_mode\": \"HTML\",
-              \"disable_web_page_preview\": true
-            }"
+            -F chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -F message_thread_id="${{ secrets.TELEGRAM_TOPIC_ID }}" \
+            -F parse_mode="HTML" \
+            -F disable_web_page_preview="true" \
+            -F text="$MESSAGE"
