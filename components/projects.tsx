@@ -59,8 +59,7 @@ export default function Projects() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project) => (
-            <div
-              key={project.title}
+            <div key={project.title}
               className="bg-background rounded-lg overflow-hidden border border-border hover:border-primary transition-colors">
               <div className="h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
                 <img
