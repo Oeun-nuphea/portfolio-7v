@@ -66,8 +66,7 @@ export default function Projects() {
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover"
-                />
+                  className="w-full h-full object-cover"/>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-foreground mb-2">
