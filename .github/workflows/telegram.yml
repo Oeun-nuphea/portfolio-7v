@@ -1,0 +1,40 @@
+name: Telegram Notify
+
+on:
+  push:
+  pull_request:
+  create:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Telegram message
+        run: |
+          EVENT_NAME="${{ github.event_name }}"
+          REPO="${{ github.repository }}"
+          ACTOR="${{ github.actor }}"
+          REF="${{ github.ref }}"
+
+          MESSAGE=""
+
+          if [ "$EVENT_NAME" = "push" ]; then
+            COMMIT_MESSAGE="${{ github.event.head_commit.message || 'No commit message' }}"
+            MESSAGE="📌 Push Event\nRepository: $REPO\nActor: $ACTOR\nBranch: $REF\nCommit: $COMMIT_MESSAGE"
+
+          elif [ "$EVENT_NAME" = "pull_request" ]; then
+            ACTION="${{ github.event.action }}"
+            PR_TITLE="${{ github.event.pull_request.title || 'No title' }}"
+            PR_NUMBER="${{ github.event.pull_request.number || 'N/A' }}"
+            PR_BRANCH="${{ github.event.pull_request.head.ref || 'N/A' }}"
+            MESSAGE="🔀 Pull Request $ACTION\nRepository: $REPO\nActor: $ACTOR\nPR #$PR_NUMBER: $PR_TITLE\nBranch: $PR_BRANCH"
+
+          elif [ "$EVENT_NAME" = "create" ]; then
+            REF_TYPE="${{ github.event.ref_type }}"
+            REF_NAME="${{ github.event.ref }}"
+            MESSAGE="🆕 $REF_TYPE Created\nRepository: $REPO\nActor: $ACTOR\n$REF_TYPE: $REF_NAME"
+          fi
+
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d text="$MESSAGE"
