@@ -1,3 +1,61 @@
+# name: Telegram Notify
+
+# on:
+#   push:
+#   pull_request:
+#   create:
+
+# jobs:
+#   notify:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Send Telegram message
+#         run: |
+#           # 1. Setup Variables
+#           REPO_NAME="${{ github.repository }}"
+#           REPO_URL="https://github.com/${{ github.repository }}"
+#           ACTOR="${{ github.actor }}"
+#           EVENT_NAME="${{ github.event_name }}"
+          
+#           # Clean Branch Name (removes 'refs/heads/' or 'refs/tags/')
+#           BRANCH=$(echo "${{ github.ref }}" | sed -e 's|refs/heads/||' -e 's|refs/tags/||')
+
+#           # 2. Logic for different events
+#           if [ "$EVENT_NAME" = "push" ]; then
+#             COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+            
+#             # Check if it's a merge commit
+#             if [[ "$COMMIT_MSG" == *"Merge pull request"* ]]; then
+#                DISPLAY_MSG="📥 <b>Action:</b> Merge into <code>$BRANCH</code>"
+#             else
+#                DISPLAY_MSG="📝 <b>Message:</b> $COMMIT_MSG"
+#             fi
+
+#             MESSAGE="✨ <b>New Push Activity</b> ✨%0A%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>👤 By:</b> $ACTOR%0A<b>🌿 Branch:</b> <code>$BRANCH</code>%0A$DISPLAY_MSG"
+
+#           elif [ "$EVENT_NAME" = "pull_request" ]; then
+#             ACTION="${{ github.event.action }}"
+#             PR_TITLE="${{ github.event.pull_request.title }}"
+#             PR_NUM="${{ github.event.pull_request.number }}"
+#             PR_URL="${{ github.event.pull_request.html_url }}"
+#             # Shows the flow: dev ➔ main
+#             PR_FLOW="${{ github.event.pull_request.head.ref }} ➔ ${{ github.event.pull_request.base.ref }}"
+            
+#             MESSAGE="🤝 <b>Pull Request Update</b> 🤝%0A%0A<b>Status:</b> $ACTION%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>🔢 PR:</b> <a href='$PR_URL'>#$PR_NUM</a>%0A<b>👤 Actor:</b> $ACTOR%0A<b>🔃 Flow:</b> <code>$PR_FLOW</code>%0A<b>💭 Title:</b> $PR_TITLE"
+
+#           elif [ "$EVENT_NAME" = "create" ]; then
+#             TYPE="${{ github.event.ref_type }}"
+#             REF_NAME="${{ github.event.ref }}"
+#             MESSAGE="🌱 <b>New $TYPE Created</b> 🌱%0A%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>👤 By:</b> $ACTOR%0A<b>📍 Name:</b> <code>$REF_NAME</code>"
+#           fi
+
+#           # 3. Send to Telegram using HTML mode
+#           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+#             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+#             -d parse_mode="HTML" \
+#             -d disable_web_page_preview="true" \
+#             -d text="$MESSAGE"
+
 name: Telegram Notify
 
 on:
@@ -17,31 +75,34 @@ jobs:
           ACTOR="${{ github.actor }}"
           EVENT_NAME="${{ github.event_name }}"
           
-          # Clean Branch Name (removes 'refs/heads/' or 'refs/tags/')
+          # Clean Branch Name
           BRANCH=$(echo "${{ github.ref }}" | sed -e 's|refs/heads/||' -e 's|refs/tags/||')
 
-          # 2. Logic for different events
+          # 2. Advanced Logic for Events
           if [ "$EVENT_NAME" = "push" ]; then
-            COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+            # Get first 50 chars of commit message and the link
+            COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -n 1 | cut -c1-50)
+            COMMIT_URL="${{ github.event.head_commit.url }}"
             
-            # Check if it's a merge commit
             if [[ "$COMMIT_MSG" == *"Merge pull request"* ]]; then
-               DISPLAY_MSG="📥 <b>Action:</b> Merge into <code>$BRANCH</code>"
+               ACTION_LINE="📥 <b>Action:</b> <a href='$COMMIT_URL'>Merge into $BRANCH</a>"
             else
-               DISPLAY_MSG="📝 <b>Message:</b> $COMMIT_MSG"
+               ACTION_LINE="📝 <b>Msg:</b> <a href='$COMMIT_URL'>$COMMIT_MSG</a>"
             fi
 
-            MESSAGE="✨ <b>New Push Activity</b> ✨%0A%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>👤 By:</b> $ACTOR%0A<b>🌿 Branch:</b> <code>$BRANCH</code>%0A$DISPLAY_MSG"
+            MESSAGE="✨ <b>New Push Activity</b> ✨%0A%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>👤 By:</b> $ACTOR%0A<b>🌿 Branch:</b> <code>$BRANCH</code>%0A$ACTION_LINE"
 
           elif [ "$EVENT_NAME" = "pull_request" ]; then
             ACTION="${{ github.event.action }}"
             PR_TITLE="${{ github.event.pull_request.title }}"
             PR_NUM="${{ github.event.pull_request.number }}"
             PR_URL="${{ github.event.pull_request.html_url }}"
-            # Shows the flow: dev ➔ main
-            PR_FLOW="${{ github.event.pull_request.head.ref }} ➔ ${{ github.event.pull_request.base.ref }}"
+            PR_FLOW="<code>${{ github.event.pull_request.head.ref }}</code> ➔ <code>${{ github.event.pull_request.base.ref }}</code>"
             
-            MESSAGE="🤝 <b>Pull Request Update</b> 🤝%0A%0A<b>Status:</b> $ACTION%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>🔢 PR:</b> <a href='$PR_URL'>#$PR_NUM</a>%0A<b>👤 Actor:</b> $ACTOR%0A<b>🔃 Flow:</b> <code>$PR_FLOW</code>%0A<b>💭 Title:</b> $PR_TITLE"
+            # Status Emojis
+            [[ "$ACTION" == "opened" ]] && STATE="🟢" || STATE="🔵"
+            
+            MESSAGE="🤝 <b>PR Notification</b> 🤝%0A%0A<b>$STATE Status:</b> $ACTION%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>🔢 PR:</b> <a href='$PR_URL'>#$PR_NUM</a>%0A<b>👤 Actor:</b> $ACTOR%0A<b>🔃 Flow:</b> $PR_FLOW%0A<b>💭 Title:</b> $PR_TITLE"
 
           elif [ "$EVENT_NAME" = "create" ]; then
             TYPE="${{ github.event.ref_type }}"
@@ -49,7 +110,7 @@ jobs:
             MESSAGE="🌱 <b>New $TYPE Created</b> 🌱%0A%0A<b>📂 Repo:</b> <a href='$REPO_URL'>$REPO_NAME</a>%0A<b>👤 By:</b> $ACTOR%0A<b>📍 Name:</b> <code>$REF_NAME</code>"
           fi
 
-          # 3. Send to Telegram using HTML mode
+          # 3. Final API Call
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
             -d parse_mode="HTML" \
