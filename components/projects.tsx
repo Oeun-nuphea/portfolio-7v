@@ -49,6 +49,20 @@ export default function Projects() {
       link: "https://github.com/orgs/e-commerce-fullstack/repositories",
       demo: "https://e-smart-shop.vercel.app/",
     },
+    {
+      title: "Spendwise",
+      image: "/blog.png",
+      description:
+        "Mobile Application For Spendwise that allow us to login and use their transaction wallet",
+      technologies: ["Flutter", "Typescript", "Express", "MongoDB", "Docker", "Github"],
+      features: [
+        "Display mobile posts with categories and tags",
+        "Responsive design for mobile",
+        "User-friendly navigation and search",
+      ],
+      link: "https://github.com/orgs/free-social/repositories",
+      demo: "#",
+    }
   ];
 
   return (
