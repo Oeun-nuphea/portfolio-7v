@@ -25,7 +25,7 @@ export default function Projects() {
         "User-friendly navigation and search",
       ],
       link: "https://github.com/G4ANT/blog",
-      demo: "#",
+      demo: "/",
     },
     {
       title: "E-commerce",
@@ -61,7 +61,7 @@ export default function Projects() {
         "User-friendly navigation and search",
       ],
       link: "https://github.com/orgs/free-social/repositories",
-      demo: "#",
+      demo: "/",
     }
   ];
 
