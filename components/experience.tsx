@@ -1,14 +1,24 @@
 export default function Experience() {
   const experiences = [
     {
-      title: "Web Development Intern",
-      company: "SAIRL (RUPP Lab)",
-      period: "2025-08 – present",
+      title: "Backenc Developer",
+      company: "LTNG Properties",
+      period: "2026-01 – present",
       description:
-        "Contributed to the development of client-facing web applications using Vue and PHP. Collaborated with the team to fix bugs, implement features, and improve application performance.",
+        "Contribute In Developing API and Database Design for LTNG Properties Platform",
       achievements: [
-        "Developing responsive web components using Vue, Typescript and Tailwind CSS",
+        "Gained deep understanding of backend architecture and API design.",
+        "Implemented efficient database schemas and optimized queries.",
+        "Collaborated with the team to improve platform performance and scalability."
       ],
+      tech: [
+        'Express Typescript',
+        'MongoDB',
+        'Database Design',
+        'API Design',
+        'Docker',
+        'Gitlab'
+      ]
     }
   ]
 
@@ -37,6 +47,16 @@ export default function Experience() {
                     </li>
                   ))}
                 </ul>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground mb-2">Technologies:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {exp.tech.map((tech) => (
+                        <span key={tech} className="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-medium">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
               </div>
             </div>
           ))}

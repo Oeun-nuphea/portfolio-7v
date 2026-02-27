@@ -4,31 +4,25 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+})
 
-// export const metadata: Metadata = {
-//   title: "Full-Stack Developer Portfolio",
-//   description: "Professional portfolio showcasing full-stack development projects, skills, and experience",
-//   generator: "v0.app",
-//   icons: {
-//     icon: [
-//       {
-//         url: "/icon-light-32x32.png",
-//         media: "(prefers-color-scheme: light)",
-//       },
-//       {
-//         url: "/icon-dark-32x32.png",
-//         media: "(prefers-color-scheme: dark)",
-//       },
-//       {
-//         url: "/icon.svg",
-//         type: "image/svg+xml",
-//       },
-//     ],
-//     apple: "/apple-icon.png",
-//   },
-// }
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+})
+
+export const metadata: Metadata = {
+  title: "Nuphea | Fullstack Developer",
+  description: "Experience with Node.js, TypeScript, PostgreSQL, and MongoDB.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
+}
 
 export default function RootLayout({
   children,
@@ -36,9 +30,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
-        {children}
+    <html lang="en" className="scroll-smooth">
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+        {/* The NavBar is fixed at the top */}
+        
+        {/* pt-[68px] ensures your content starts below the 2-row navbar */}
+        <main className="pt-[68px]">
+          {children}
+        </main>
+        
         <Analytics />
       </body>
     </html>

@@ -1,3 +1,6 @@
+import { Teachers } from "next/font/google";
+import { describe } from "node:test";
+
 export default function Projects() {
   const projects = [
     {
@@ -25,7 +28,6 @@ export default function Projects() {
         "User-friendly navigation and search",
       ],
       link: "https://github.com/G4ANT/blog",
-      demo: "/",
     },
     {
       title: "E-commerce",
@@ -51,7 +53,7 @@ export default function Projects() {
     },
     {
       title: "Spendwise",
-      image: "/blog.png",
+      image: "/spendwise.png",
       description:
         "Mobile Application For Spendwise that allow us to login and use their transaction wallet",
       technologies: ["Flutter", "Typescript", "Express", "MongoDB", "Docker", "Github"],
@@ -61,7 +63,23 @@ export default function Projects() {
         "User-friendly navigation and search",
       ],
       link: "https://github.com/orgs/free-social/repositories",
-      demo: "/",
+    },
+    {
+      title: "Notion",
+      image: "/notion.png",
+      description: "Notion-inspired app for advanced note-taking with flexible usage options.",
+      technologies: ['NuxtJS', 'Express', 'TypeScript', 'Postgres', 'Docker', 'GitHub', 'RabbitMQ', 'Event-Driven Architecture'],
+      features: [
+        "Create and organize notes in a flexible hierarchy",
+        "Rich text editor with formatting options",
+        "Tagging and categorization for easy search",
+        "Real-time collaboration between multiple users",
+        "Task management with checklists and reminders",
+        "Database-style tables and views",
+        "Offline support with local caching",
+        "Integration with external tools via API"
+      ],
+      link: 'https://github.com/Learning-and-Exploring/note-rabbitmq',
     }
   ];
 
@@ -76,7 +94,7 @@ export default function Projects() {
             <div key={project.title} className="bg-background rounded-lg overflow-hidden border border-border hover:border-primary transition-colors">
               <div className="h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
                 <img src={project.image}
-                  alt={project.title} className="w-full h-full object-cover"/>
+                  alt={project.title} className="w-full h-full object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-foreground mb-2">
@@ -118,6 +136,7 @@ export default function Projects() {
                   >
                     View Code
                   </a>
+                  {project.demo && (
                   <a
                     href={project.demo}
                     target="_blank"
@@ -125,6 +144,7 @@ export default function Projects() {
                   >
                     Live Demo
                   </a>
+                )}
                 </div>
               </div>
             </div>

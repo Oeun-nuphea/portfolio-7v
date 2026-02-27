@@ -10,7 +10,7 @@ export default function Skills() {
     },
     {
       category: "Databases",
-      skills: [ "MongoDB", "SQL"],
+      skills: [ "MongoDB", "SQL", "PostgreSQL"],
     },
     {
       category: "Tools & Platforms",
