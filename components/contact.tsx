@@ -2,8 +2,39 @@
 
 import type React from "react"
 
+import { Github, Globe, Linkedin, Mail } from "lucide-react"
 import { useState } from "react"
-import { Mail, Linkedin, Github, Send } from "lucide-react"
+
+const contactLinks = [
+  {
+    label: "Email",
+    value: "nupheaoeun@gmail.com",
+    href: "mailto:nupheaoeun@gmail.com",
+    icon: Mail,
+    external: false,
+  },
+  {
+    label: "LinkedIn",
+    value: "linkedin.com/in/ouen-nuphea",
+    href: "https://www.linkedin.com/in/ouen-nuphea/",
+    icon: Linkedin,
+    external: true,
+  },
+  {
+    label: "GitHub",
+    value: "github.com/nuphea",
+    href: "https://github.com/nuphea",
+    icon: Github,
+    external: true,
+  },
+  {
+    label: "Portfolio",
+    value: "portfolio-oeun-nuphea.vercel.app",
+    href: "https://portfolio-oeun-nuphea.vercel.app/",
+    icon: Globe,
+    external: true,
+  },
+]
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -19,75 +50,98 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted:", formData)
+
+    const subject = `Portfolio inquiry from ${formData.name}`
+    const body = [
+      `Name: ${formData.name}`,
+      `Email: ${formData.email}`,
+      "",
+      formData.message,
+    ].join("\n")
+
+    window.location.href = `mailto:nupheaoeun@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     setSubmitted(true)
     setFormData({ name: "", email: "", message: "" })
-    setTimeout(() => setSubmitted(false), 5000)
+    setTimeout(() => setSubmitted(false), 4000)
   }
 
   return (
-    <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-4xl font-bold text-foreground mb-12">Let's Connect</h2>
+    <section id="contact" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-12 max-w-3xl">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
+            Get In Touch
+          </p>
+          <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            Open to conversations about backend, platform, and frontend work.
+          </h2>
+          <p className="text-lg leading-relaxed text-muted-foreground">
+            Email is the fastest route for project or role discussions. LinkedIn,
+            GitHub, and the live portfolio are here as well.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-2xl font-bold text-foreground mb-6">Get In Touch</h3>
-            <p className="text-muted-foreground mb-8 leading-relaxed">
-              I'm always interested in hearing about new opportunities and interesting projects. Feel free to reach out!
-            </p>
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="space-y-4">
+            {contactLinks.map((link) => {
+              const Icon = link.icon
 
-            <div className="space-y-4 mb-8">
-              <a
-                href="mailto:nupheaoeun@gmail.com" target="_blank"
-                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Mail size={20} className="text-primary" />
-                <span>nupheaoeun@gmail.com</span>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/ouen-nuphea/" target="_blank"
-                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Linkedin size={20} className="text-primary" />
-                <span>https://www.linkedin.com/in/ouen-nuphea/</span>
-              </a>
-              <a
-                href="https://github.com/Oeun-nuphea" target="_blank"
-                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Github size={20} className="text-primary" />
-                <span>https://github.com/Oeun-nuphea</span>
-              </a>
-              <a
-                href="https://t.me/oeunnuphea"
-                target="_blank"
-                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Send size={20} className="text-primary" />
-                <span>https://t.me/oeunnuphea</span>
-              </a>
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noreferrer" : undefined}
+                  className="flex items-center justify-between rounded-[1.5rem] border border-border/70 bg-card/85 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <Icon size={20} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                        {link.label}
+                      </p>
+                      <p className="text-base font-medium text-foreground">{link.value}</p>
+                    </div>
+                  </div>
+                  <span className="text-sm font-semibold text-primary">Open</span>
+                </a>
+              )
+            })}
 
-
+            <div className="rounded-[1.75rem] border border-border/70 bg-card/85 p-6 shadow-sm">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-primary/75">
+                Preferred Contact
+              </p>
+              <p className="leading-relaxed text-muted-foreground">
+                Use email for direct project discussions and LinkedIn for broader
+                networking. The form on the right opens a prefilled email draft.
+              </p>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="bg-card rounded-lg p-8 border border-border">
+          <div className="rounded-[2rem] border border-border/70 bg-card/85 p-8 shadow-sm">
+            <h3 className="mb-3 text-2xl font-bold text-foreground">Start a Conversation</h3>
+            <p className="mb-8 max-w-2xl leading-relaxed text-muted-foreground">
+              Share a quick summary of the work, role, or collaboration you have in mind.
+              Submitting this form opens an email draft with the details filled in.
+            </p>
+
             {submitted ? (
-              <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-                <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+              <div className="flex h-full flex-col items-center justify-center gap-4 py-8 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/20">
                   <span className="text-2xl">✓</span>
                 </div>
-                <h4 className="text-xl font-semibold text-foreground">Message Sent!</h4>
-                <p className="text-muted-foreground">Thank you for reaching out. I'll get back to you soon.</p>
+                <h4 className="text-xl font-semibold text-foreground">Email draft opened</h4>
+                <p className="text-muted-foreground">
+                  If a mail client is available, your message is ready to send.
+                </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+                  <label htmlFor="name" className="mb-2 block text-sm font-medium text-foreground">
                     Name
                   </label>
                   <input
@@ -97,12 +151,13 @@ export default function Contact() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="Your name"
                   />
                 </div>
+
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
                     Email
                   </label>
                   <input
@@ -112,12 +167,13 @@ export default function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="your.email@example.com"
                   />
                 </div>
+
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
+                  <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground">
                     Message
                   </label>
                   <textarea
@@ -127,15 +183,16 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     rows={5}
-                    className="w-full px-4 py-2 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                    className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="Your message..."
                   />
                 </div>
+
                 <button
-                  type="submit" disabled
-                  className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-accent transition-colors"
+                  type="submit"
+                  className="w-full rounded-xl bg-gradient-to-r from-primary to-accent px-6 py-3 font-semibold text-white transition hover:brightness-110"
                 >
-                  Send Message
+                  Open Email Draft
                 </button>
               </form>
             )}

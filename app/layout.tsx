@@ -1,7 +1,7 @@
-import type React from "react"
+import { Analytics } from "@vercel/analytics/next"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
+import type React from "react"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Nuphea | Fullstack Developer",
-  description: "Experience with Node.js, TypeScript, PostgreSQL, and MongoDB.",
+  title: "Nuphea | Fullstack Engineer",
+  description: "Fullstack engineer building scalable, event-driven systems that hold up in production.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -35,13 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
-        {/* The NavBar is fixed at the top */}
-        
-        {/* pt-[68px] ensures your content starts below the 2-row navbar */}
-        <main className="pt-[68px]">
-          {children}
-        </main>
-        
+        {children}
         <Analytics />
       </body>
     </html>
