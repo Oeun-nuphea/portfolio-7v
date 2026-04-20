@@ -2,6 +2,23 @@ import Image from "next/image"
 
 const projects = [
   {
+    title: "Spendwise",
+    category: "Mobile finance experience",
+    // image: "/spendwise.png",
+    description:
+      "Transaction wallet experience for mobile users with authentication, account flows, and a backend stack ready for packaged delivery.",
+    technologies: ["Flutter", "TypeScript", "Express", "MongoDB", "Docker", "GitHub", "Github Action CI CD", "Grafana", "Prometheus", "AWS", "NextJS", "Redis", "Rest API", "Socket", "WebRTC"],
+    highlights: [
+      "Mobile-first UX for wallet and transaction views",
+      "Backend integration for account and transaction flows",
+      "Real-time chat system using WebSocket",
+      "Voice and video calling with WebRTC",
+      "Dockerized collaboration setup for the team",
+      "Admin dashboard for managing users"
+    ],
+    codeUrl: "https://github.com/orgs/free-social/repositories",
+  },
+  {
     title: "Notion-Inspired Workspace",
     category: "Event-driven platform",
     image: "/notion.png",
@@ -16,7 +33,7 @@ const projects = [
     codeUrl: "https://github.com/Learning-and-Exploring/note-rabbitmq",
   },
   {
-    title: "E-Smart Shop",
+    title: "E-Shop",
     category: "Full-stack commerce",
     // image: "/e-commerce.png",
     description:
@@ -29,20 +46,6 @@ const projects = [
     ],
     codeUrl: "https://github.com/orgs/e-commerce-fullstack/repositories",
     demoUrl: "https://e-smart-shop.vercel.app/",
-  },
-  {
-    title: "Spendwise",
-    category: "Mobile finance experience",
-    // image: "/spendwise.png",
-    description:
-      "Transaction wallet experience for mobile users with authentication, account flows, and a backend stack ready for packaged delivery.",
-    technologies: ["Flutter", "TypeScript", "Express", "MongoDB", "Docker", "GitHub", "Github Action", "Grafana", "Prometheus", "AWS"],
-    highlights: [
-      "Mobile-first UX for wallet and transaction views",
-      "Backend integration for account and transaction flows",
-      "Dockerized collaboration setup for the team",
-    ],
-    codeUrl: "https://github.com/orgs/free-social/repositories",
   },
   {
     title: "Blog Dashboard",
@@ -68,9 +71,6 @@ export default function Projects() {
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
             Projects
           </p>
-          <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Selected work across event-driven systems, product interfaces, and delivery-focused builds.
-          </h2>
           <p className="text-lg leading-relaxed text-muted-foreground">
             The strongest thread across these projects is practical implementation:
             clear architecture, useful interfaces, and systems designed to keep
@@ -82,9 +82,8 @@ export default function Projects() {
           {projects.map((project, index) => (
             <article
               key={project.title}
-              className={`group overflow-hidden rounded-[2rem] border border-border/70 bg-card/85 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_-32px_rgba(15,23,42,0.4)] ${
-                index === 0 ? "xl:col-span-2" : ""
-              }`}
+              className={`group overflow-hidden rounded-[2rem] border border-border/70 bg-card/85 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_-32px_rgba(15,23,42,0.4)] ${index === 0 ? "xl:col-span-2" : ""
+                }`}
             >
               {/* <div className={`relative overflow-hidden ${index === 0 ? "h-72" : "h-60"}`}>
                 <Image
