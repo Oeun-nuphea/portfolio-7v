@@ -40,7 +40,7 @@ const stackGroups = [
   },
   {
     category: "Observability",
-    skills: ["Grafana", "Prometheus"],
+    skills: ["Grafana"],
   },
 ]
 
@@ -52,10 +52,6 @@ const explorations = [
   {
     title: "Distributed tracing and observability",
     progress: 55,
-  },
-  {
-    title: "Kubernetes and container orchestration",
-    progress: 40,
   },
 ]
 

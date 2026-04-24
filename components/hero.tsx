@@ -54,7 +54,7 @@ const focusCards = [
   },
   {
     title: "Observability",
-    description: "Metrics and visibility with Grafana and Prometheus in the delivery loop.",
+    description: "Metrics and visibility with Grafana in the delivery loop.",
   },
 ]
 
@@ -127,7 +127,7 @@ export default function Hero() {
             transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
             className="mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl lg:mx-0"
           >
-            Fullstack Engineer building scalable, event-driven systems that hold up
+            Backend Engineer building scalable, event-driven systems that hold up
             in production.
           </motion.p>
 

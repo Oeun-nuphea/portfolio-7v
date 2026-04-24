@@ -23,7 +23,7 @@ export default function Header() {
             Nuphea
           </span>
           <span className="block text-sm font-medium text-foreground transition-colors group-hover:text-primary">
-            Fullstack Engineer
+            Backend Engineer
           </span>
         </a>
 

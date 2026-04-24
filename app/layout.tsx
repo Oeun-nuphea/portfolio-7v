@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Nuphea | Fullstack Engineer",
-  description: "Fullstack engineer building scalable, event-driven systems that hold up in production.",
+  title: "Nuphea",
+  description: "Backend engineer building scalable, event-driven systems that hold up in production.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
