@@ -13,7 +13,6 @@ export default function Footer() {
 
         <div className="text-sm text-muted-foreground sm:text-right">
           <p>© {currentYear} Nuphea. All rights reserved.</p>
-          <p className="mt-1">Built with Next.js and Tailwind CSS.</p>
         </div>
       </div>
     </footer>
