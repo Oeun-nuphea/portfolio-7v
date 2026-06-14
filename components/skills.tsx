@@ -1,105 +1,113 @@
 const principles = [
   {
-    title: "Separation of concerns",
-    description: "Clean, modular architecture that keeps responsibilities explicit.",
+    title: "Separation of Concerns",
+    description: "Structuring applications into modular components with singular, well-defined responsibilities.",
   },
   {
-    title: "Event-driven design",
-    description: "Loosely coupled systems built around asynchronous communication.",
+    title: "Event-Driven Design",
+    description: "Leveraging decoupled message pub/sub patterns to support scalable, asynchronous workflows.",
   },
   {
-    title: "Service isolation",
-    description: "Independent deployability and clear ownership boundaries per service.",
+    title: "Service Isolation",
+    description: "Maintaining clear boundaries to ensure services can be built, tested, and deployed independently.",
   },
   {
-    title: "Performance-first",
-    description: "Optimize the layers that matter most to users and operators.",
+    title: "Performance & Caching",
+    description: "Optimizing code execution and caching at appropriate layers to ensure responsive user experiences.",
   },
   {
-    title: "Fault tolerance",
-    description: "Design for failure with recoverability and resilience in mind.",
+    title: "Fault Tolerance",
+    description: "Developing resilient structures capable of self-healing, retry handling, and graceful degradation.",
   },
   {
-    title: "Always deployable",
-    description: "Continuous delivery mindset backed by disciplined release workflows.",
+    title: "Continuous Deployment",
+    description: "Automating validation and integration pipelines to maintain a constant state of release readiness.",
   },
 ]
 
 const stackGroups = [
   {
-    category: "Application",
-    skills: ["TypeScript", "Node.js", "Vue 3", "React", "Express"],
+    category: "Application Frameworks",
+    skills: ["TypeScript", "Node.js", "Express", "Go", "Vue 3", "React"],
   },
   {
-    category: "Data and Messaging",
+    category: "Databases & Messaging",
     skills: ["PostgreSQL", "MongoDB", "Redis", "RabbitMQ"],
   },
   {
-    category: "Delivery and Cloud",
-    skills: ["Docker", "GitHub Actions", "AWS"],
+    category: "Infrastructure & Tools",
+    skills: ["Docker", "Kubernetes", "GitHub Actions", "AWS"],
   },
   {
-    category: "Observability",
-    skills: ["Grafana"],
+    category: "Observability & Diagnostics",
+    skills: ["Grafana", "Prometheus", "Sentry"],
   },
 ]
 
 const explorations = [
   {
-    title: "Advanced system design and resilience patterns",
+    title: "Distributed Tracing & APM Systems",
     progress: 75,
   },
   {
-    title: "Distributed tracing and observability",
-    progress: 55,
+    title: "System Design for High Scale",
+    progress: 60,
   },
 ]
 
 export default function Skills() {
   return (
-    <section id="principles" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl space-y-16">
-        <div>
-          <div className="mb-10 max-w-2xl">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
-              Engineering Principles
+    <section id="principles" className="scroll-mt-24 py-24 px-6 sm:px-8">
+      <div className="mx-auto max-w-7xl space-y-20">
+        {/* Core Principles */}
+        <div className="space-y-12">
+          <div className="space-y-3 max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+              My Philosophy
             </p>
-            <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Built for clarity, resilience, and change.
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+              Engineering Principles
             </h2>
+            <p className="text-base text-muted-foreground">
+              Design paradigms I practice to build clear, resilient, and extensible systems.
+            </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {principles.map((principle) => (
-              <article
+              <div
                 key={principle.title}
-                className="pt-6 border-t border-border/30"
+                className="pt-6 border-t border-border/60 space-y-2"
               >
-                <h3 className="mb-3 text-xl font-semibold text-foreground">{principle.title}</h3>
-                <p className="leading-relaxed text-muted-foreground">{principle.description}</p>
-              </article>
+                <h3 className="text-lg font-bold text-foreground">{principle.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{principle.description}</p>
+              </div>
             ))}
           </div>
         </div>
 
-        <div id="stack" className="scroll-mt-24 grid gap-16 lg:grid-cols-[1.35fr_0.85fr]">
-          <div>
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
-              Tech Stack
-            </p>
-            <h3 className="mb-8 text-2xl font-bold tracking-tight text-foreground">
-              Tools I work with.
-            </h3>
+        {/* Tech Stack & Explorations */}
+        <div id="stack" className="scroll-mt-24 grid gap-16 lg:grid-cols-[1.2fr_0.8fr] pt-12 border-t border-border/40">
+          {/* Tech Stack */}
+          <div className="space-y-8">
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+                Toolkit
+              </p>
+              <h3 className="text-2xl font-bold text-foreground">
+                Technologies & Tools
+              </h3>
+            </div>
 
-            <div className="grid gap-8 md:grid-cols-2">
+            <div className="grid gap-6 sm:grid-cols-2">
               {stackGroups.map((group) => (
-                <div key={group.category} className="space-y-4">
-                  <h4 className="text-lg font-semibold text-foreground">{group.category}</h4>
-                  <div className="flex flex-wrap gap-2">
+                <div key={group.category} className="space-y-3 p-5 rounded-2xl border border-border bg-card/40">
+                  <h4 className="text-sm font-bold text-foreground tracking-wide">{group.category}</h4>
+                  <div className="flex flex-wrap gap-1.5">
                     {group.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="rounded-full border border-border/70 bg-card px-3 py-1 text-sm font-medium text-foreground"
+                        className="rounded-lg bg-muted px-2.5 py-1 text-xs font-semibold text-foreground/80"
                       >
                         {skill}
                       </span>
@@ -110,24 +118,27 @@ export default function Skills() {
             </div>
           </div>
 
-          <div>
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
-              Currently Exploring
-            </p>
-            <h3 className="mb-8 text-2xl font-bold tracking-tight text-foreground">
-              Active learning areas.
-            </h3>
+          {/* Currently Exploring */}
+          <div className="space-y-8">
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+                Professional Growth
+              </p>
+              <h3 className="text-2xl font-bold text-foreground">
+                Active Learning Areas
+              </h3>
+            </div>
 
             <div className="space-y-6">
               {explorations.map((item) => (
-                <div key={item.title}>
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <p className="text-sm font-medium leading-relaxed text-foreground">{item.title}</p>
-                    <span className="text-sm font-semibold text-primary">{item.progress}%</span>
+                <div key={item.title} className="space-y-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-sm font-bold text-foreground">{item.title}</p>
+                    <span className="text-xs font-bold text-primary">{item.progress}%</span>
                   </div>
-                  <div className="h-3 rounded-full bg-muted">
+                  <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
+                      className="h-full bg-primary rounded-full transition-all duration-1000"
                       style={{ width: `${item.progress}%` }}
                     />
                   </div>

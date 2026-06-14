@@ -1,57 +1,59 @@
 import Image from "next/image"
+import { Github, ExternalLink } from "lucide-react"
 
 const projects = [
   {
     title: "Spendwise",
-    category: "Mobile finance app",
+    category: "Mobile Finance Application",
+    image: "/spendwise.png",
     description:
-      "Mobile wallet experience with authentication, real-time chat, and a production-ready backend stack.",
+      "A feature-rich mobile wallet experience featuring secure authentication, real-time chat integration, and a production-grade backend stack.",
     technologies: ["Flutter", "TypeScript", "Express", "MongoDB", "Redis", "Docker", "AWS", "WebRTC"],
     highlights: [
       "Real-time chat with WebSocket and voice/video via WebRTC",
       "Live transaction and wallet flows with mobile-first UX",
-      "Admin dashboard and Dockerized team setup",
+      "Admin dashboard and Dockerized container workflow",
     ],
     codeUrl: "https://github.com/orgs/free-social/repositories",
   },
   {
     title: "Notion-Inspired Workspace",
-    category: "Event-driven platform",
+    category: "Event-Driven Platform",
     image: "/notion.png",
     description:
-      "Collaborative note platform shaped around RabbitMQ-powered services, TypeScript APIs, and a containerized development workflow.",
+      "A collaborative notes and workspace platform structured around RabbitMQ message brokers, Node/TS APIs, and containerized dev systems.",
     technologies: ["ReactJS", "Express", "TypeScript", "PostgreSQL", "Docker", "RabbitMQ"],
     highlights: [
-      "Flexible note hierarchy and workspace organization",
-      "Service-to-service communication with event-driven architecture",
-      "Containerized local environment for consistent development",
+      "Flexible document hierarchy and content block structure",
+      "Service-to-service decoupled communication via message queue",
+      "Unified Docker environments for rapid developer onboarding",
     ],
     codeUrl: "https://github.com/Learning-and-Exploring/note-rabbitmq",
   },
   {
-    title: "E-Shop",
-    category: "Full-stack commerce",
+    title: "E-Shop Platform",
+    category: "Full-Stack E-Commerce",
+    image: "/e-commerce.png",
     description:
-      "End-to-end e-commerce platform with product management, cart flows, and secure auth.",
+      "An end-to-end commercial storefront incorporating catalog management, dynamic shopping cart flows, and secure customer authentication.",
     technologies: ["Vue", "Node.js", "MongoDB", "Tailwind CSS", "Vercel"],
     highlights: [
-      "Product browsing, cart, checkout, and order tracking",
-      "User authentication and account management",
+      "Catalog browsing, category search, and real-time checkout updates",
+      "Secure user sessions and profile dashboard functionality",
     ],
     codeUrl: "https://github.com/orgs/e-commerce-fullstack/repositories",
     demoUrl: "https://e-smart-shop.vercel.app/",
   },
   {
-    title: "Blog Dashboard",
-    category: "Frontend dashboard",
-    // image: "/blog.png",
+    title: "Blog Dashboard UI",
+    category: "Frontend Control Panel",
+    image: "/blog.png",
     description:
-      "Responsive dashboard interface for managing blog content, categories, and user-facing navigation across screen sizes.",
+      "A fully responsive and interactive back-office dashboard interface for organizing articles, tags, authors, and user interactions.",
     technologies: ["HTML", "CSS", "JavaScript"],
     highlights: [
-      "Post, category, and tag presentation",
-      "Responsive layout across mobile and desktop",
-      "Clear navigation patterns for content discovery",
+      "Clean post, category, and metadata organization views",
+      "Device-agnostic layout structures preserving grid density",
     ],
     codeUrl: "https://github.com/G4ANT/blog",
   },
@@ -59,67 +61,59 @@ const projects = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-12 max-w-xl">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
-            Projects
+    <section id="projects" className="scroll-mt-24 py-24 px-6 sm:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-16 space-y-3 max-w-xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+            My Portfolio
           </p>
-          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Things I’ve built.
+          <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            Featured Projects
           </h2>
+          <p className="text-base text-muted-foreground">
+            A selection of backend systems, microservice deployments, and full-stack applications.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-12 xl:grid-cols-2">
-          {projects.map((project, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          {projects.map((project) => (
             <article
               key={project.title}
-              className={`group border-b border-border/30 pb-12 last:border-0 hover:-translate-y-0.5 transition-transform ${index === 0 ? "xl:col-span-2 xl:border-b-0" : ""
-                }`}
+              className="group flex flex-col rounded-2xl border border-border bg-card overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-md"
             >
-              {/* <div className={`relative overflow-hidden ${index === 0 ? "h-72" : "h-60"}`}>
+              {/* Image Container with Zoom effect */}
+              <div className="relative aspect-video w-full overflow-hidden bg-muted border-b border-border/50">
                 <Image
                   src={project.image}
                   alt={project.title}
                   fill
-                  className="object-cover transition duration-500 group-hover:scale-[1.03]"
-                  sizes={index === 0 ? "(min-width: 1280px) 1200px, 100vw" : "(min-width: 1280px) 560px, 100vw"}
+                  className="object-cover object-top transition duration-500 group-hover:scale-102"
+                  sizes="(min-width: 768px) 50vw, 100vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-slate-950/10 to-transparent" />
-                <div className="absolute left-6 top-6 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur">
+                <div className="absolute left-4 top-4 rounded-lg border border-border/10 bg-background/80 backdrop-blur-md px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm">
                   {project.category}
                 </div>
-              </div> */}
+              </div>
 
-              <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
-                <div>
-                  <h3 className="mb-3 text-2xl font-bold text-foreground">{project.title}</h3>
-                  <p className="mb-5 text-base leading-relaxed text-muted-foreground">{project.description}</p>
+              {/* Card Details */}
+              <div className="flex flex-1 flex-col p-6 space-y-5 justify-between">
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {project.description}
+                  </p>
 
-                  <div className="mb-5">
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary/75">
-                      Technologies
+                  {/* Highlights Bullet List */}
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/85">
+                      Key Highlights
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="rounded-full border border-border/70 bg-background px-3 py-1 text-sm font-medium text-foreground"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                      Highlights
-                    </p>
-                    <ul className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+                    <ul className="space-y-1.5">
                       {project.highlights.map((highlight) => (
-                        <li key={highlight} className="flex items-start gap-3">
-                          <span className="mt-2 h-1.5 w-1.5 rounded-full bg-accent" />
+                        <li key={highlight} className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/80" />
                           <span>{highlight}</span>
                         </li>
                       ))}
@@ -127,25 +121,41 @@ export default function Projects() {
                   </div>
                 </div>
 
-                <div className="flex min-w-[10rem] flex-col gap-3">
-                  <a
-                    href={project.codeUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-xl bg-foreground px-5 py-3 text-center text-sm font-semibold text-background transition hover:opacity-90"
-                  >
-                    View Code
-                  </a>
-                  {project.demoUrl && (
+                {/* Tech Pills & Actions */}
+                <div className="space-y-4 pt-2 border-t border-border/40">
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-md bg-muted px-2 py-1 text-[11px] font-semibold text-muted-foreground tracking-wide"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-2">
                     <a
-                      href={project.demoUrl}
+                      href={project.codeUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-border bg-card px-5 py-3 text-center text-sm font-semibold text-foreground transition hover:bg-muted"
+                      className="inline-flex items-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-xs font-bold text-background transition hover:opacity-90 active:scale-[0.98]"
                     >
-                      Live Demo
+                      <Github size={14} />
+                      Source Code
                     </a>
-                  )}
+                    {project.demoUrl && (
+                      <a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground transition hover:bg-muted active:scale-[0.98]"
+                      >
+                        <ExternalLink size={14} />
+                        Live Demo
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </article>
@@ -155,3 +165,4 @@ export default function Projects() {
     </section>
   )
 }
+

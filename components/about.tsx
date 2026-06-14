@@ -1,67 +1,91 @@
 const buildAreas = [
   {
-    title: "Event-driven microservices",
+    title: "Event-Driven Microservices",
     description:
-      "Decoupled services with RabbitMQ pub/sub, dead-letter queues, and isolated databases per service.",
-    label: "Reliable message flows",
-    gradient: "bg-gradient-to-br from-sky-500/14 via-sky-500/4 to-transparent",
-    accent: "bg-sky-500",
+      "Designing decoupled, fault-tolerant services utilizing message queues (RabbitMQ), dead-letter routing, and isolated datastores.",
+    label: "Distributed Architecture",
   },
   {
-    title: "High-performance APIs",
+    title: "High-Performance APIs",
     description:
-      "REST APIs with Node.js, Express, TypeScript, Redis caching, and clean architecture.",
-    label: "Throughput with clarity",
-    gradient: "bg-gradient-to-br from-blue-700/12 via-blue-700/4 to-transparent",
-    accent: "bg-blue-700",
+      "Developing low-latency RESTful APIs using Node.js, Express, and TypeScript, backed by Redis caching and clean code principles.",
+    label: "Services & API Design",
   },
   {
-    title: "Modern frontend UIs",
+    title: "Modern Frontend Platforms",
     description:
-      "Responsive applications in Vue 3 and React, including browser experiences built with the Canvas API.",
-    label: "Interfaces that stay fast",
-    gradient: "bg-gradient-to-br from-emerald-500/14 via-emerald-500/4 to-transparent",
-    accent: "bg-emerald-500",
+      "Building responsive interfaces in React and Vue 3, ensuring fast rendering, intuitive UX, and clean state management.",
+    label: "Frontend Systems",
   },
   {
-    title: "CI/CD and DevOps",
+    title: "CI/CD & Continuous Delivery",
     description:
-      "GitHub Actions pipelines, Docker-based environments, and PR-gated delivery workflows.",
-    label: "Always deployable",
-    gradient: "bg-gradient-to-br from-orange-500/14 via-orange-500/4 to-transparent",
-    accent: "bg-orange-500",
+      "Automating integration pipelines with GitHub Actions, containerizing environments with Docker, and hosting securely in AWS.",
+    label: "DevOps & Infrastructure",
   },
 ]
 
 export default function About() {
   return (
-    <section id="about" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-12 max-w-3xl">
-          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            What I Build
-          </h2>
-        </div>
-
-        <div className="grid gap-12 md:grid-cols-2">
-          {buildAreas.map((area, index) => (
-            <article
-              key={area.title}
-              className="group border-t border-border/30 pt-8"
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <span className={`h-3 w-3 rounded-full ${area.accent}`} />
-                <span className="text-sm font-medium text-muted-foreground">0{index + 1}</span>
-              </div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.26em] text-muted-foreground">
-                {area.label}
+    <section id="about" className="scroll-mt-24 py-24 px-6 sm:px-8 bg-muted/10">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] items-start">
+          {/* Left Side: Bio */}
+          <div className="space-y-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+              Who I Am
+            </p>
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+              About Me
+            </h2>
+            <div className="space-y-4 text-base leading-relaxed text-muted-foreground">
+              <p>
+                I am a passionate Backend Engineer dedicated to building stable, performance-oriented backend platforms. I enjoy translating complex business logic into clean, reusable service code and decoupled microservice event flows.
               </p>
-              <h3 className="mb-3 text-2xl font-semibold text-foreground">{area.title}</h3>
-              <p className="text-base leading-relaxed text-muted-foreground">{area.description}</p>
-            </article>
-          ))}
+              <p>
+                With continuous learning at my core, I keep myself up to date with modern system design paradigms, caching patterns, and automated CI/CD practices. I value clear communication, observability, and clean API design.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Side: Areas of Expertise Grid */}
+          <div className="space-y-8">
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+                Technical Focus
+              </p>
+              <h3 className="text-2xl font-bold text-foreground">
+                Areas of Expertise
+              </h3>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              {buildAreas.map((area, index) => (
+                <div
+                  key={area.title}
+                  className="group relative rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md"
+                >
+                  <div className="mb-4 flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/5 px-2 py-1 rounded">
+                      {area.label}
+                    </span>
+                    <span className="text-xs font-semibold text-muted-foreground/50">
+                      0{index + 1}
+                    </span>
+                  </div>
+                  <h4 className="mb-2 text-lg font-bold text-foreground transition-colors group-hover:text-primary">
+                    {area.title}
+                  </h4>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {area.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
   )
 }
+

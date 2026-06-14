@@ -24,7 +24,7 @@ const contactLinks = [
   },
   {
     label: "Portfolio",
-    value: "portfolio-oeun-nuphea.vercel.app",
+    value: "nuphea.dev",
     href: "https://portfolio-oeun-nuphea.vercel.app/",
     icon: Globe,
     external: true,
@@ -33,18 +33,21 @@ const contactLinks = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-12 max-w-xl">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
-            Get In Touch
+    <section id="contact" className="scroll-mt-24 py-24 px-6 sm:px-8 bg-muted/10">
+      <div className="mx-auto max-w-4xl text-center space-y-12">
+        <div className="space-y-4 max-w-xl mx-auto">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+            Connect
           </p>
-          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Let's work together.
+          <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            Get In Touch
           </h2>
+          <p className="text-base text-muted-foreground leading-relaxed">
+            Whether you want to discuss system design, a job opportunity, or just chat about backend architectures—feel free to reach out.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 max-w-2xl mx-auto">
           {contactLinks.map((link) => {
             const Icon = link.icon
 
@@ -54,17 +57,19 @@ export default function Contact() {
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noreferrer" : undefined}
-                className="flex items-center justify-between rounded-[1.5rem] border border-border/70 bg-card/85 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 overflow-hidden"
+                className="group flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:-translate-y-0.5"
               >
-                <div className="flex items-center gap-4 min-w-0">
-                  <div className="flex shrink-0 h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <Icon size={20} />
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="flex shrink-0 h-10 w-10 items-center justify-center rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                    <Icon size={18} />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  <div className="text-left min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       {link.label}
                     </p>
-                    <p className="truncate text-base font-medium text-foreground">{link.value}</p>
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {link.value}
+                    </p>
                   </div>
                 </div>
               </a>
@@ -75,3 +80,4 @@ export default function Contact() {
     </section>
   )
 }
+
