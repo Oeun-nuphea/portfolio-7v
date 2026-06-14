@@ -3,13 +3,13 @@ const education = [
     type: "Academic Degree",
     degree: "Bachelor of Science in Information Technology",
     school: "Royal University of Phnom Penh",
-    period: "Expected 2026",
+    period: "Graduated 2026",
   },
   {
     type: "Professional Training",
     degree: "Full-Stack Web Development Program",
     school: "ANT Training Center",
-    period: "Expected Jul 2026",
+    period: "Graduated Jul 2026",
   },
   {
     type: "Coursework",
