@@ -3,18 +3,14 @@ import Image from "next/image"
 const projects = [
   {
     title: "Spendwise",
-    category: "Mobile finance experience",
-    // image: "/spendwise.png",
+    category: "Mobile finance app",
     description:
-      "Transaction wallet experience for mobile users with authentication, account flows, and a backend stack ready for packaged delivery.",
-    technologies: ["Flutter", "TypeScript", "Express", "MongoDB", "Docker", "GitHub", "Github Action CI CD", "Grafana", "Prometheus", "AWS", "NextJS", "Redis", "Rest API", "Socket", "WebRTC"],
+      "Mobile wallet experience with authentication, real-time chat, and a production-ready backend stack.",
+    technologies: ["Flutter", "TypeScript", "Express", "MongoDB", "Redis", "Docker", "AWS", "WebRTC"],
     highlights: [
-      "Mobile-first UX for wallet and transaction views",
-      "Backend integration for account and transaction flows",
-      "Real-time chat system using WebSocket",
-      "Voice and video calling with WebRTC",
-      "Dockerized collaboration setup for the team",
-      "Admin dashboard for managing users"
+      "Real-time chat with WebSocket and voice/video via WebRTC",
+      "Live transaction and wallet flows with mobile-first UX",
+      "Admin dashboard and Dockerized team setup",
     ],
     codeUrl: "https://github.com/orgs/free-social/repositories",
   },
@@ -35,13 +31,11 @@ const projects = [
   {
     title: "E-Shop",
     category: "Full-stack commerce",
-    // image: "/e-commerce.png",
     description:
-      "End-to-end e-commerce platform with product management, shopping flows, and secure user experience across storefront and backend.",
-    technologies: ["Vue", "Node.js", "MongoDB", "Tailwind CSS", "Vercel", "Render"],
+      "End-to-end e-commerce platform with product management, cart flows, and secure auth.",
+    technologies: ["Vue", "Node.js", "MongoDB", "Tailwind CSS", "Vercel"],
     highlights: [
-      "Product discovery and category-based browsing",
-      "Cart, checkout, and order tracking flows",
+      "Product browsing, cart, checkout, and order tracking",
       "User authentication and account management",
     ],
     codeUrl: "https://github.com/orgs/e-commerce-fullstack/repositories",
@@ -67,22 +61,20 @@ export default function Projects() {
   return (
     <section id="projects" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 max-w-3xl">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
+        <div className="mb-12 max-w-xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
             Projects
           </p>
-          <p className="text-lg leading-relaxed text-muted-foreground">
-            The strongest thread across these projects is practical implementation:
-            clear architecture, useful interfaces, and systems designed to keep
-            moving in real environments.
-          </p>
+          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            Things I’ve built.
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <div className="grid grid-cols-1 gap-12 xl:grid-cols-2">
           {projects.map((project, index) => (
             <article
               key={project.title}
-              className={`group overflow-hidden rounded-[2rem] border border-border/70 bg-card/85 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_-32px_rgba(15,23,42,0.4)] ${index === 0 ? "xl:col-span-2" : ""
+              className={`group border-b border-border/30 pb-12 last:border-0 hover:-translate-y-0.5 transition-transform ${index === 0 ? "xl:col-span-2 xl:border-b-0" : ""
                 }`}
             >
               {/* <div className={`relative overflow-hidden ${index === 0 ? "h-72" : "h-60"}`}>
@@ -99,7 +91,7 @@ export default function Projects() {
                 </div>
               </div> */}
 
-              <div className="grid gap-6 p-6 lg:grid-cols-[1fr_auto] lg:items-start">
+              <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
                 <div>
                   <h3 className="mb-3 text-2xl font-bold text-foreground">{project.title}</h3>
                   <p className="mb-5 text-base leading-relaxed text-muted-foreground">{project.description}</p>

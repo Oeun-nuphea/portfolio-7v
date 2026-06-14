@@ -60,24 +60,20 @@ export default function Skills() {
     <section id="principles" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl space-y-16">
         <div>
-          <div className="mb-10 max-w-3xl">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
+          <div className="mb-10 max-w-2xl">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
               Engineering Principles
             </p>
-            <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Architecture choices guided by clarity, resilience, and change over time.
+            <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Built for clarity, resilience, and change.
             </h2>
-            <p className="text-lg leading-relaxed text-muted-foreground">
-              The goal is not complexity for its own sake. It is systems that can
-              grow without losing reliability, ownership, or deployment confidence.
-            </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
             {principles.map((principle) => (
               <article
                 key={principle.title}
-                className="rounded-[1.75rem] border border-border/70 bg-card/80 p-6 shadow-sm"
+                className="pt-6 border-t border-border/30"
               >
                 <h3 className="mb-3 text-xl font-semibold text-foreground">{principle.title}</h3>
                 <p className="leading-relaxed text-muted-foreground">{principle.description}</p>
@@ -86,19 +82,19 @@ export default function Skills() {
           </div>
         </div>
 
-        <div id="stack" className="scroll-mt-24 grid gap-6 lg:grid-cols-[1.35fr_0.85fr]">
-          <div className="rounded-[2rem] border border-border/70 bg-card/80 p-8 shadow-sm">
+        <div id="stack" className="scroll-mt-24 grid gap-16 lg:grid-cols-[1.35fr_0.85fr]">
+          <div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
               Tech Stack
             </p>
-            <h3 className="mb-6 text-3xl font-bold tracking-tight text-foreground">
-              Tools used across services, interfaces, and delivery pipelines.
+            <h3 className="mb-8 text-2xl font-bold tracking-tight text-foreground">
+              Tools I work with.
             </h3>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-8 md:grid-cols-2">
               {stackGroups.map((group) => (
-                <div key={group.category} className="rounded-2xl border border-border/70 bg-background/70 p-5">
-                  <h4 className="mb-4 text-lg font-semibold text-foreground">{group.category}</h4>
+                <div key={group.category} className="space-y-4">
+                  <h4 className="text-lg font-semibold text-foreground">{group.category}</h4>
                   <div className="flex flex-wrap gap-2">
                     {group.skills.map((skill) => (
                       <span
@@ -114,12 +110,12 @@ export default function Skills() {
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-border/70 bg-card/80 p-8 shadow-sm">
+          <div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
               Currently Exploring
             </p>
-            <h3 className="mb-6 text-3xl font-bold tracking-tight text-foreground">
-              Depth areas getting the most attention right now.
+            <h3 className="mb-8 text-2xl font-bold tracking-tight text-foreground">
+              Active learning areas.
             </h3>
 
             <div className="space-y-6">

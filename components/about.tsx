@@ -38,25 +38,18 @@ export default function About() {
     <section id="about" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 max-w-3xl">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
+          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             What I Build
-          </p>
-          <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Systems designed to scale cleanly and hold up under production pressure.
           </h2>
-          <p className="text-lg leading-relaxed text-muted-foreground">
-            The focus is reliable backend architecture, responsive frontend delivery,
-            and engineering workflows that stay maintainable as products grow.
-          </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-12 md:grid-cols-2">
           {buildAreas.map((area, index) => (
             <article
               key={area.title}
-              className={`rounded-[2rem] border border-border/70 p-8 shadow-sm ${area.gradient}`}
+              className="group border-t border-border/30 pt-8"
             >
-              <div className="mb-6 flex items-center justify-between">
+              <div className="mb-4 flex items-center justify-between">
                 <span className={`h-3 w-3 rounded-full ${area.accent}`} />
                 <span className="text-sm font-medium text-muted-foreground">0{index + 1}</span>
               </div>

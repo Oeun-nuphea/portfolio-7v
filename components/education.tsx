@@ -3,28 +3,22 @@ const education = [
     type: "Academic",
     degree: "Bachelor of Science in Information Technology",
     school: "Royal University of Phnom Penh",
-    period: "Expected Graduation 2026",
+    period: "Expected 2026",
     details: [],
   },
   {
     type: "Professional Training",
     degree: "Full-Stack Web Development",
     school: "ANT Training Center",
-    period: "Expected Completion Jul 2026",
-    details: [
-      "Comprehensive training in modern web development",
-      "Hands-on projects and real-world application work",
-    ],
+    period: "Expected Jul 2026",
+    details: [],
   },
   {
     type: "Coursework",
     degree: "Python Programming",
     school: "Royal University of Phnom Penh",
-    period: "2024 - 2025",
-    details: [
-      "Built fundamentals in Python and core programming concepts",
-      "Applied Python in practical exercises and coursework",
-    ],
+    period: "2024 – 2025",
+    details: [],
   },
 ]
 
@@ -32,22 +26,18 @@ export default function Education() {
   return (
     <section id="education" className="scroll-mt-24 py-20 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 max-w-3xl">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
+        <div className="mb-12 max-w-xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.28em] text-primary/75">
             Education
           </p>
-          <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Academic foundations paired with hands-on technical training.
+          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            Academic & professional training.
           </h2>
-          <p className="text-lg leading-relaxed text-muted-foreground">
-            Formal study and targeted training continue to support the production-focused
-            work across backend systems, frontend delivery, and software design.
-          </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-12 lg:grid-cols-3">
           {education.map((item) => (
-            <article key={item.degree} className="rounded-[2rem] border border-border/70 bg-card/85 p-8 shadow-sm">
+            <article key={item.degree} className="space-y-2">
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-primary/75">
                 {item.type}
               </p>
