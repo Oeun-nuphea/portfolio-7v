@@ -10,7 +10,7 @@ const contactLinks = [
   },
   {
     label: "LinkedIn",
-    value: "linkedin.com/in/ouen-nuphea",
+    value: "Oeun Nuphea",
     href: "https://www.linkedin.com/in/ouen-nuphea/",
     icon: Linkedin,
     external: true,
@@ -23,9 +23,9 @@ const contactLinks = [
     external: true,
   },
   {
-    label: "Portfolio",
-    value: "nuphea.dev",
-    href: "https://portfolio-oeun-nuphea.vercel.app/",
+    label: "Telegram",
+    value: "Oeun Nuphea",
+    href: "https://t.me/oeunnuphea",
     icon: Globe,
     external: true,
   },
@@ -57,7 +57,7 @@ export default function Contact() {
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noreferrer" : undefined}
-                className="group flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:-translate-y-0.5"
+                className="group flex items-center justify-between rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md "
               >
                 <div className="flex items-center gap-3.5 min-w-0">
                   <div className="flex shrink-0 h-10 w-10 items-center justify-center rounded-xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">

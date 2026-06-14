@@ -21,7 +21,7 @@ const education = [
 
 export default function Education() {
   return (
-    <section id="education" className="scroll-mt-24 py-24 px-6 sm:px-8">
+    <section id="education" className="scroll-mt-24 py-24 px-6 sm:px-8 bg-muted/40">
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 space-y-3 max-w-xl">
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
@@ -35,28 +35,25 @@ export default function Education() {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="divide-y divide-border/60">
           {education.map((item) => (
-            <article
+            <div
               key={item.degree}
-              className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-md"
+              className="py-6 first:pt-0 last:pb-0 grid grid-cols-1 sm:grid-cols-[1fr_2.5fr] gap-4 sm:gap-6 items-start"
             >
-              <div className="space-y-4">
-                <span className="inline-block rounded-lg bg-primary/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+              <div className="space-y-1.5">
+                <span className="inline-block rounded-lg bg-primary/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
                   {item.type}
                 </span>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-snug">
-                    {item.degree}
-                  </h3>
-                  <p className="text-sm font-semibold text-foreground/80">{item.school}</p>
-                </div>
+                <p className="text-sm font-bold text-muted-foreground">{item.period}</p>
               </div>
-
-              <div className="pt-6 mt-6 border-t border-border/40 flex items-center justify-between">
-                <span className="text-xs font-semibold text-muted-foreground">{item.period}</span>
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-foreground leading-snug">
+                  {item.degree}
+                </h3>
+                <p className="text-sm font-semibold text-foreground/70">{item.school}</p>
               </div>
-            </article>
+            </div>
           ))}
         </div>
       </div>

@@ -99,15 +99,15 @@ export default function Skills() {
               </h3>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2">
+            <div className="space-y-4 divide-y divide-border/40">
               {stackGroups.map((group) => (
-                <div key={group.category} className="space-y-3 p-5 rounded-2xl border border-border bg-card/40">
-                  <h4 className="text-sm font-bold text-foreground tracking-wide">{group.category}</h4>
+                <div key={group.category} className="grid grid-cols-1 sm:grid-cols-[1.2fr_2fr] gap-3 pt-4 first:pt-0 items-center">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{group.category}</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {group.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="rounded-lg bg-muted px-2.5 py-1 text-xs font-semibold text-foreground/80"
+                        className="rounded-lg bg-card border border-border px-2.5 py-1 text-xs font-semibold text-foreground/90 shadow-sm"
                       >
                         {skill}
                       </span>

@@ -1,11 +1,9 @@
-import Image from "next/image"
 import { Github, ExternalLink } from "lucide-react"
 
 const projects = [
   {
     title: "Spendwise",
     category: "Mobile Finance Application",
-    image: "/spendwise.png",
     description:
       "A feature-rich mobile wallet experience featuring secure authentication, real-time chat integration, and a production-grade backend stack.",
     technologies: ["Flutter", "TypeScript", "Express", "MongoDB", "Redis", "Docker", "AWS", "WebRTC"],
@@ -19,7 +17,6 @@ const projects = [
   {
     title: "Notion-Inspired Workspace",
     category: "Event-Driven Platform",
-    image: "/notion.png",
     description:
       "A collaborative notes and workspace platform structured around RabbitMQ message brokers, Node/TS APIs, and containerized dev systems.",
     technologies: ["ReactJS", "Express", "TypeScript", "PostgreSQL", "Docker", "RabbitMQ"],
@@ -33,7 +30,6 @@ const projects = [
   {
     title: "E-Shop Platform",
     category: "Full-Stack E-Commerce",
-    image: "/e-commerce.png",
     description:
       "An end-to-end commercial storefront incorporating catalog management, dynamic shopping cart flows, and secure customer authentication.",
     technologies: ["Vue", "Node.js", "MongoDB", "Tailwind CSS", "Vercel"],
@@ -47,7 +43,6 @@ const projects = [
   {
     title: "Blog Dashboard UI",
     category: "Frontend Control Panel",
-    image: "/blog.png",
     description:
       "A fully responsive and interactive back-office dashboard interface for organizing articles, tags, authors, and user interactions.",
     technologies: ["HTML", "CSS", "JavaScript"],
@@ -61,7 +56,7 @@ const projects = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="scroll-mt-24 py-24 px-6 sm:px-8">
+    <section id="projects" className="scroll-mt-24 py-24 px-6 sm:px-8 bg-muted/40">
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 space-y-3 max-w-xl">
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
@@ -79,28 +74,20 @@ export default function Projects() {
           {projects.map((project) => (
             <article
               key={project.title}
-              className="group flex flex-col rounded-2xl border border-border bg-card overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-md"
+              className="group flex flex-col rounded-2xl border border-border bg-card overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md"
             >
-              {/* Image Container with Zoom effect */}
-              <div className="relative aspect-video w-full overflow-hidden bg-muted border-b border-border/50">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover object-top transition duration-500 group-hover:scale-102"
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                />
-                <div className="absolute left-4 top-4 rounded-lg border border-border/10 bg-background/80 backdrop-blur-md px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm">
-                  {project.category}
-                </div>
-              </div>
-
               {/* Card Details */}
               <div className="flex flex-1 flex-col p-6 space-y-5 justify-between">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
-                    {project.title}
-                  </h3>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <h3 className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                      {project.title}
+                    </h3>
+                    <span className="rounded-lg border border-border/80 bg-muted/40 px-2.5 py-1 text-xs font-semibold text-foreground/80">
+                      {project.category}
+                    </span>
+                  </div>
+
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     {project.description}
                   </p>

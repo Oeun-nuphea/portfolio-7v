@@ -7,7 +7,7 @@ export default function Footer() {
         <div>
           <p className="text-lg font-semibold text-foreground">Nuphea</p>
           <p className="text-sm text-muted-foreground">
-            Backend Engineer building scalable, event-driven systems.
+            Backend Engineer & Freelancer building scalable, event-driven systems.
           </p>
         </div>
 

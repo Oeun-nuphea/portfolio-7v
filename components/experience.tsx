@@ -21,41 +21,41 @@ export default function Experience() {
             Career History
           </p>
           <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Professional Experience
+            Experience
           </h2>
         </div>
 
-        <div className="space-y-12">
+        <div className="relative border-l border-border/80 ml-3 pl-8 space-y-12">
           {experiences.map((exp) => (
-            <article
-              key={exp.title}
-              className="relative rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm space-y-6 transition-all duration-300 hover:border-primary/20 hover:shadow-md"
-            >
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                <div className="space-y-1">
-                  <h3 className="text-xl font-bold text-foreground">{exp.title}</h3>
-                  <p className="text-sm font-semibold text-primary">{exp.company}</p>
+            <article key={exp.title} className="relative space-y-5">
+              {/* Timeline Bullet Node */}
+              <div className="absolute -left-[41px] top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-4 border-background bg-primary shadow-sm" />
+
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-foreground leading-snug">{exp.title}</h3>
+                  <p className="text-sm font-bold text-primary">{exp.company}</p>
                 </div>
-                <span className="inline-block rounded-lg bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground/80 sm:mt-1 self-start">
+                <span className="inline-block text-xs font-bold text-muted-foreground sm:mt-0">
                   {exp.period}
                 </span>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
                   Key Achievements
                 </p>
-                <ul className="space-y-2.5">
+                <ul className="space-y-2">
                   {exp.achievements.map((achievement) => (
                     <li key={achievement} className="flex items-start gap-2.5 text-sm text-muted-foreground leading-relaxed">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/80" />
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/60" />
                       <span>{achievement}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="pt-4 border-t border-border/40 space-y-2">
+              <div className="space-y-2 pt-2">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
                   Technologies Utilized
                 </p>
@@ -63,7 +63,7 @@ export default function Experience() {
                   {exp.tech.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-md bg-muted px-2.5 py-1 text-xs font-semibold text-foreground/80"
+                      className="rounded-lg bg-muted px-2.5 py-1 text-xs font-semibold text-foreground/80"
                     >
                       {tech}
                     </span>

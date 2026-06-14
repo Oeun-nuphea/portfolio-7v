@@ -27,7 +27,7 @@ const buildAreas = [
 
 export default function About() {
   return (
-    <section id="about" className="scroll-mt-24 py-24 px-6 sm:px-8 bg-muted/10">
+    <section id="about" className="scroll-mt-24 py-24 px-6 sm:px-8 bg-muted/40">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] items-start">
           {/* Left Side: Bio */}
@@ -40,7 +40,7 @@ export default function About() {
             </h2>
             <div className="space-y-4 text-base leading-relaxed text-muted-foreground">
               <p>
-                I am a passionate Backend Engineer dedicated to building stable, performance-oriented backend platforms. I enjoy translating complex business logic into clean, reusable service code and decoupled microservice event flows.
+                I am a passionate Backend Engineer and Freelancer dedicated to building stable, performance-oriented backend platforms. I enjoy translating complex business logic into clean, reusable service code and decoupled microservice event flows.
               </p>
               <p>
                 With continuous learning at my core, I keep myself up to date with modern system design paradigms, caching patterns, and automated CI/CD practices. I value clear communication, observability, and clean API design.
@@ -59,26 +59,28 @@ export default function About() {
               </h3>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2">
+            <div className="divide-y divide-border/60">
               {buildAreas.map((area, index) => (
                 <div
                   key={area.title}
-                  className="group relative rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md"
+                  className="group py-6 first:pt-0 last:pb-0 flex gap-6 items-start transition-all"
                 >
-                  <div className="mb-4 flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/5 px-2 py-1 rounded">
-                      {area.label}
-                    </span>
-                    <span className="text-xs font-semibold text-muted-foreground/50">
-                      0{index + 1}
-                    </span>
+                  <span className="text-3xl font-extrabold text-muted-foreground/30 group-hover:text-primary/70 transition-colors duration-300 select-none">
+                    0{index + 1}
+                  </span>
+                  <div className="space-y-1.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h4 className="text-lg font-bold text-foreground transition-colors group-hover:text-primary duration-300">
+                        {area.title}
+                      </h4>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/5 px-2 py-0.5 rounded">
+                        {area.label}
+                      </span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {area.description}
+                    </p>
                   </div>
-                  <h4 className="mb-2 text-lg font-bold text-foreground transition-colors group-hover:text-primary">
-                    {area.title}
-                  </h4>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {area.description}
-                  </p>
                 </div>
               ))}
             </div>

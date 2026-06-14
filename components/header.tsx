@@ -1,7 +1,7 @@
 "use client"
 
 import { Menu, X } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const navItems = [
   { label: "Build", href: "#about" },
@@ -14,6 +14,30 @@ const navItems = [
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("")
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -60% 0px",
+      threshold: 0,
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id)
+        }
+      })
+    }, observerOptions)
+
+    navItems.forEach((item) => {
+      const el = document.querySelector(item.href)
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl">
@@ -28,15 +52,22 @@ export default function Header() {
         </a>
 
         <div className="hidden lg:flex lg:items-center lg:gap-7">
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              {item.label}
-            </a>
-          ))}
+          {navItems.map((item) => {
+            const isActive = activeSection === item.href.substring(1)
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                className={`text-sm font-semibold transition-all duration-200 ${
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {item.label}
+              </a>
+            )
+          })}
         </div>
 
         <button
@@ -50,16 +81,21 @@ export default function Header() {
         {isOpen && (
           <div className="absolute inset-x-0 top-full border-b border-border/70 bg-background/95 lg:hidden">
             <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-5 sm:px-6">
-              {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="text-base font-medium text-foreground transition-colors hover:text-primary"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </a>
-              ))}
+              {navItems.map((item) => {
+                const isActive = activeSection === item.href.substring(1)
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className={`text-base font-semibold transition-all duration-200 ${
+                      isActive ? "text-primary" : "text-foreground hover:text-primary"
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                )
+              })}
             </div>
           </div>
         )}
@@ -67,3 +103,4 @@ export default function Header() {
     </header>
   )
 }
+

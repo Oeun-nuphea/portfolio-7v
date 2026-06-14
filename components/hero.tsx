@@ -79,7 +79,7 @@ export default function Hero() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-2xl font-bold tracking-tight sm:text-3xl text-foreground/90"
               >
-                Backend Engineer building scalable, event-driven systems.
+                Backend Engineer & Freelancer building scalable, event-driven systems.
               </motion.h2>
 
               <motion.p
@@ -88,7 +88,7 @@ export default function Hero() {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground"
               >
-                I design and implement high-performance APIs, reliable microservices, and continuous deployment pipelines. Focus on clean code, automated testing, and production observability.
+                I design and implement high-performance APIs, reliable microservices, and continuous deployment pipelines. Focus on clean code, automated testing, and production observability. Available for contract work and freelance projects.
               </motion.p>
             </div>
 
