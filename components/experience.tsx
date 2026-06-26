@@ -4,11 +4,13 @@ const experiences = [
     company: "LTNG Properties",
     period: "Jan 2026 – Present",
     achievements: [
-      "Architected database schemas and streamlined API routing structures for core application features.",
-      "Maintained microservice boundaries and optimized backend services to support high-throughput operations.",
-      "Automated testing flows and continuous integration pipelines to guarantee service reliability.",
+      // "Architected database schemas and streamlined API routing structures for core application features.",
+      // "Maintained microservice boundaries and optimized backend services to support high-throughput operations.",
+      // "Automated testing flows and continuous integration pipelines to guarantee service reliability.",
     ],
-    tech: ["Express.js", "TypeScript", "MongoDB", "Docker", "GitLab CI/CD"],
+    tech: [
+      // "Express.js", "TypeScript", "MongoDB", "Docker", "GitLab CI/CD"
+    ],
   },
 ]
 
