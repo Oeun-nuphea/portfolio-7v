@@ -31,7 +31,7 @@ const stackGroups = [
     skills: ["TypeScript", "Node.js", "Express", "Go", "Vue 3", "React"],
   },
   {
-    category: "Databases & Messaging",
+    category: "Databases & Messaging Broker",
     skills: ["PostgreSQL", "MongoDB", "Redis", "RabbitMQ"],
   },
   {
