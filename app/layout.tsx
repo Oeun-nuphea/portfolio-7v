@@ -81,14 +81,7 @@ export const metadata: Metadata = {
     creator: "@oeunnuphea",
     images: ["/opengraph-image"],
   },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.png", type: "image/png" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/icon.png",
-  },
+
   alternates: {
     canonical: siteUrl,
   },

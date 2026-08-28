@@ -2,6 +2,7 @@
 
 import { User, Compass, Layers, FolderGit2, Briefcase, Mail, Share2, Check } from "lucide-react"
 import { useState, useEffect } from "react"
+import Image from "next/image"
 
 const navItems = [
   { label: "About", href: "#about", icon: User },
@@ -67,10 +68,21 @@ export default function Header() {
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
-        <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4 lg:px-8">
-          <a href="#top" className="flex flex-col">
-            <span className="text-sm font-semibold text-foreground">Nuphea</span>
-            <span className="text-xs text-muted-foreground">Backend Engineer</span>
+        <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3 lg:px-8">
+          <a href="#top" className="flex items-center gap-2.5">
+            <div className="relative h-8 w-8 overflow-hidden rounded-full border border-border">
+              <Image
+                src="/OUENNUPHEA.jpg"
+                alt="Oeun Nuphea"
+                fill
+                className="object-cover"
+                sizes="32px"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-foreground leading-tight">Nuphea</span>
+              <span className="text-xs text-muted-foreground leading-tight">Backend Engineer</span>
+            </div>
           </a>
 
           <div className="flex items-center gap-4">
@@ -111,6 +123,8 @@ export default function Header() {
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = activeSection === item.href.substring(1)
+            const isProfileTab = item.label === "About"
+
             return (
               <a
                 key={item.label}
@@ -121,7 +135,23 @@ export default function Header() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <Icon size={20} className={isActive ? "stroke-[2.5]" : "stroke-[1.75]"} />
+                {isProfileTab ? (
+                  <div
+                    className={`relative h-5 w-5 overflow-hidden rounded-full border transition-all ${
+                      isActive ? "border-foreground ring-1 ring-foreground" : "border-muted-foreground/50"
+                    }`}
+                  >
+                    <Image
+                      src="/OUENNUPHEA.jpg"
+                      alt="Profile"
+                      fill
+                      className="object-cover"
+                      sizes="20px"
+                    />
+                  </div>
+                ) : (
+                  <Icon size={20} className={isActive ? "stroke-[2.5]" : "stroke-[1.75]"} />
+                )}
                 <span>{item.label}</span>
                 {isActive && (
                   <span className="absolute -top-px h-0.5 w-6 rounded-full bg-foreground" />
@@ -134,3 +164,4 @@ export default function Header() {
     </>
   )
 }
+
