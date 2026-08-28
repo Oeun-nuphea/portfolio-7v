@@ -1,11 +1,39 @@
 "use client"
 
+import { useState } from "react"
 import { saveAs } from "file-saver"
 import JSZip from "jszip"
 import Image from "next/image"
-import { Download, ArrowRight } from "lucide-react"
+import { Download, ArrowRight, Share2, Check } from "lucide-react"
 
 export default function Hero() {
+  const [copied, setCopied] = useState(false)
+
+  const handleShare = async () => {
+    const shareData = {
+      title: "Oeun Nuphea - Backend Engineer",
+      text: "Check out Oeun Nuphea's Portfolio",
+      url: "https://oeunnuphea.vercel.app",
+    }
+
+    if (typeof navigator !== "undefined" && navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch {
+        // User closed share dialog
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText("https://oeunnuphea.vercel.app")
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error("Failed to copy share link:", error)
+    }
+  }
+
   const downloadZip = async () => {
     const zip = new JSZip()
 
@@ -73,6 +101,15 @@ export default function Hero() {
               >
                 <Download size={15} />
                 Download CVs
+              </button>
+
+              <button
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
+                aria-label="Share portfolio"
+              >
+                {copied ? <Check size={15} className="text-emerald-500" /> : <Share2 size={15} />}
+                {copied ? "Copied!" : "Share"}
               </button>
             </div>
           </div>

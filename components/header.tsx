@@ -1,6 +1,6 @@
 "use client"
 
-import { User, Compass, Layers, FolderGit2, Briefcase, Mail } from "lucide-react"
+import { User, Compass, Layers, FolderGit2, Briefcase, Mail, Share2, Check } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const navItems = [
@@ -14,6 +14,32 @@ const navItems = [
 
 export default function Header() {
   const [activeSection, setActiveSection] = useState("")
+  const [copied, setCopied] = useState(false)
+
+  const handleShare = async () => {
+    const shareData = {
+      title: "Oeun Nuphea - Backend Engineer",
+      text: "Check out Oeun Nuphea's Portfolio",
+      url: "https://oeunnuphea.vercel.app",
+    }
+
+    if (typeof navigator !== "undefined" && navigator.share && navigator.canShare?.(shareData)) {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch {
+        // User closed share dialog
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText("https://oeunnuphea.vercel.app")
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error("Failed to copy share link:", error)
+    }
+  }
 
   useEffect(() => {
     const observerOptions = {
@@ -47,23 +73,34 @@ export default function Header() {
             <span className="text-xs text-muted-foreground">Backend Engineer</span>
           </a>
 
-          <div className="hidden lg:flex lg:items-center lg:gap-8">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.href.substring(1)
-              return (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={`text-sm transition-colors duration-200 ${
-                    isActive
-                      ? "text-foreground font-medium"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              )
-            })}
+          <div className="flex items-center gap-4">
+            <div className="hidden lg:flex lg:items-center lg:gap-8">
+              {navItems.map((item) => {
+                const isActive = activeSection === item.href.substring(1)
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className={`text-sm transition-colors duration-200 ${
+                      isActive
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {item.label}
+                  </a>
+                )
+              })}
+            </div>
+
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
+              aria-label="Share portfolio link"
+            >
+              {copied ? <Check size={14} className="text-emerald-500" /> : <Share2 size={14} />}
+              <span>{copied ? "Copied" : "Share"}</span>
+            </button>
           </div>
         </nav>
       </header>
