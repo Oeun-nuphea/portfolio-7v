@@ -12,7 +12,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Oeun Nuphea",
-  url: "https://ounnuphea.vercel.app",
+  url: "https://oeunnuphea.vercel.app",
   jobTitle: "Backend Engineer",
   description:
     "Backend Engineer specializing in scalable event-driven systems, high-performance APIs, and continuous deployment pipelines. Available for contract work and freelance projects.",

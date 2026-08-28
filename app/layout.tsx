@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
-const siteUrl = "https://ounnuphea.vercel.app"
+const siteUrl = "https://oeunnuphea.vercel.app"
 const siteTitle = "Oeun Nuphea — Backend Engineer & Freelancer"
 const siteDescription =
   "Backend Engineer specializing in scalable event-driven systems, high-performance APIs, and continuous deployment pipelines. Available for contract work and freelance projects."
