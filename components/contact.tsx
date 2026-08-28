@@ -17,8 +17,8 @@ const contactLinks = [
   },
   {
     label: "GitHub",
-    value: "github.com/nuphea",
-    href: "https://github.com/nuphea",
+    value: "github.com/Oeun-nuphea",
+    href: "https://github.com/Oeun-nuphea",
     icon: Github,
     external: true,
   },
