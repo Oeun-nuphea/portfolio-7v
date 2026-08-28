@@ -39,36 +39,25 @@ const stackGroups = [
     skills: ["Docker", "Kubernetes", "GitHub Actions", "AWS"],
   },
   {
-    category: "Observability & Diagnostics",
+    category: "Observability",
     skills: ["Grafana", "Prometheus", "Sentry"],
-  },
-]
-
-const explorations = [
-  {
-    title: "Distributed Tracing & APM Systems",
-    progress: 75,
-  },
-  {
-    title: "System Design for High Scale",
-    progress: 60,
   },
 ]
 
 export default function Skills() {
   return (
-    <section id="principles" className="scroll-mt-24 py-24 px-6 sm:px-8">
-      <div className="mx-auto max-w-7xl space-y-20">
+    <section id="principles" className="scroll-mt-24 py-24 px-6 sm:px-8 border-t border-border">
+      <div className="mx-auto max-w-5xl space-y-20">
         {/* Core Principles */}
         <div className="space-y-12">
-          <div className="space-y-3 max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               My Philosophy
             </p>
-            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
               Engineering Principles
             </h2>
-            <p className="text-base text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Design paradigms I practice to build clear, resilient, and extensible systems.
             </p>
           </div>
@@ -77,74 +66,42 @@ export default function Skills() {
             {principles.map((principle) => (
               <div
                 key={principle.title}
-                className="pt-6 border-t border-border/60 space-y-2"
+                className="pt-6 border-t border-border space-y-2"
               >
-                <h3 className="text-lg font-bold text-foreground">{principle.title}</h3>
+                <h3 className="text-sm font-semibold text-foreground">{principle.title}</h3>
                 <p className="text-sm leading-relaxed text-muted-foreground">{principle.description}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Tech Stack & Explorations */}
-        <div id="stack" className="scroll-mt-24 grid gap-16 lg:grid-cols-[1.2fr_0.8fr] pt-12 border-t border-border/40">
-          {/* Tech Stack */}
-          <div className="space-y-8">
-            <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-                Toolkit
-              </p>
-              <h3 className="text-2xl font-bold text-foreground">
-                Technologies & Tools
-              </h3>
-            </div>
-
-            <div className="space-y-4 divide-y divide-border/40">
-              {stackGroups.map((group) => (
-                <div key={group.category} className="grid grid-cols-1 sm:grid-cols-[1.2fr_2fr] gap-3 pt-4 first:pt-0 items-center">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{group.category}</h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {group.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-lg bg-card border border-border px-2.5 py-1 text-xs font-semibold text-foreground/90 shadow-sm"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* Tech Stack */}
+        <div id="stack" className="scroll-mt-24 space-y-8 pt-12 border-t border-border">
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Toolkit
+            </p>
+            <h3 className="text-2xl font-bold text-foreground">
+              Technologies & Tools
+            </h3>
           </div>
 
-          {/* Currently Exploring */}
-          <div className="space-y-8">
-            <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-                Professional Growth
-              </p>
-              <h3 className="text-2xl font-bold text-foreground">
-                Active Learning Areas
-              </h3>
-            </div>
-
-            <div className="space-y-6">
-              {explorations.map((item) => (
-                <div key={item.title} className="space-y-2">
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="text-sm font-bold text-foreground">{item.title}</p>
-                    <span className="text-xs font-bold text-primary">{item.progress}%</span>
-                  </div>
-                  <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full transition-all duration-1000"
-                      style={{ width: `${item.progress}%` }}
-                    />
-                  </div>
+          <div className="space-y-4 divide-y divide-border">
+            {stackGroups.map((group) => (
+              <div key={group.category} className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-3 pt-4 first:pt-0 items-start">
+                <h4 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground pt-0.5">{group.category}</h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {group.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded border border-border px-2.5 py-1 text-xs font-medium text-foreground"
+                    >
+                      {skill}
+                    </span>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

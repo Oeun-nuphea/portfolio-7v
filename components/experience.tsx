@@ -16,62 +16,56 @@ const experiences = [
 
 export default function Experience() {
   return (
-    <section id="experience" className="scroll-mt-24 py-24 px-6 sm:px-8 bg-muted/10">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-16 space-y-3 max-w-xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+    <section id="experience" className="scroll-mt-24 py-24 px-6 sm:px-8 border-t border-border">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-14 space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Career History
           </p>
-          <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">
             Experience
           </h2>
         </div>
 
-        <div className="relative border-l border-border/80 ml-3 pl-8 space-y-12">
+        <div className="relative border-l border-border ml-3 pl-8 space-y-10">
           {experiences.map((exp) => (
-            <article key={exp.title} className="relative space-y-5">
-              {/* Timeline Bullet Node */}
-              <div className="absolute -left-[41px] top-1.5 flex h-5 w-5 items-center justify-center rounded-full border-4 border-background bg-primary shadow-sm" />
+            <article key={exp.title} className="relative">
+              {/* Timeline dot */}
+              <div className="absolute -left-[37px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-background bg-foreground" />
 
               <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
                 <div>
-                  <h3 className="text-xl font-bold text-foreground leading-snug">{exp.title}</h3>
-                  <p className="text-sm font-bold text-primary">{exp.company}</p>
+                  <h3 className="text-base font-semibold text-foreground">{exp.title}</h3>
+                  <p className="text-sm text-muted-foreground">{exp.company}</p>
                 </div>
-                <span className="inline-block text-xs font-bold text-muted-foreground sm:mt-0">
+                <span className="text-xs text-muted-foreground sm:shrink-0">
                   {exp.period}
                 </span>
               </div>
 
-              <div className="space-y-2.5">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
-                  Key Achievements
-                </p>
-                <ul className="space-y-2">
+              {exp.achievements.length > 0 && (
+                <ul className="mt-4 space-y-2">
                   {exp.achievements.map((achievement) => (
-                    <li key={achievement} className="flex items-start gap-2.5 text-sm text-muted-foreground leading-relaxed">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/60" />
+                    <li key={achievement} className="flex items-start gap-2 text-sm text-muted-foreground leading-relaxed">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/60" />
                       <span>{achievement}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
+              )}
 
-              <div className="space-y-2 pt-2">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
-                  Technologies Utilized
-                </p>
-                <div className="flex flex-wrap gap-1.5">
+              {exp.tech.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-1.5">
                   {exp.tech.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-lg bg-muted px-2.5 py-1 text-xs font-semibold text-foreground/80"
+                      className="rounded border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground"
                     >
                       {tech}
                     </span>
                   ))}
                 </div>
-              </div>
+              )}
             </article>
           ))}
         </div>
@@ -79,4 +73,3 @@ export default function Experience() {
     </section>
   )
 }
-

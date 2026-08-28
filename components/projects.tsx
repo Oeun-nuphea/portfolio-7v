@@ -56,79 +56,71 @@ const projects = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="scroll-mt-24 py-24 px-6 sm:px-8 bg-muted/40">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-16 space-y-3 max-w-xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+    <section id="projects" className="scroll-mt-24 py-24 px-6 sm:px-8 border-t border-border">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-14 space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             My Portfolio
           </p>
-          <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">
             Featured Projects
           </h2>
-          <p className="text-base text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             A selection of backend systems, microservice deployments, and full-stack applications.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((project) => (
             <article
               key={project.title}
-              className="group flex flex-col rounded-2xl border border-border bg-card overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md"
+              className="flex flex-col rounded-xl border border-border overflow-hidden transition-colors duration-200 hover:border-foreground/20"
             >
-              {/* Card Details */}
-              <div className="flex flex-1 flex-col p-6 space-y-5 justify-between">
-                <div className="space-y-4">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h3 className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+              <div className="flex flex-1 flex-col p-6 space-y-5">
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">
+                      {project.category}
+                    </p>
+                    <h3 className="text-base font-semibold text-foreground">
                       {project.title}
                     </h3>
-                    <span className="rounded-lg border border-border/80 bg-muted/40 px-2.5 py-1 text-xs font-semibold text-foreground/80">
-                      {project.category}
-                    </span>
                   </div>
 
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     {project.description}
                   </p>
 
-                  {/* Highlights Bullet List */}
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/85">
-                      Key Highlights
-                    </p>
-                    <ul className="space-y-1.5">
-                      {project.highlights.map((highlight) => (
-                        <li key={highlight} className="flex items-start gap-2.5 text-xs text-muted-foreground leading-relaxed">
-                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/80" />
-                          <span>{highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <ul className="space-y-1.5">
+                    {project.highlights.map((highlight) => (
+                      <li key={highlight} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
+                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/60" />
+                        <span>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                {/* Tech Pills & Actions */}
-                <div className="space-y-4 pt-2 border-t border-border/40">
+                <div className="mt-auto space-y-4 pt-4 border-t border-border">
                   <div className="flex flex-wrap gap-1.5">
                     {project.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="rounded-md bg-muted px-2 py-1 text-[11px] font-semibold text-muted-foreground tracking-wide"
+                        className="rounded border border-border px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
                       >
                         {tech}
                       </span>
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-3 pt-2">
+                  <div className="flex items-center gap-2.5">
                     <a
                       href={project.codeUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-xs font-bold text-background transition hover:opacity-90 active:scale-[0.98]"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-xs font-medium text-foreground transition hover:bg-muted"
                     >
-                      <Github size={14} />
+                      <Github size={13} />
                       Source Code
                     </a>
                     {project.demoUrl && (
@@ -136,9 +128,9 @@ export default function Projects() {
                         href={project.demoUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground transition hover:bg-muted active:scale-[0.98]"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
                       >
-                        <ExternalLink size={14} />
+                        <ExternalLink size={13} />
                         Live Demo
                       </a>
                     )}
@@ -152,4 +144,3 @@ export default function Projects() {
     </section>
   )
 }
-
