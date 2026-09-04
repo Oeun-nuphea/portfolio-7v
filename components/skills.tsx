@@ -28,7 +28,7 @@ const principles = [
 const stackGroups = [
   {
     category: "Application Frameworks",
-    skills: ["TypeScript", "Node.js", "Express", "Go", "Vue 3", "React"],
+    skills: ["TypeScript", "Node.js", "Express", "NestJS", "Go", "Vue 3", "React"],
   },
   {
     category: "Databases & Messaging Broker",

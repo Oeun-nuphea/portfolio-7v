@@ -1,6 +1,31 @@
-import { Github, ExternalLink } from "lucide-react"
+import { Github, ExternalLink, Package } from "lucide-react"
 
-const projects = [
+interface Project {
+  title: string
+  category: string
+  description: string
+  technologies: string[]
+  highlights: string[]
+  codeUrl?: string
+  demoUrl?: string
+  npmUrl?: string
+}
+
+const projects: Project[] = [
+  {
+    title: "nestjs-mongo-paginator",
+    category: "Open-Source NPM Package",
+    description:
+      "A lightweight, type-safe NestJS and Mongoose pagination library supporting both offset-based and cursor-based pagination strategies.",
+    technologies: ["NestJS", "TypeScript", "MongoDB", "Mongoose", "NPM"],
+    highlights: [
+      "Unified type-safe API for offset-based and cursor-based pagination",
+      "Supports custom query filtering, multi-field sorting, and projection",
+      "Designed for NestJS microservices and REST APIs to handle high-performance queries",
+    ],
+    codeUrl: "https://github.com/Oeun-nuphea/nestjs-mongo-paginator",
+    npmUrl: "https://www.npmjs.com/package/nestjs-mongo-paginator",
+  },
   {
     title: "Spendwise",
     category: "Mobile Finance Application",
@@ -113,16 +138,29 @@ export default function Projects() {
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-2.5">
-                    <a
-                      href={project.codeUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-xs font-medium text-foreground transition hover:bg-muted"
-                    >
-                      <Github size={13} />
-                      Source Code
-                    </a>
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    {project.codeUrl && (
+                      <a
+                        href={project.codeUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-xs font-medium text-foreground transition hover:bg-muted"
+                      >
+                        <Github size={13} />
+                        Source Code
+                      </a>
+                    )}
+                    {project.npmUrl && (
+                      <a
+                        href={project.npmUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
+                      >
+                        <Package size={13} />
+                        NPM Package
+                      </a>
+                    )}
                     {project.demoUrl && (
                       <a
                         href={project.demoUrl}
