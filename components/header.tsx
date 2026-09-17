@@ -256,7 +256,7 @@ export default function Header() {
         {/* Pure Crystal Glass Draggable Floating Navigation Bar */}
         <motion.div
           ref={navContainerRef}
-          drag
+          drag={dockPosition === "bottom"}
           dragConstraints={constraintsRef}
           dragElastic={0.06}
           dragMomentum={false}
@@ -265,29 +265,25 @@ export default function Header() {
             if (!navContainerRef.current) return
             const rect = navContainerRef.current.getBoundingClientRect()
             const screenWidth = window.innerWidth
-            const screenHeight = window.innerHeight
 
-            // If dragged close to the left edge (< 25% of screen)
-            if (rect.left < screenWidth * 0.25) {
+            // If dragged close to the left edge (< 30% of screen)
+            if (rect.left < screenWidth * 0.3) {
               setDockPosition("left")
             }
-            // If dragged close to the right edge (> 75% of screen)
-            else if (rect.right > screenWidth * 0.75) {
+            // If dragged close to the right edge (> 70% of screen)
+            else if (rect.right > screenWidth * 0.7) {
               setDockPosition("right")
             }
-            // If near the bottom or center
+            // Otherwise keep at bottom
             else {
               setDockPosition("bottom")
             }
           }}
-          animate={
-            dockPosition === "left"
-              ? { x: 0, y: 0, transition: { type: "spring", stiffness: 350, damping: 28 } }
-              : dockPosition === "right"
-              ? { x: 0, y: 0, transition: { type: "spring", stiffness: 350, damping: 28 } }
-              : { x: 0, y: 0, transition: { type: "spring", stiffness: 350, damping: 28 } }
-          }
-          className={`absolute pointer-events-none touch-none transition-all duration-300 ${
+          key={dockPosition}
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          className={`absolute pointer-events-none touch-none ${
             dockPosition === "left"
               ? "left-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5"
               : dockPosition === "right"
