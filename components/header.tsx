@@ -162,9 +162,9 @@ export default function Header() {
                   key={item.label}
                   href={item.href}
                   onClick={() => setActiveSection(sectionKey)}
-                  className={`group relative flex-1 flex flex-col items-center justify-center rounded-[24px] py-1.5 transition-all duration-200 ${
+                  className={`group relative flex-1 flex flex-col items-center justify-center rounded-[26px] py-2.5 px-2 transition-all duration-200 ${
                     isActive
-                      ? "border border-white/80 bg-white/[0.15] text-neutral-900 shadow-[0_6px_16px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.9),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_8px_rgba(255,255,255,0.25)] backdrop-blur-xl"
+                      ? "border border-white/80 bg-white/[0.18] text-neutral-900 shadow-[0_8px_20px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.3)] backdrop-blur-xl"
                       : "border border-transparent text-neutral-500 hover:text-neutral-900 hover:bg-white/15"
                   }`}
                 >
