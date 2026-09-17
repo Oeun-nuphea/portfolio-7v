@@ -115,10 +115,13 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Floating iOS Glass Dock for Mobile */}
+      {/* Telegram iOS 100 Liquid Glass Bottom Bar */}
       <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex justify-center pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] px-4 lg:hidden">
-        <nav className="pointer-events-auto w-full max-w-md rounded-2xl border border-white/70 bg-white/80 backdrop-blur-2xl shadow-[0_12px_40px_rgba(15,23,42,0.1),inset_0_1px_1px_rgba(255,255,255,0.95)]">
-          <div className="flex h-15 items-center justify-around px-2 py-1">
+        <nav className="pointer-events-auto relative w-full max-w-sm rounded-[28px] border border-white/80 bg-white/70 backdrop-blur-3xl p-1.5 shadow-[0_16px_40px_-8px_rgba(0,136,204,0.18),0_8px_24px_rgba(15,23,42,0.06),inset_0_1.5px_2px_rgba(255,255,255,1)]">
+          {/* Liquid refraction specular edge highlight */}
+          <div className="absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-sky-400/60 to-transparent" />
+
+          <div className="flex h-14 items-center justify-around px-1">
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = activeSection === item.href.substring(1)
@@ -128,16 +131,18 @@ export default function Header() {
                 <a
                   key={item.label}
                   href={item.href}
-                  className={`relative flex flex-1 flex-col items-center justify-center gap-1 py-1 text-[10px] transition-all duration-200 rounded-xl ${
+                  className={`relative flex flex-1 flex-col items-center justify-center gap-1 py-1.5 text-[10px] font-medium transition-all duration-300 rounded-[20px] ${
                     isActive
-                      ? "text-foreground font-semibold bg-white/70 shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "text-[#0088cc] font-bold bg-white/95 shadow-[0_4px_14px_rgba(0,136,204,0.18),inset_0_1px_1px_rgba(255,255,255,1)] scale-[1.02]"
+                      : "text-slate-400 hover:text-slate-600 active:scale-95"
                   }`}
                 >
                   {isProfileTab ? (
                     <div
-                      className={`relative h-5 w-5 overflow-hidden rounded-full border transition-all ${
-                        isActive ? "border-foreground ring-1 ring-foreground" : "border-muted-foreground/40"
+                      className={`relative h-5 w-5 overflow-hidden rounded-full border transition-all duration-300 ${
+                        isActive
+                          ? "border-[#0088cc] ring-2 ring-[#0088cc]/30 shadow-[0_0_10px_rgba(0,136,204,0.35)]"
+                          : "border-slate-300"
                       }`}
                     >
                       <Image
@@ -149,9 +154,22 @@ export default function Header() {
                       />
                     </div>
                   ) : (
-                    <Icon size={18} className={isActive ? "stroke-[2.5]" : "stroke-[1.75]"} />
+                    <Icon
+                      size={18}
+                      className={`transition-all duration-300 ${
+                        isActive
+                          ? "stroke-[2.5] text-[#0088cc] drop-shadow-[0_2px_6px_rgba(0,136,204,0.35)]"
+                          : "stroke-[1.75]"
+                      }`}
+                    />
                   )}
-                  <span className="leading-none">{item.label}</span>
+                  <span className={`leading-none transition-colors duration-300 ${isActive ? "text-[#0088cc]" : ""}`}>
+                    {item.label}
+                  </span>
+
+                  {isActive && (
+                    <span className="absolute -bottom-0.5 h-1 w-1 rounded-full bg-[#0088cc] shadow-[0_0_6px_#0088cc]" />
+                  )}
                 </a>
               )
             })}
