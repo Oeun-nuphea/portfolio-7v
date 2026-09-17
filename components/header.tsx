@@ -12,7 +12,7 @@ const navItems = [
 ]
 
 export default function Header() {
-  const [activeSection, setActiveSection] = useState("")
+  const [activeSection, setActiveSection] = useState("about")
   const [copied, setCopied] = useState(false)
 
   const handleShare = async () => {
@@ -91,6 +91,7 @@ export default function Header() {
                   <a
                     key={item.label}
                     href={item.href}
+                    onClick={() => setActiveSection(item.href.substring(1))}
                     className={`rounded-full px-3 py-1 text-xs font-medium transition-all duration-200 ${
                       isActive
                         ? "bg-white text-foreground shadow-sm ring-1 ring-black/5"
@@ -117,29 +118,32 @@ export default function Header() {
 
       {/* Telegram iOS Bottom Navigation Bar */}
       <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex justify-center pb-[calc(1rem+env(safe-area-inset-bottom,0px))] px-4 lg:hidden">
-        <nav className="pointer-events-auto flex items-center justify-between gap-1 rounded-full border border-white/70 bg-white/80 backdrop-blur-2xl px-2 py-1.5 shadow-[0_10px_35px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)]">
-          {navItems.map((item, index) => {
+        <nav className="pointer-events-auto flex w-full max-w-[340px] items-center justify-between rounded-full border border-white/70 bg-white/80 backdrop-blur-2xl p-1 shadow-[0_10px_35px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)]">
+          {navItems.map((item) => {
             const Icon = item.icon
-            const isActive = activeSection ? activeSection === item.href.substring(1) : index === 0
+            const sectionKey = item.href.substring(1)
+            const isActive = activeSection === sectionKey
 
             return (
               <a
                 key={item.label}
                 href={item.href}
-                className={`flex flex-col items-center justify-center rounded-full transition-colors duration-200 ${
+                onClick={() => setActiveSection(sectionKey)}
+                className={`flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-colors duration-150 ${
                   isActive
-                    ? "bg-[#EAEFF5] text-[#0088cc] px-4 py-1.5"
-                    : "text-[#707579] hover:text-slate-800 px-3.5 py-1.5"
+                    ? "bg-[#EAEFF5] text-[#0088cc]"
+                    : "text-[#707579] hover:text-slate-800"
                 }`}
               >
                 <Icon
                   size={20}
-                  className={`transition-colors duration-200 ${
-                    isActive ? "text-[#0088cc] stroke-[2.2]" : "text-[#707579] stroke-[1.75]"
+                  strokeWidth={2}
+                  className={`transition-colors duration-150 ${
+                    isActive ? "text-[#0088cc]" : "text-[#707579]"
                   }`}
                 />
                 <span
-                  className={`text-[10px] leading-tight mt-0.5 tracking-tight transition-colors duration-200 ${
+                  className={`text-[10px] leading-tight mt-0.5 tracking-tight transition-colors duration-150 ${
                     isActive ? "font-semibold text-[#0088cc]" : "font-medium text-[#707579]"
                   }`}
                 >
