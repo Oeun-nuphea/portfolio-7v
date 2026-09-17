@@ -18,8 +18,65 @@ export default function Header() {
   const [isVisible, setIsVisible] = useState(true)
   const [dockPosition, setDockPosition] = useState<"bottom" | "left" | "right">("bottom")
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [transitionDirection, setTransitionDirection] = useState<"to-contact" | "to-experience" | null>(null)
+  const prevSectionRef = useRef(activeSection)
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const isManualClickRef = useRef(false)
+  const manualClickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const constraintsRef = useRef<HTMLDivElement>(null)
   const navContainerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("portfolio_dock_position")
+      if (saved === "bottom" || saved === "left" || saved === "right") {
+        setDockPosition(saved)
+      }
+    } catch {
+      // localStorage may be unavailable or restricted
+    }
+  }, [])
+
+  const updateDockPosition = (pos: "bottom" | "left" | "right") => {
+    setDockPosition(pos)
+    try {
+      localStorage.setItem("portfolio_dock_position", pos)
+    } catch {
+      // ignore
+    }
+  }
+
+  const triggerTransition = (direction: "to-contact" | "to-experience") => {
+    if (dockPosition === "left" || dockPosition === "right") {
+      setTransitionDirection(direction)
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current)
+      }
+      animationTimeoutRef.current = setTimeout(() => {
+        setTransitionDirection(null)
+      }, 650)
+    }
+  }
+
+  const handleNavClick = (sectionKey: string) => {
+    isManualClickRef.current = true
+    if (manualClickTimeoutRef.current) {
+      clearTimeout(manualClickTimeoutRef.current)
+    }
+    manualClickTimeoutRef.current = setTimeout(() => {
+      isManualClickRef.current = false
+    }, 800)
+
+    if (dockPosition === "left" || dockPosition === "right") {
+      if (sectionKey === "contact" && activeSection !== "contact") {
+        triggerTransition("to-contact")
+      } else if (activeSection === "contact" && sectionKey !== "contact") {
+        triggerTransition("to-experience")
+      }
+    }
+
+    setActiveSection(sectionKey)
+  }
 
   useEffect(() => {
     let lastScrollY = window.scrollY
@@ -95,6 +152,7 @@ export default function Header() {
     }
 
     const observer = new IntersectionObserver((entries) => {
+      if (isManualClickRef.current) return
       // Pick the entry with the highest intersection ratio or is currently intersecting
       const intersecting = entries.filter((e) => e.isIntersecting)
       if (intersecting.length > 0) {
@@ -109,6 +167,32 @@ export default function Header() {
     })
 
     return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const prev = prevSectionRef.current
+    const current = activeSection
+
+    if (dockPosition === "left" || dockPosition === "right") {
+      if (current === "contact" && prev !== "contact") {
+        triggerTransition("to-contact")
+      } else if (prev === "contact" && current !== "contact") {
+        triggerTransition("to-experience")
+      }
+    }
+
+    prevSectionRef.current = activeSection
+  }, [activeSection, dockPosition])
+
+  useEffect(() => {
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current)
+      }
+      if (manualClickTimeoutRef.current) {
+        clearTimeout(manualClickTimeoutRef.current)
+      }
+    }
   }, [])
 
   return (
@@ -143,7 +227,7 @@ export default function Header() {
                   <a
                     key={item.label}
                     href={item.href}
-                    onClick={() => setActiveSection(item.href.substring(1))}
+                    onClick={() => handleNavClick(item.href.substring(1))}
                     className={`rounded-full px-3.5 py-1 text-xs font-medium transition-all duration-200 ${
                       isActive
                         ? "border border-white/85 bg-white/[0.15] text-foreground shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.35)] backdrop-blur-md"
@@ -191,7 +275,7 @@ export default function Header() {
                     <div className="mt-2 space-y-1">
                       <button
                         onClick={() => {
-                          setDockPosition("bottom")
+                          updateDockPosition("bottom")
                           setIsSettingsOpen(false)
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
@@ -209,7 +293,7 @@ export default function Header() {
 
                       <button
                         onClick={() => {
-                          setDockPosition("left")
+                          updateDockPosition("left")
                           setIsSettingsOpen(false)
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
@@ -227,7 +311,7 @@ export default function Header() {
 
                       <button
                         onClick={() => {
-                          setDockPosition("right")
+                          updateDockPosition("right")
                           setIsSettingsOpen(false)
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
@@ -285,9 +369,9 @@ export default function Header() {
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
           className={`absolute pointer-events-none ${
             dockPosition === "left"
-              ? "left-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5"
+              ? "left-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
               : dockPosition === "right"
-              ? "right-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5"
+              ? "right-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
               : "bottom-4 left-0 right-0 mx-auto flex items-center justify-center gap-3 w-fit"
           }`}
         >
@@ -314,7 +398,7 @@ export default function Header() {
                   <a
                     key={item.label}
                     href={item.href}
-                    onClick={() => setActiveSection(sectionKey)}
+                    onClick={() => handleNavClick(sectionKey)}
                     className={`group relative flex flex-col items-center justify-center transition-all duration-200 ${
                       dockPosition === "bottom"
                         ? "h-full flex-1 rounded-[28px]"
@@ -325,6 +409,15 @@ export default function Header() {
                         : "border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/[0.14] hover:border-white/40"
                     }`}
                   >
+                    {/* Expanding liquid ripple when droplet arrives at Experience */}
+                    {sectionKey === "experience" && transitionDirection === "to-experience" && (
+                      <motion.span
+                        initial={{ scale: 0.85, opacity: 0.8 }}
+                        animate={{ scale: 1.18, opacity: 0 }}
+                        transition={{ duration: 0.4, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                        className="absolute inset-0 rounded-[28px] border border-white/90 bg-white/20 pointer-events-none"
+                      />
+                    )}
                     <Icon
                       size={dockPosition === "bottom" ? 20 : 22}
                       strokeWidth={isActive ? 2.2 : 1.9}
@@ -352,7 +445,7 @@ export default function Header() {
           {dockPosition === "bottom" && (
             <a
               href="#contact"
-              onClick={() => setActiveSection("contact")}
+              onClick={() => handleNavClick("contact")}
               style={{
                 backdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
                 WebkitBackdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
@@ -383,6 +476,48 @@ export default function Header() {
             </a>
           )}
 
+          {/* Dynamic Traveling Liquid Glass Droplet Animation between Experience and Contact (Left & Right Dock only) */}
+          {(dockPosition === "left" || dockPosition === "right") && (
+            <div className="relative h-0 w-full flex items-center justify-center pointer-events-none z-30">
+              <AnimatePresence>
+                {transitionDirection && (
+                  <motion.div
+                    key={transitionDirection}
+                    initial={{
+                      opacity: 0,
+                      y: transitionDirection === "to-contact" ? -22 : 26,
+                      scale: 0.7,
+                    }}
+                    animate={{
+                      opacity: [0, 1, 1, 0],
+                      y: transitionDirection === "to-contact" ? 26 : -22,
+                      scale: [0.7, 1.1, 0.75],
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      y: { duration: 0.55, ease: [0.25, 1, 0.5, 1] },
+                      scale: { duration: 0.55, ease: "easeInOut" },
+                      opacity: { duration: 0.55, times: [0, 0.15, 0.8, 1], ease: "easeInOut" },
+                    }}
+                    className="absolute flex flex-col items-center justify-center pointer-events-none transform-gpu"
+                  >
+                    {/* Glowing liquid light streak trailing behind the droplet in direction of motion */}
+                    {transitionDirection === "to-contact" ? (
+                      <div className="absolute -top-3 h-4 w-[2px] rounded-full bg-gradient-to-t from-white/95 via-white/40 to-transparent blur-[0.5px]" />
+                    ) : (
+                      <div className="absolute -bottom-3 h-4 w-[2px] rounded-full bg-gradient-to-b from-white/95 via-white/40 to-transparent blur-[0.5px]" />
+                    )}
+
+                    {/* Liquid Glass Droplet Orb */}
+                    <div className="relative flex h-4 w-4 items-center justify-center rounded-full border border-white/95 bg-white/40 shadow-[0_2px_10px_rgba(255,255,255,0.85),0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_1.5px_rgba(255,255,255,1)] backdrop-blur-sm">
+                      <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,1)]" />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
           {/* Paired Crystal Glass Capsule for Contact & Share (Left & Right Dock only) */}
           {(dockPosition === "left" || dockPosition === "right") && (
             <div
@@ -394,7 +529,7 @@ export default function Header() {
             >
               <a
                 href="#contact"
-                onClick={() => setActiveSection("contact")}
+                onClick={() => handleNavClick("contact")}
                 className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
                   activeSection === "contact"
                     ? "border border-white/85 bg-white/[0.08] text-neutral-950 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)] backdrop-blur-md"
@@ -402,6 +537,15 @@ export default function Header() {
                 }`}
                 aria-label="Contact"
               >
+                {/* Expanding liquid ripple when droplet arrives at Contact */}
+                {transitionDirection === "to-contact" && (
+                  <motion.span
+                    initial={{ scale: 0.85, opacity: 0.8 }}
+                    animate={{ scale: 1.18, opacity: 0 }}
+                    transition={{ duration: 0.4, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute inset-0 rounded-[28px] border border-white/90 bg-white/20 pointer-events-none"
+                  />
+                )}
                 <Mail
                   size={22}
                   strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
