@@ -19,18 +19,29 @@ export default function Header() {
   useEffect(() => {
     let lastScrollY = window.scrollY
 
+    // Find or create theme-color meta tag for Android status bar
+    let metaThemeColor = document.querySelector('meta[name="theme-color"]')
+    if (!metaThemeColor) {
+      metaThemeColor = document.createElement("meta")
+      metaThemeColor.setAttribute("name", "theme-color")
+      document.head.appendChild(metaThemeColor)
+    }
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY
 
       // Always show when near the top (within 50px)
       if (currentScrollY < 50) {
         setIsVisible(true)
+        if (metaThemeColor) metaThemeColor.setAttribute("content", "#ffffff")
       } else if (currentScrollY > lastScrollY) {
-        // Scrolling down -> hide top bar
+        // Scrolling down -> hide top bar and blend status bar with page background
         setIsVisible(false)
+        if (metaThemeColor) metaThemeColor.setAttribute("content", "#f8fafc")
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling up -> show top bar
+        // Scrolling up -> show top bar and tint status bar with frosted glass color
         setIsVisible(true)
+        if (metaThemeColor) metaThemeColor.setAttribute("content", "#ffffff")
       }
 
       lastScrollY = currentScrollY
