@@ -348,29 +348,29 @@ export default function Header() {
               })}
           </nav>
 
-          {/* Circular Crystal Glass Contact Button */}
-          <a
-            href="#contact"
-            onClick={() => setActiveSection("contact")}
-            style={{
-              backdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
-              WebkitBackdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
-            }}
-            className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu backdrop-blur-md backdrop-saturate-[180%] ${
-              activeSection === "contact"
-                ? "border border-white/85 bg-white/[0.08] text-neutral-950 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
-                : "border border-white/75 bg-white/[0.05] text-neutral-600 hover:bg-white/[0.14] hover:border-white/95 hover:text-neutral-950 hover:scale-[1.04] shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)]"
-            }`}
-            aria-label="Contact"
-          >
-            <Mail
-              size={dockPosition === "bottom" ? 20 : 22}
-              strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
-              className={`transition-colors duration-200 ${
-                activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] text-neutral-950" : "text-neutral-600 group-hover:text-neutral-950"
+          {/* Standalone Circular Crystal Glass Contact Button (Bottom dock only) */}
+          {dockPosition === "bottom" && (
+            <a
+              href="#contact"
+              onClick={() => setActiveSection("contact")}
+              style={{
+                backdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
+                WebkitBackdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
+              }}
+              className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu backdrop-blur-md backdrop-saturate-[180%] ${
+                activeSection === "contact"
+                  ? "border border-white/85 bg-white/[0.08] text-neutral-950 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
+                  : "border border-white/75 bg-white/[0.05] text-neutral-600 hover:bg-white/[0.14] hover:border-white/95 hover:text-neutral-950 hover:scale-[1.04] shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)]"
               }`}
-            />
-            {dockPosition === "bottom" && (
+              aria-label="Contact"
+            >
+              <Mail
+                size={20}
+                strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
+                className={`transition-colors duration-200 ${
+                  activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] text-neutral-950" : "text-neutral-600 group-hover:text-neutral-950"
+                }`}
+              />
               <span
                 className={`mt-0.5 text-[9px] leading-none transition-colors duration-200 ${
                   activeSection === "contact"
@@ -380,26 +380,49 @@ export default function Header() {
               >
                 Contact
               </span>
-            )}
-          </a>
+            </a>
+          )}
 
-          {/* Circular Crystal Glass Share Button (Left & Right Dock only, hidden on Bottom) */}
+          {/* Paired Crystal Glass Capsule for Contact & Share (Left & Right Dock only) */}
           {(dockPosition === "left" || dockPosition === "right") && (
-            <button
-              onClick={handleShare}
+            <div
               style={{
                 backdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
                 WebkitBackdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
               }}
-              className="pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu backdrop-blur-md backdrop-saturate-[180%] border border-white/75 bg-white/[0.05] text-neutral-600 hover:bg-white/[0.14] hover:border-white/95 hover:text-neutral-950 hover:scale-[1.04] shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)]"
-              aria-label="Share portfolio"
+              className="pointer-events-auto flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/[0.05] shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/[0.1] hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-md backdrop-saturate-[180%] transform-gpu transition-all duration-300"
             >
-              {copied ? (
-                <Check size={22} strokeWidth={2.2} className="text-emerald-600 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" />
-              ) : (
-                <Share2 size={22} strokeWidth={1.9} className="transition-colors duration-200 text-neutral-600 hover:text-neutral-950" />
-              )}
-            </button>
+              <a
+                href="#contact"
+                onClick={() => setActiveSection("contact")}
+                className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
+                  activeSection === "contact"
+                    ? "border border-white/85 bg-white/[0.08] text-neutral-950 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)] backdrop-blur-md"
+                    : "border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/[0.14] hover:border-white/40"
+                }`}
+                aria-label="Contact"
+              >
+                <Mail
+                  size={22}
+                  strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
+                  className={`transition-colors duration-200 ${
+                    activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] text-neutral-950" : "text-neutral-600 group-hover:text-neutral-950"
+                  }`}
+                />
+              </a>
+
+              <button
+                onClick={handleShare}
+                className="group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/[0.14] hover:border-white/40 transition-all duration-200 active:scale-95"
+                aria-label="Share portfolio"
+              >
+                {copied ? (
+                  <Check size={22} strokeWidth={2.2} className="text-emerald-600 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" />
+                ) : (
+                  <Share2 size={22} strokeWidth={1.9} className="transition-colors duration-200 text-neutral-600 group-hover:text-neutral-950" />
+                )}
+              </button>
+            </div>
           )}
         </motion.div>
       </div>
