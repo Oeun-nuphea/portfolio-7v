@@ -146,10 +146,10 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Apple iOS Floating Glassmorphism Bottom Navigation Bar */}
+      {/* Pure Crystal Glass Floating Bottom Navigation Bar */}
       <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex items-center justify-center gap-3 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] px-4 lg:hidden">
-        {/* Main Floating Glass Capsule (3 items: About, Stack, Experience with equal flex-1 width) */}
-        <nav className="pointer-events-auto flex flex-1 max-w-[320px] items-center rounded-[32px] border border-white/60 bg-white/65 p-1.5 shadow-[0_16px_40px_rgba(15,23,42,0.1),inset_0_1px_1px_rgba(255,255,255,0.8)] backdrop-blur-3xl backdrop-saturate-150 transform-gpu">
+        {/* Main Crystal Glass Capsule (3 items: About, Stack, Experience) */}
+        <nav className="pointer-events-auto flex flex-1 max-w-[320px] items-center rounded-[32px] border border-white/60 bg-white/[0.06] p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu">
           {navItems
             .filter((item) => item.href !== "#contact")
             .map((item) => {
@@ -162,24 +162,24 @@ export default function Header() {
                   key={item.label}
                   href={item.href}
                   onClick={() => setActiveSection(sectionKey)}
-                  className={`group relative flex-1 flex flex-col items-center justify-center rounded-[24px] py-1.5 transition-colors duration-200 ${
+                  className={`group relative flex-1 flex flex-col items-center justify-center rounded-[24px] py-1.5 transition-all duration-200 ${
                     isActive
-                      ? "bg-white text-neutral-900 shadow-[0_2px_8px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)]"
-                      : "text-neutral-500 hover:text-neutral-800 hover:bg-black/[0.03]"
+                      ? "border border-white/80 bg-white/[0.15] text-neutral-900 shadow-[0_6px_16px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.9),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_8px_rgba(255,255,255,0.25)] backdrop-blur-xl"
+                      : "border border-transparent text-neutral-500 hover:text-neutral-900 hover:bg-white/15"
                   }`}
                 >
                   <Icon
                     size={20}
                     strokeWidth={isActive ? 2.2 : 1.9}
                     className={`transition-colors duration-200 ${
-                      isActive ? "text-neutral-900" : "text-neutral-500 group-hover:text-neutral-800"
+                      isActive ? "text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "text-neutral-500 group-hover:text-neutral-900"
                     }`}
                   />
                   <span
                     className={`mt-0.5 text-[10px] font-medium tracking-tight transition-colors duration-200 ${
                       isActive
-                        ? "text-neutral-900 font-semibold"
-                        : "text-neutral-500 group-hover:text-neutral-800"
+                        ? "text-neutral-900 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
+                        : "text-neutral-500 group-hover:text-neutral-900"
                     }`}
                   >
                     {item.label}
@@ -189,19 +189,25 @@ export default function Header() {
             })}
         </nav>
 
-        {/* Circular Floating Contact Button */}
+        {/* Circular Crystal Glass Contact Button */}
         <a
           href="#contact"
           onClick={() => setActiveSection("contact")}
-          className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full border border-white/60 shadow-[0_16px_40px_rgba(15,23,42,0.1),inset_0_1px_1px_rgba(255,255,255,0.8)] backdrop-blur-3xl backdrop-saturate-150 transition-all duration-200 active:scale-95 transform-gpu ${
+          className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu ${
             activeSection === "contact"
-              ? "bg-white text-neutral-900 ring-2 ring-black/5 shadow-[0_4px_12px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)]"
-              : "bg-white/65 text-neutral-600 hover:bg-white/80 hover:text-neutral-900"
+              ? "border border-white/85 bg-white/[0.18] text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.1),0_6px_16px_rgba(0,0,0,0.06),inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(255,255,255,0.45),inset_0_0_12px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
+              : "border border-white/60 bg-white/[0.06] text-neutral-500 hover:bg-white/20 hover:text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
           }`}
           aria-label="Contact"
         >
-          <Mail size={20} strokeWidth={activeSection === "contact" ? 2.2 : 1.9} />
-          <span className="mt-0.5 text-[9px] font-medium leading-none">Contact</span>
+          <Mail
+            size={20}
+            strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
+            className={activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : ""}
+          />
+          <span className={`mt-0.5 text-[9px] leading-none ${activeSection === "contact" ? "font-semibold text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "font-medium"}`}>
+            Contact
+          </span>
         </a>
       </div>
     </>
