@@ -14,6 +14,31 @@ const navItems = [
 export default function Header() {
   const [activeSection, setActiveSection] = useState("about")
   const [copied, setCopied] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+
+      // Always show when near the top (within 50px)
+      if (currentScrollY < 50) {
+        setIsVisible(true)
+      } else if (currentScrollY > lastScrollY) {
+        // Scrolling down -> hide top bar
+        setIsVisible(false)
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up -> show top bar
+        setIsVisible(true)
+      }
+
+      lastScrollY = currentScrollY
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const handleShare = async () => {
     const shareData = {
@@ -66,7 +91,11 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/50 bg-white/70 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/60 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_24px_rgba(15,23,42,0.03)]">
+      <header
+        className={`fixed inset-x-0 top-0 z-50 border-b border-white/50 bg-white/70 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/60 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_24px_rgba(15,23,42,0.03)] transition-all duration-300 transform-gpu ${
+          isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
+        }`}
+      >
         <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3 lg:px-8">
           <a href="#top" className="flex items-center gap-2.5 group">
             <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/80 shadow-sm ring-1 ring-black/5">
