@@ -118,7 +118,7 @@ export default function Header() {
 
       {/* Telegram iOS Bottom Navigation Bar */}
       <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex justify-center pb-[calc(1rem+env(safe-area-inset-bottom,0px))] px-4 lg:hidden">
-        <nav className="pointer-events-auto flex w-full max-w-[272px] items-center justify-between gap-1 rounded-full border border-white/70 bg-white/80 backdrop-blur-2xl p-1 shadow-[0_10px_35px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)]">
+        <nav className="pointer-events-auto flex w-full max-w-[340px] items-center justify-between rounded-full border border-white/70 bg-white/80 backdrop-blur-2xl p-1 shadow-[0_10px_35px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)]">
           {navItems.map((item) => {
             const Icon = item.icon
             const sectionKey = item.href.substring(1)
@@ -129,7 +129,7 @@ export default function Header() {
                 key={item.label}
                 href={item.href}
                 onClick={() => setActiveSection(sectionKey)}
-                className={`flex-1 flex flex-col items-center justify-center py-2 px-0.5 rounded-full transition-colors duration-150 ${
+                className={`flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-full transition-colors duration-150 ${
                   isActive
                     ? "bg-[#EAEFF5] text-[#0088cc]"
                     : "text-[#707579] hover:text-slate-800"
@@ -143,7 +143,7 @@ export default function Header() {
                   }`}
                 />
                 <span
-                  className={`text-[9.5px] leading-tight mt-0.5 tracking-tight whitespace-nowrap transition-colors duration-150 ${
+                  className={`text-[10px] leading-tight mt-0.5 tracking-tight transition-colors duration-150 ${
                     isActive ? "font-semibold text-[#0088cc]" : "font-medium text-[#707579]"
                   }`}
                 >
