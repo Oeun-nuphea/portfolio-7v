@@ -5,7 +5,6 @@ import Experience from "@/components/experience"
 import Footer from "@/components/footer"
 import Header from "@/components/header"
 import Hero from "@/components/hero"
-import Projects from "@/components/projects"
 import Skills from "@/components/skills"
 
 const jsonLd = {
@@ -69,7 +68,6 @@ export default function Home() {
         <Hero />
         <About />
         <Skills />
-        <Projects />
         <Experience />
         <Education />
         <Contact />

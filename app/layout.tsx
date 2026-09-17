@@ -1,7 +1,9 @@
 import { Analytics } from "@vercel/analytics/next"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import type React from "react"
+import PwaInstallPrompt from "@/components/pwa-install-prompt"
+import PwaRegister from "@/components/pwa-register"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -19,8 +21,24 @@ const siteTitle = "Oeun Nuphea — Backend Engineer & Freelancer"
 const siteDescription =
   "Backend Engineer specializing in scalable event-driven systems, high-performance APIs, and continuous deployment pipelines. Available for contract work and freelance projects."
 
+export const viewport: Viewport = {
+  themeColor: "#0a0a0a",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Oeun Nuphea",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   title: {
     default: siteTitle,
     template: "%s | Nuphea",
@@ -99,6 +117,8 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
+        <PwaRegister />
+        <PwaInstallPrompt />
         <Analytics />
       </body>
     </html>

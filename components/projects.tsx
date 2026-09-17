@@ -81,19 +81,18 @@ const projects: Project[] = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="scroll-mt-24 py-24 px-6 sm:px-8 border-t border-border">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-14 space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            My Portfolio
-          </p>
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">
-            Featured Projects
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            A selection of backend systems, microservice deployments, and full-stack applications.
-          </p>
-        </div>
+    <div id="projects" className="scroll-mt-24 pt-16 border-t border-border">
+      <div className="mb-14 space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          My Portfolio
+        </p>
+        <h3 className="text-2xl font-bold tracking-tight text-foreground">
+          Featured Projects
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          A selection of backend systems, microservice deployments, and full-stack applications.
+        </p>
+      </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((project) => (
@@ -178,7 +177,6 @@ export default function Projects() {
             </article>
           ))}
         </div>
-      </div>
-    </section>
+    </div>
   )
 }

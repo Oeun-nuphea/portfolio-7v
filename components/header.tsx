@@ -1,14 +1,12 @@
 "use client"
 
-import { User, Compass, Layers, FolderGit2, Briefcase, Mail, Share2, Check } from "lucide-react"
+import { User, Layers, Briefcase, Mail, Share2, Check } from "lucide-react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
 const navItems = [
   { label: "About", href: "#about", icon: User },
-  { label: "Principles", href: "#principles", icon: Compass },
   { label: "Stack", href: "#stack", icon: Layers },
-  { label: "Projects", href: "#projects", icon: FolderGit2 },
   { label: "Experience", href: "#experience", icon: Briefcase },
   { label: "Contact", href: "#contact", icon: Mail },
 ]

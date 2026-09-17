@@ -1,3 +1,5 @@
+import Projects from "@/components/projects"
+
 const experiences = [
   {
     title: "Backend Developer",
@@ -17,7 +19,8 @@ const experiences = [
 export default function Experience() {
   return (
     <section id="experience" className="scroll-mt-24 py-24 px-6 sm:px-8 border-t border-border">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-5xl space-y-16">
+        <div>
         <div className="mb-14 space-y-2">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Career History
@@ -69,6 +72,9 @@ export default function Experience() {
             </article>
           ))}
         </div>
+        </div>
+
+        <Projects />
       </div>
     </section>
   )
