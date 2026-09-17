@@ -19,8 +19,8 @@ const stackGroups = [
 
 export default function Skills() {
   return (
-    <section id="stack" className="scroll-mt-24 py-24 px-6 sm:px-8 border-t border-border">
-      <div className="mx-auto max-w-5xl space-y-8">
+    <section id="stack" className="scroll-mt-24 py-24 px-6 sm:px-8">
+      <div className="mx-auto max-w-5xl space-y-10">
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Toolkit
@@ -33,15 +33,20 @@ export default function Skills() {
           </p>
         </div>
 
-        <div className="space-y-4 divide-y divide-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {stackGroups.map((group) => (
-            <div key={group.category} className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-3 pt-4 first:pt-0 items-start">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground pt-0.5">{group.category}</h3>
-              <div className="flex flex-wrap gap-1.5">
+            <div
+              key={group.category}
+              className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-all duration-300"
+            >
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                {group.category}
+              </h3>
+              <div className="flex flex-wrap gap-2">
                 {group.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="rounded border border-border px-2.5 py-1 text-xs font-medium text-foreground"
+                    className="glass-pill rounded-full px-3.5 py-1 text-xs font-medium text-foreground transition-all duration-200 hover:scale-105 hover:bg-white/90 shadow-sm"
                   >
                     {skill}
                   </span>

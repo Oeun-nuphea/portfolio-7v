@@ -58,12 +58,15 @@ export default function Hero() {
   }
 
   return (
-    <section className="min-h-[90vh] flex items-center px-6 pt-32 pb-20 lg:px-8">
+    <section className="min-h-[85vh] flex items-center px-6 pt-32 pb-20 lg:px-8">
       <div className="mx-auto w-full max-w-5xl">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_auto]">
           <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            <div className="glass-pill inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-foreground shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
               Open to Work
             </div>
 
@@ -82,7 +85,7 @@ export default function Hero() {
             <div className="flex flex-wrap items-center gap-3">
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 rounded-lg bg-foreground px-5 py-2.5 text-sm font-medium text-background transition hover:opacity-80"
+                className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-all duration-200 shadow-md shadow-black/10 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
               >
                 Get In Touch
                 <ArrowRight size={15} />
@@ -90,14 +93,14 @@ export default function Hero() {
 
               <a
                 href="#projects"
-                className="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-muted"
+                className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-foreground hover:scale-[1.02] active:scale-[0.98]"
               >
                 View Projects
               </a>
 
               <button
                 onClick={downloadZip}
-                className="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
+                className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Download size={15} />
                 Download CVs
@@ -105,7 +108,7 @@ export default function Hero() {
 
               <button
                 onClick={handleShare}
-                className="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
+                className="glass-button inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:scale-[1.02] active:scale-[0.98]"
                 aria-label="Share portfolio"
               >
                 {copied ? <Check size={15} className="text-emerald-500" /> : <Share2 size={15} />}
@@ -115,15 +118,20 @@ export default function Hero() {
           </div>
 
           <div className="flex justify-center lg:justify-end">
-            <div className="relative h-56 w-56 overflow-hidden rounded-2xl border border-border sm:h-64 sm:w-64">
-              <Image
-                src="/OUENNUPHEA.jpg"
-                alt="Portrait of Nuphea"
-                fill
-                priority
-                className="object-cover"
-                sizes="(min-width: 640px) 256px, 224px"
-              />
+            <div className="relative group">
+              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-blue-400/20 via-indigo-300/20 to-purple-400/20 blur-xl opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative p-2 rounded-3xl glass-panel shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+                <div className="relative h-56 w-56 overflow-hidden rounded-2xl sm:h-64 sm:w-64">
+                  <Image
+                    src="/OUENNUPHEA.jpg"
+                    alt="Portrait of Nuphea"
+                    fill
+                    priority
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(min-width: 640px) 256px, 224px"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

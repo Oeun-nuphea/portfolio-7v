@@ -21,9 +21,9 @@ const education = [
 
 export default function Education() {
   return (
-    <section id="education" className="scroll-mt-24 py-24 px-6 sm:px-8 border-t border-border">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-14 space-y-2">
+    <section id="education" className="scroll-mt-24 py-24 px-6 sm:px-8">
+      <div className="mx-auto max-w-5xl space-y-10">
+        <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Credentials
           </p>
@@ -35,23 +35,23 @@ export default function Education() {
           </p>
         </div>
 
-        <div className="divide-y divide-border">
+        <div className="space-y-4">
           {education.map((item) => (
             <div
               key={item.degree}
-              className="py-6 first:pt-0 last:pb-0 grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-3 sm:gap-8 items-start"
+              className="glass-panel p-6 sm:p-7 rounded-3xl grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-4 sm:gap-8 items-start transition-all duration-300 hover:bg-white/80 hover:shadow-lg"
             >
-              <div className="space-y-0.5">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <div className="space-y-1">
+                <span className="glass-pill inline-block text-[10px] font-semibold uppercase tracking-widest text-muted-foreground px-2.5 py-0.5 rounded-full">
                   {item.type}
-                </p>
+                </span>
                 <p className="text-xs text-muted-foreground">{item.period}</p>
               </div>
-              <div className="space-y-0.5">
-                <h3 className="text-sm font-semibold text-foreground leading-snug">
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-foreground leading-snug">
                   {item.degree}
                 </h3>
-                <p className="text-sm text-muted-foreground">{item.school}</p>
+                <p className="text-sm font-medium text-muted-foreground">{item.school}</p>
               </div>
             </div>
           ))}

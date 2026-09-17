@@ -126,7 +126,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased relative min-h-screen`}>
+        {/* Ambient iOS liquid glass refraction background lights */}
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+          <div className="absolute -top-32 right-1/4 h-[480px] w-[480px] rounded-full bg-gradient-to-br from-blue-300/20 to-sky-200/20 blur-[100px]" />
+          <div className="absolute top-1/3 -left-32 h-[520px] w-[520px] rounded-full bg-gradient-to-tr from-indigo-200/25 to-purple-200/15 blur-[120px]" />
+          <div className="absolute top-2/3 -right-24 h-[440px] w-[440px] rounded-full bg-gradient-to-bl from-teal-200/20 to-sky-200/15 blur-[100px]" />
+          <div className="absolute -bottom-24 left-1/3 h-[400px] w-[400px] rounded-full bg-gradient-to-r from-blue-200/20 to-indigo-200/15 blur-[110px]" />
+        </div>
         {children}
         <PwaRegister />
         <PwaInstallPrompt />

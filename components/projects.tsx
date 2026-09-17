@@ -81,8 +81,8 @@ const projects: Project[] = [
 
 export default function Projects() {
   return (
-    <div id="projects" className="scroll-mt-24 pt-16 border-t border-border">
-      <div className="mb-14 space-y-2">
+    <div id="projects" className="scroll-mt-24 pt-16 space-y-10">
+      <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           My Portfolio
         </p>
@@ -94,89 +94,89 @@ export default function Projects() {
         </p>
       </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((project) => (
-            <article
-              key={project.title}
-              className="flex flex-col rounded-xl border border-border overflow-hidden transition-colors duration-200 hover:border-foreground/20"
-            >
-              <div className="flex flex-1 flex-col p-6 space-y-5">
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">
-                      {project.category}
-                    </p>
-                    <h3 className="text-base font-semibold text-foreground">
-                      {project.title}
-                    </h3>
-                  </div>
-
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {project.description}
-                  </p>
-
-                  <ul className="space-y-1.5">
-                    {project.highlights.map((highlight) => (
-                      <li key={highlight} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
-                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/60" />
-                        <span>{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {projects.map((project) => (
+          <article
+            key={project.title}
+            className="glass-panel flex flex-col rounded-3xl overflow-hidden transition-all duration-300 hover:scale-[1.015] hover:bg-white/85 hover:shadow-xl"
+          >
+            <div className="flex flex-1 flex-col p-6 sm:p-7 space-y-5">
+              <div className="space-y-3">
+                <div>
+                  <span className="glass-pill inline-block text-[10px] font-semibold uppercase tracking-widest text-muted-foreground px-2.5 py-0.5 rounded-full mb-2">
+                    {project.category}
+                  </span>
+                  <h4 className="text-lg font-bold text-foreground">
+                    {project.title}
+                  </h4>
                 </div>
 
-                <div className="mt-auto space-y-4 pt-4 border-t border-border">
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded border border-border px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {project.description}
+                </p>
 
-                  <div className="flex flex-wrap items-center gap-2.5">
-                    {project.codeUrl && (
-                      <a
-                        href={project.codeUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-xs font-medium text-foreground transition hover:bg-muted"
-                      >
-                        <Github size={13} />
-                        Source Code
-                      </a>
-                    )}
-                    {project.npmUrl && (
-                      <a
-                        href={project.npmUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
-                      >
-                        <Package size={13} />
-                        NPM Package
-                      </a>
-                    )}
-                    {project.demoUrl && (
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
-                      >
-                        <ExternalLink size={13} />
-                        Live Demo
-                      </a>
-                    )}
-                  </div>
+                <ul className="space-y-1.5 pt-1">
+                  {project.highlights.map((highlight) => (
+                    <li key={highlight} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-blue-500/70 shadow-sm" />
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-auto space-y-4 pt-4 border-t border-white/60">
+                <div className="flex flex-wrap gap-1.5">
+                  {project.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="glass-pill rounded-full px-2.5 py-0.5 text-[11px] font-medium text-foreground"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {project.codeUrl && (
+                    <a
+                      href={project.codeUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-white"
+                    >
+                      <Github size={13} />
+                      Source Code
+                    </a>
+                  )}
+                  {project.npmUrl && (
+                    <a
+                      href={project.npmUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-white"
+                    >
+                      <Package size={13} />
+                      NPM Package
+                    </a>
+                  )}
+                  {project.demoUrl && (
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-white"
+                    >
+                      <ExternalLink size={13} />
+                      Live Demo
+                    </a>
+                  )}
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   )
 }

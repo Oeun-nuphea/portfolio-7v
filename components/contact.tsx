@@ -33,9 +33,9 @@ const contactLinks = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="scroll-mt-24 py-24 px-6 sm:px-8 border-t border-border">
+    <section id="contact" className="scroll-mt-24 py-24 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-14 space-y-2 max-w-xl">
+        <div className="mb-12 space-y-2 max-w-xl">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Connect
           </p>
@@ -47,7 +47,7 @@ export default function Contact() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-2xl">
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 max-w-2xl">
           {contactLinks.map((link) => {
             const Icon = link.icon
 
@@ -57,16 +57,16 @@ export default function Contact() {
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noreferrer" : undefined}
-                className="group flex items-center gap-3.5 rounded-xl border border-border p-4 transition-colors duration-200 hover:border-foreground/20 hover:bg-muted/40"
+                className="glass-panel group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.02] hover:bg-white/85 hover:shadow-lg"
               >
-                <div className="flex shrink-0 h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground group-hover:text-foreground transition-colors duration-200">
-                  <Icon size={16} />
+                <div className="flex shrink-0 h-10 w-10 items-center justify-center rounded-xl bg-white/80 border border-white text-muted-foreground group-hover:text-foreground group-hover:scale-110 shadow-sm transition-all duration-200">
+                  <Icon size={18} />
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                     {link.label}
                   </p>
-                  <p className="truncate text-sm font-medium text-foreground">
+                  <p className="truncate text-sm font-semibold text-foreground">
                     {link.value}
                   </p>
                 </div>

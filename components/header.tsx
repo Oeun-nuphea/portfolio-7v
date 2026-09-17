@@ -65,10 +65,10 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 pt-[env(safe-area-inset-top,0px)]">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/50 bg-white/70 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/60 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_24px_rgba(15,23,42,0.03)]">
         <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3 lg:px-8">
-          <a href="#top" className="flex items-center gap-2.5">
-            <div className="relative h-8 w-8 overflow-hidden rounded-full border border-border">
+          <a href="#top" className="flex items-center gap-2.5 group">
+            <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/80 shadow-sm ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-105">
               <Image
                 src="/OUENNUPHEA.jpg"
                 alt="Oeun Nuphea"
@@ -84,17 +84,17 @@ export default function Header() {
           </a>
 
           <div className="flex items-center gap-4">
-            <div className="hidden lg:flex lg:items-center lg:gap-8">
+            <div className="hidden lg:flex lg:items-center lg:gap-1 p-1 rounded-full border border-white/60 bg-white/40 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
               {navItems.map((item) => {
                 const isActive = activeSection === item.href.substring(1)
                 return (
                   <a
                     key={item.label}
                     href={item.href}
-                    className={`text-sm transition-colors duration-200 ${
+                    className={`rounded-full px-3 py-1 text-xs font-medium transition-all duration-200 ${
                       isActive
-                        ? "text-foreground font-medium"
-                        : "text-muted-foreground hover:text-foreground"
+                        ? "bg-white text-foreground shadow-sm ring-1 ring-black/5"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/50"
                     }`}
                   >
                     {item.label}
@@ -105,7 +105,7 @@ export default function Header() {
 
             <button
               onClick={handleShare}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground hover:bg-muted"
+              className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-white/90"
               aria-label="Share portfolio link"
             >
               {copied ? <Check size={14} className="text-emerald-500" /> : <Share2 size={14} />}
@@ -115,50 +115,49 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Instagram-style Bottom Navigation Bar for Mobile */}
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 lg:hidden pb-[env(safe-area-inset-bottom,0px)]">
-        <div className="flex h-16 items-center justify-around px-2">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const isActive = activeSection === item.href.substring(1)
-            const isProfileTab = item.label === "About"
+      {/* Floating iOS Glass Dock for Mobile */}
+      <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex justify-center pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] px-4 lg:hidden">
+        <nav className="pointer-events-auto w-full max-w-md rounded-2xl border border-white/70 bg-white/80 backdrop-blur-2xl shadow-[0_12px_40px_rgba(15,23,42,0.1),inset_0_1px_1px_rgba(255,255,255,0.95)]">
+          <div className="flex h-15 items-center justify-around px-2 py-1">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = activeSection === item.href.substring(1)
+              const isProfileTab = item.label === "About"
 
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                className={`relative flex flex-1 flex-col items-center justify-center gap-1 py-1 text-[10px] transition-colors ${
-                  isActive
-                    ? "text-foreground font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {isProfileTab ? (
-                  <div
-                    className={`relative h-5 w-5 overflow-hidden rounded-full border transition-all ${
-                      isActive ? "border-foreground ring-1 ring-foreground" : "border-muted-foreground/50"
-                    }`}
-                  >
-                    <Image
-                      src="/OUENNUPHEA.jpg"
-                      alt="Profile"
-                      fill
-                      className="object-cover"
-                      sizes="20px"
-                    />
-                  </div>
-                ) : (
-                  <Icon size={20} className={isActive ? "stroke-[2.5]" : "stroke-[1.75]"} />
-                )}
-                <span>{item.label}</span>
-                {isActive && (
-                  <span className="absolute -top-px h-0.5 w-6 rounded-full bg-foreground" />
-                )}
-              </a>
-            )
-          })}
-        </div>
-      </nav>
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={`relative flex flex-1 flex-col items-center justify-center gap-1 py-1 text-[10px] transition-all duration-200 rounded-xl ${
+                    isActive
+                      ? "text-foreground font-semibold bg-white/70 shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {isProfileTab ? (
+                    <div
+                      className={`relative h-5 w-5 overflow-hidden rounded-full border transition-all ${
+                        isActive ? "border-foreground ring-1 ring-foreground" : "border-muted-foreground/40"
+                      }`}
+                    >
+                      <Image
+                        src="/OUENNUPHEA.jpg"
+                        alt="Profile"
+                        fill
+                        className="object-cover"
+                        sizes="20px"
+                      />
+                    </div>
+                  ) : (
+                    <Icon size={18} className={isActive ? "stroke-[2.5]" : "stroke-[1.75]"} />
+                  )}
+                  <span className="leading-none">{item.label}</span>
+                </a>
+              )
+            })}
+          </div>
+        </nav>
+      </div>
     </>
   )
 }

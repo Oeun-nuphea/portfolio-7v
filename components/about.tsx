@@ -25,9 +25,9 @@ export default function About() {
   return (
     <section id="about" className="scroll-mt-24 py-24 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] items-start">
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] items-start">
           {/* Left Side: Bio */}
-          <div className="space-y-6">
+          <div className="glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
             <div className="space-y-2">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Who I Am
@@ -57,13 +57,13 @@ export default function About() {
               </h3>
             </div>
 
-            <div className="divide-y divide-border">
+            <div className="space-y-3">
               {buildAreas.map((area, index) => (
                 <div
                   key={area.title}
-                  className="group py-5 first:pt-0 last:pb-0 flex gap-5 items-start"
+                  className="glass-panel group p-4 sm:p-5 rounded-2xl flex gap-4 items-start transition-all duration-300 hover:scale-[1.01] hover:bg-white/85 hover:shadow-lg"
                 >
-                  <span className="text-2xl font-bold tabular-nums text-border group-hover:text-muted-foreground transition-colors duration-200 select-none">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/80 border border-white text-xs font-bold text-foreground shadow-sm group-hover:scale-110 transition-transform duration-200">
                     0{index + 1}
                   </span>
                   <div className="space-y-1">
