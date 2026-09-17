@@ -38,7 +38,7 @@ export default function About() {
             </div>
             <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
               <p>
-                I am a passionate Backend Engineer and Freelancer dedicated to building stable, performance-oriented backend platforms. I enjoy translating complex business logic into clean, reusable service code and decoupled microservice event flows.
+                I am a passionate Software Engineer and Freelancer dedicated to building stable, performance-oriented backend platforms. I enjoy translating complex business logic into clean, reusable service code and decoupled microservice event flows.
               </p>
               <p>
                 With continuous learning at my core, I keep myself up to date with modern system design paradigms, caching patterns, and automated CI/CD practices. I value clear communication, observability, and clean API design.

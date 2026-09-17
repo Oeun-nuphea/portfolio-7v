@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 })
 
 const siteUrl = "https://oeunnuphea.vercel.app"
-const siteTitle = "Oeun Nuphea — Backend Engineer & Freelancer"
+const siteTitle = "Oeun Nuphea — Software Engineer & Freelancer"
 const siteDescription =
-  "Backend Engineer specializing in scalable event-driven systems, high-performance APIs, and continuous deployment pipelines. Available for contract work and freelance projects."
+  "Software Engineer specializing in scalable event-driven systems, high-performance APIs, and continuous deployment pipelines. Available for contract work and freelance projects."
 
 export const viewport: Viewport = {
   themeColor: "#ffffff",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   keywords: [
-    "Backend Engineer",
+    "Software Engineer",
     "Freelancer",
     "Node.js",
     "TypeScript",
@@ -99,7 +99,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Oeun Nuphea — Backend Engineer & Freelancer",
+        alt: "Oeun Nuphea — Software Engineer & Freelancer",
       },
     ],
   },

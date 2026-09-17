@@ -11,7 +11,7 @@ export default function Hero() {
 
   const handleShare = async () => {
     const shareData = {
-      title: "Oeun Nuphea - Backend Engineer",
+      title: "Oeun Nuphea - Software Engineer",
       text: "Check out Oeun Nuphea's Portfolio",
       url: "https://oeunnuphea.vercel.app",
     }
@@ -75,7 +75,7 @@ export default function Hero() {
                 Oeun Nuphea
               </h1>
               <p className="text-xl text-muted-foreground font-medium">
-                Backend Engineer & Freelancer
+                Software Engineer & Freelancer
               </p>
               <p className="max-w-lg text-base leading-relaxed text-muted-foreground">
                 I design and implement high-performance APIs, reliable microservices, and continuous deployment pipelines. Available for contract work and freelance projects.

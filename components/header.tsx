@@ -17,7 +17,7 @@ export default function Header() {
 
   const handleShare = async () => {
     const shareData = {
-      title: "Oeun Nuphea - Backend Engineer",
+      title: "Oeun Nuphea - Software Engineer",
       text: "Check out Oeun Nuphea's Portfolio",
       url: "https://oeunnuphea.vercel.app",
     }
@@ -79,7 +79,7 @@ export default function Header() {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-foreground leading-tight">Nuphea</span>
-              <span className="text-xs text-muted-foreground leading-tight">Backend Engineer</span>
+              <span className="text-xs text-muted-foreground leading-tight">Software Engineer</span>
             </div>
           </a>
 
