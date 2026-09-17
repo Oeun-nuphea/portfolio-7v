@@ -58,7 +58,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="min-h-[85vh] flex items-center px-6 pt-28 pb-10 sm:pt-32 sm:pb-16 lg:pb-20 lg:px-8">
+    <section className="min-h-[80vh] flex items-center px-6 pt-28 pb-10 sm:pt-32 sm:pb-12 lg:pb-12 lg:px-8">
       <div className="mx-auto w-full max-w-5xl">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_auto]">
           <div className="space-y-8">

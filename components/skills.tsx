@@ -19,7 +19,7 @@ const stackGroups = [
 
 export default function Skills() {
   return (
-    <section id="stack" className="scroll-mt-20 sm:scroll-mt-24 py-8 sm:py-16 lg:py-24 px-6 sm:px-8">
+    <section id="stack" className="scroll-mt-20 sm:scroll-mt-24 py-8 sm:py-10 lg:py-12 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl space-y-10">
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
