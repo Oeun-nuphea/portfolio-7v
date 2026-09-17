@@ -297,10 +297,10 @@ export default function Header() {
         >
           {/* Main Crystal Glass Capsule: Morphs between horizontal capsule and vertical side dock */}
           <nav
-            className={`pointer-events-auto items-center rounded-[32px] border border-white/60 bg-white/[0.06] p-1 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-grab active:cursor-grabbing transition-all duration-300 ${
+            className={`pointer-events-auto items-center border border-white/60 bg-white/[0.06] shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-grab active:cursor-grabbing transition-all duration-300 ${
               dockPosition === "bottom"
-                ? "flex h-[58px] min-w-[280px] max-w-[320px] flex-row"
-                : "flex w-[62px] flex-col gap-1.5 py-2 rounded-[36px]"
+                ? "flex h-[58px] min-w-[280px] max-w-[320px] flex-row p-0.5 rounded-[32px]"
+                : "flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px]"
             }`}
           >
             {navItems
@@ -318,7 +318,7 @@ export default function Header() {
                     className={`group relative flex flex-col items-center justify-center transition-all duration-200 ${
                       dockPosition === "bottom"
                         ? "h-full flex-1 rounded-[28px]"
-                        : "h-[50px] w-[50px] rounded-[22px]"
+                        : "h-[54px] w-full rounded-[28px]"
                     } ${
                       isActive
                         ? "border border-white/80 bg-white/[0.18] text-neutral-900 shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.3)] backdrop-blur-xl"
@@ -326,21 +326,23 @@ export default function Header() {
                     }`}
                   >
                     <Icon
-                      size={20}
+                      size={dockPosition === "bottom" ? 20 : 22}
                       strokeWidth={isActive ? 2.2 : 1.9}
                       className={`transition-colors duration-200 ${
                         isActive ? "text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "text-neutral-500 group-hover:text-neutral-900"
                       }`}
                     />
-                    <span
-                      className={`mt-0.5 text-[10px] font-medium tracking-tight transition-colors duration-200 ${
-                        isActive
-                          ? "text-neutral-900 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
-                          : "text-neutral-500 group-hover:text-neutral-900"
-                      }`}
-                    >
-                      {item.label}
-                    </span>
+                    {dockPosition === "bottom" && (
+                      <span
+                        className={`mt-0.5 text-[10px] font-medium tracking-tight transition-colors duration-200 ${
+                          isActive
+                            ? "text-neutral-900 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
+                            : "text-neutral-500 group-hover:text-neutral-900"
+                        }`}
+                      >
+                        {item.label}
+                      </span>
+                    )}
                   </a>
                 )
               })}
@@ -350,9 +352,7 @@ export default function Header() {
           <a
             href="#contact"
             onClick={() => setActiveSection("contact")}
-            className={`pointer-events-auto flex shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu cursor-grab active:cursor-grabbing ${
-              dockPosition === "bottom" ? "h-[58px] w-[58px]" : "h-[56px] w-[56px]"
-            } ${
+            className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu cursor-grab active:cursor-grabbing ${
               activeSection === "contact"
                 ? "border border-white/85 bg-white/[0.18] text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.1),0_6px_16px_rgba(0,0,0,0.06),inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(255,255,255,0.45),inset_0_0_12px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
                 : "border border-white/60 bg-white/[0.06] text-neutral-500 hover:bg-white/20 hover:text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
@@ -360,13 +360,15 @@ export default function Header() {
             aria-label="Contact"
           >
             <Mail
-              size={20}
+              size={dockPosition === "bottom" ? 20 : 22}
               strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
               className={activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : ""}
             />
-            <span className={`mt-0.5 text-[9px] leading-none ${activeSection === "contact" ? "font-semibold text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "font-medium"}`}>
-              Contact
-            </span>
+            {dockPosition === "bottom" && (
+              <span className={`mt-0.5 text-[9px] leading-none ${activeSection === "contact" ? "font-semibold text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "font-medium"}`}>
+                Contact
+              </span>
+            )}
           </a>
         </motion.div>
       </div>
