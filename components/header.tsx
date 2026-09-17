@@ -149,7 +149,7 @@ export default function Header() {
       {/* Pure Crystal Glass Floating Bottom Navigation Bar */}
       <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex items-center justify-center gap-3 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] px-4 lg:hidden">
         {/* Main Crystal Glass Capsule (3 items: About, Stack, Experience) */}
-        <nav className="pointer-events-auto flex flex-1 max-w-[320px] items-center rounded-[32px] border border-white/60 bg-white/[0.06] p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu">
+        <nav className="pointer-events-auto flex h-[58px] flex-1 max-w-[320px] items-center rounded-[32px] border border-white/60 bg-white/[0.06] p-0.5 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu">
           {navItems
             .filter((item) => item.href !== "#contact")
             .map((item) => {
@@ -162,9 +162,9 @@ export default function Header() {
                   key={item.label}
                   href={item.href}
                   onClick={() => setActiveSection(sectionKey)}
-                  className={`group relative flex-1 flex flex-col items-center justify-center rounded-[26px] py-2.5 px-2 transition-all duration-200 ${
+                  className={`group relative flex h-full flex-1 flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
                     isActive
-                      ? "border border-white/80 bg-white/[0.18] text-neutral-900 shadow-[0_8px_20px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.3)] backdrop-blur-xl"
+                      ? "border border-white/80 bg-white/[0.18] text-neutral-900 shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.3)] backdrop-blur-xl"
                       : "border border-transparent text-neutral-500 hover:text-neutral-900 hover:bg-white/15"
                   }`}
                 >
