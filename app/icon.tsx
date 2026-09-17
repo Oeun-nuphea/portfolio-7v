@@ -20,9 +20,8 @@ export default async function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          borderRadius: "50%",
           overflow: "hidden",
-          backgroundColor: "#000000",
+          backgroundColor: "#ffffff",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -33,7 +32,6 @@ export default async function Icon() {
             width: "32px",
             height: "32px",
             objectFit: "cover",
-            borderRadius: "50%",
           }}
         />
       </div>
