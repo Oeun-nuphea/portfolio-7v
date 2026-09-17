@@ -33,9 +33,9 @@ const contactLinks = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="scroll-mt-24 py-24 px-6 sm:px-8">
+    <section id="contact" className="scroll-mt-20 sm:scroll-mt-24 py-8 sm:py-16 lg:py-24 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-12 space-y-2 max-w-xl">
+        <div className="mb-8 sm:mb-12 space-y-2 max-w-xl">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Connect
           </p>

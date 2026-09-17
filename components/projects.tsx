@@ -81,7 +81,7 @@ const projects: Project[] = [
 
 export default function Projects() {
   return (
-    <div id="projects" className="scroll-mt-24 pt-16 space-y-10">
+    <div id="projects" className="scroll-mt-20 sm:scroll-mt-24 pt-10 sm:pt-16 space-y-8 sm:space-y-10">
       <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           My Portfolio

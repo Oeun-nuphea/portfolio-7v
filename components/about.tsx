@@ -23,7 +23,7 @@ const buildAreas = [
 
 export default function About() {
   return (
-    <section id="about" className="scroll-mt-24 py-24 px-6 sm:px-8">
+    <section id="about" className="scroll-mt-20 sm:scroll-mt-24 py-8 sm:py-16 lg:py-24 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] items-start">
           {/* Left Side: Bio */}
