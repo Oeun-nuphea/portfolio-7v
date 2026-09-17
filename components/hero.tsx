@@ -62,13 +62,6 @@ export default function Hero() {
       <div className="mx-auto w-full max-w-5xl">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_auto]">
           <div className="space-y-8">
-            <div className="glass-pill inline-flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-foreground shadow-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              Open to Work
-            </div>
 
             <div className="space-y-4">
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">

@@ -136,7 +136,7 @@ export default function Header() {
           </a>
 
           <div className="flex items-center gap-4">
-            <div className="hidden lg:flex lg:items-center lg:gap-1 p-1 rounded-full border border-white/60 bg-white/40 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
+            <div className="hidden lg:flex lg:items-center lg:gap-1 p-1 rounded-full border border-white/75 bg-white/[0.08] backdrop-blur-md backdrop-saturate-[180%] shadow-[0_8px_24px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.9),inset_0_-1px_2px_rgba(255,255,255,0.3)]">
               {navItems.map((item) => {
                 const isActive = activeSection === item.href.substring(1)
                 return (
@@ -144,10 +144,10 @@ export default function Header() {
                     key={item.label}
                     href={item.href}
                     onClick={() => setActiveSection(item.href.substring(1))}
-                    className={`rounded-full px-3 py-1 text-xs font-medium transition-all duration-200 ${
+                    className={`rounded-full px-3.5 py-1 text-xs font-medium transition-all duration-200 ${
                       isActive
-                        ? "bg-white text-foreground shadow-sm ring-1 ring-black/5"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/50"
+                        ? "border border-white/85 bg-white/[0.15] text-foreground shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.35)] backdrop-blur-md"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/30"
                     }`}
                   >
                     {item.label}
@@ -251,39 +251,39 @@ export default function Header() {
         </nav>
       </header>
 
+      {/* Liquid Glass Optical Refraction SVG Filter */}
+      <svg className="pointer-events-none fixed -top-full left-0 h-0 w-0 opacity-0" aria-hidden="true">
+        <defs>
+          <filter id="liquid-glass-lens" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.015 0.015"
+              numOctaves={2}
+              seed={5}
+              result="turbulence"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="turbulence"
+              scale={22}
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="displaced"
+            />
+          </filter>
+        </defs>
+      </svg>
+
       {/* Screen Boundary for Dragging Navigation (iPad Pro, iPad, Mobile) */}
       <div ref={constraintsRef} className="fixed inset-0 z-50 pointer-events-none p-4 lg:hidden">
-        {/* Pure Crystal Glass Draggable Floating Navigation Bar */}
+        {/* Pure Crystal Glass Floating Navigation Bar */}
         <motion.div
           ref={navContainerRef}
-          drag={dockPosition === "bottom"}
-          dragConstraints={constraintsRef}
-          dragElastic={0.06}
-          dragMomentum={false}
-          whileDrag={{ scale: 1.04, cursor: "grabbing" }}
-          onDragEnd={(_e, info) => {
-            if (!navContainerRef.current) return
-            const rect = navContainerRef.current.getBoundingClientRect()
-            const screenWidth = window.innerWidth
-
-            // If dragged close to the left edge (< 30% of screen)
-            if (rect.left < screenWidth * 0.3) {
-              setDockPosition("left")
-            }
-            // If dragged close to the right edge (> 70% of screen)
-            else if (rect.right > screenWidth * 0.7) {
-              setDockPosition("right")
-            }
-            // Otherwise keep at bottom
-            else {
-              setDockPosition("bottom")
-            }
-          }}
           key={dockPosition}
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className={`absolute pointer-events-none touch-none ${
+          className={`absolute pointer-events-none ${
             dockPosition === "left"
               ? "left-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5"
               : dockPosition === "right"
@@ -293,7 +293,11 @@ export default function Header() {
         >
           {/* Main Crystal Glass Capsule: Morphs between horizontal capsule and vertical side dock */}
           <nav
-            className={`pointer-events-auto items-center border border-white/60 bg-white/[0.06] shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-grab active:cursor-grabbing transition-all duration-300 ${
+            style={{
+              backdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
+              WebkitBackdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
+            }}
+            className={`pointer-events-auto items-center border border-white/75 bg-white/[0.05] shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/[0.1] hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-md backdrop-saturate-[180%] transform-gpu transition-all duration-300 ${
               dockPosition === "bottom"
                 ? "flex h-[58px] min-w-[280px] max-w-[320px] flex-row p-0.5 rounded-[32px]"
                 : "flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px]"
@@ -317,23 +321,23 @@ export default function Header() {
                         : "h-[54px] w-full rounded-[28px]"
                     } ${
                       isActive
-                        ? "border border-white/80 bg-white/[0.18] text-neutral-900 shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.3)] backdrop-blur-xl"
-                        : "border border-transparent text-neutral-500 hover:text-neutral-900 hover:bg-white/15"
+                        ? "border border-white/85 bg-white/[0.08] text-neutral-950 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)] backdrop-blur-md"
+                        : "border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/[0.14] hover:border-white/40"
                     }`}
                   >
                     <Icon
                       size={dockPosition === "bottom" ? 20 : 22}
                       strokeWidth={isActive ? 2.2 : 1.9}
                       className={`transition-colors duration-200 ${
-                        isActive ? "text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "text-neutral-500 group-hover:text-neutral-900"
+                        isActive ? "text-neutral-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "text-neutral-600 group-hover:text-neutral-950"
                       }`}
                     />
                     {dockPosition === "bottom" && (
                       <span
-                        className={`mt-0.5 text-[10px] font-medium tracking-tight transition-colors duration-200 ${
+                        className={`mt-0.5 text-[10px] tracking-tight transition-colors duration-200 ${
                           isActive
-                            ? "text-neutral-900 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
-                            : "text-neutral-500 group-hover:text-neutral-900"
+                            ? "text-neutral-950 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
+                            : "text-neutral-600 group-hover:text-neutral-950 font-medium"
                         }`}
                       >
                         {item.label}
@@ -348,20 +352,32 @@ export default function Header() {
           <a
             href="#contact"
             onClick={() => setActiveSection("contact")}
-            className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu cursor-grab active:cursor-grabbing ${
+            style={{
+              backdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
+              WebkitBackdropFilter: "blur(2px) saturate(170%) url(#liquid-glass-lens)",
+            }}
+            className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu backdrop-blur-md backdrop-saturate-[180%] ${
               activeSection === "contact"
-                ? "border border-white/85 bg-white/[0.18] text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.1),0_6px_16px_rgba(0,0,0,0.06),inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(255,255,255,0.45),inset_0_0_12px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
-                : "border border-white/60 bg-white/[0.06] text-neutral-500 hover:bg-white/20 hover:text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
+                ? "border border-white/85 bg-white/[0.08] text-neutral-950 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
+                : "border border-white/75 bg-white/[0.05] text-neutral-600 hover:bg-white/[0.14] hover:border-white/95 hover:text-neutral-950 hover:scale-[1.04] shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)]"
             }`}
             aria-label="Contact"
           >
             <Mail
               size={dockPosition === "bottom" ? 20 : 22}
               strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
-              className={activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : ""}
+              className={`transition-colors duration-200 ${
+                activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] text-neutral-950" : "text-neutral-600 group-hover:text-neutral-950"
+              }`}
             />
             {dockPosition === "bottom" && (
-              <span className={`mt-0.5 text-[9px] leading-none ${activeSection === "contact" ? "font-semibold text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "font-medium"}`}>
+              <span
+                className={`mt-0.5 text-[9px] leading-none transition-colors duration-200 ${
+                  activeSection === "contact"
+                    ? "font-semibold text-neutral-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
+                    : "font-medium text-neutral-600"
+                }`}
+              >
                 Contact
               </span>
             )}

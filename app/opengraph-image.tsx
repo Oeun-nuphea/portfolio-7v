@@ -91,26 +91,7 @@ export default async function OGImage() {
               </div>
             ))}
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              fontSize: "14px",
-              color: "#6b7280",
-              fontWeight: 500,
-            }}
-          >
-            <div
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: "#10b981",
-              }}
-            />
-            Open to Work
-          </div>
+
         </div>
       </div>
     ),
