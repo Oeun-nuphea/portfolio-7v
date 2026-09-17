@@ -85,7 +85,7 @@ export default function Hero() {
             <div className="flex flex-wrap items-center gap-3">
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-all duration-200 shadow-md shadow-black/10 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-all duration-200 shadow-md shadow-black/10 hover:shadow-lg active:scale-[0.98]"
               >
                 Get In Touch
                 <ArrowRight size={15} />
@@ -93,14 +93,14 @@ export default function Hero() {
 
               <a
                 href="#projects"
-                className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-foreground hover:scale-[1.02] active:scale-[0.98]"
+                className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-foreground active:scale-[0.98]"
               >
                 View Projects
               </a>
 
               <button
                 onClick={downloadZip}
-                className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:scale-[1.02] active:scale-[0.98]"
+                className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground active:scale-[0.98]"
               >
                 <Download size={15} />
                 Download CVs
@@ -108,7 +108,7 @@ export default function Hero() {
 
               <button
                 onClick={handleShare}
-                className="glass-button inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:scale-[1.02] active:scale-[0.98]"
+                className="glass-button inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground active:scale-[0.98]"
                 aria-label="Share portfolio"
               >
                 {copied ? <Check size={15} className="text-emerald-500" /> : <Share2 size={15} />}
@@ -127,7 +127,7 @@ export default function Hero() {
                     alt="Portrait of Nuphea"
                     fill
                     priority
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500"
                     sizes="(min-width: 640px) 256px, 224px"
                   />
                 </div>

@@ -68,7 +68,7 @@ export default function Header() {
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/50 bg-white/70 backdrop-blur-2xl supports-[backdrop-filter]:bg-white/60 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_24px_rgba(15,23,42,0.03)]">
         <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3 lg:px-8">
           <a href="#top" className="flex items-center gap-2.5 group">
-            <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/80 shadow-sm ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-105">
+            <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/80 shadow-sm ring-1 ring-black/5">
               <Image
                 src="/OUENNUPHEA.jpg"
                 alt="Oeun Nuphea"
@@ -133,7 +133,7 @@ export default function Header() {
                   href={item.href}
                   className={`relative flex flex-1 flex-col items-center justify-center gap-1 py-1.5 text-[10px] font-medium transition-all duration-300 rounded-[20px] ${
                     isActive
-                      ? "text-[#0088cc] font-bold bg-white/95 shadow-[0_4px_14px_rgba(0,136,204,0.18),inset_0_1px_1px_rgba(255,255,255,1)] scale-[1.02]"
+                      ? "text-[#0088cc] font-bold bg-white/95 shadow-[0_4px_14px_rgba(0,136,204,0.18),inset_0_1px_1px_rgba(255,255,255,1)]"
                       : "text-slate-400 hover:text-slate-600 active:scale-95"
                   }`}
                 >

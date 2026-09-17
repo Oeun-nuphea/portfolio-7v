@@ -61,9 +61,9 @@ export default function About() {
               {buildAreas.map((area, index) => (
                 <div
                   key={area.title}
-                  className="glass-panel group p-4 sm:p-5 rounded-2xl flex gap-4 items-start transition-all duration-300 hover:scale-[1.01] hover:bg-white/85 hover:shadow-lg"
+                  className="glass-panel group p-4 sm:p-5 rounded-2xl flex gap-4 items-start transition-all duration-300 hover:bg-white/85 hover:shadow-lg"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/80 border border-white text-xs font-bold text-foreground shadow-sm group-hover:scale-110 transition-transform duration-200">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/80 border border-white text-xs font-bold text-foreground shadow-sm transition-transform duration-200">
                     0{index + 1}
                   </span>
                   <div className="space-y-1">

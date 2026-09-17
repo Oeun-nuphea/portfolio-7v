@@ -57,9 +57,9 @@ export default function Contact() {
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noreferrer" : undefined}
-                className="glass-panel group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.02] hover:bg-white/85 hover:shadow-lg"
+                className="glass-panel group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-white/85 hover:shadow-lg"
               >
-                <div className="flex shrink-0 h-10 w-10 items-center justify-center rounded-xl bg-white/80 border border-white text-muted-foreground group-hover:text-foreground group-hover:scale-110 shadow-sm transition-all duration-200">
+                <div className="flex shrink-0 h-10 w-10 items-center justify-center rounded-xl bg-white/80 border border-white text-muted-foreground group-hover:text-foreground shadow-sm transition-all duration-200">
                   <Icon size={18} />
                 </div>
                 <div className="min-w-0">

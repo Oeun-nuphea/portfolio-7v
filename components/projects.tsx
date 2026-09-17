@@ -98,7 +98,7 @@ export default function Projects() {
         {projects.map((project) => (
           <article
             key={project.title}
-            className="glass-panel flex flex-col rounded-3xl overflow-hidden transition-all duration-300 hover:scale-[1.015] hover:bg-white/85 hover:shadow-xl"
+            className="glass-panel flex flex-col rounded-3xl overflow-hidden transition-all duration-300 hover:bg-white/85 hover:shadow-xl"
           >
             <div className="flex flex-1 flex-col p-6 sm:p-7 space-y-5">
               <div className="space-y-3">
