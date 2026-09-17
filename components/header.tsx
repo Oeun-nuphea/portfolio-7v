@@ -28,6 +28,12 @@ export default function Header() {
     }
 
     const handleScroll = () => {
+      // Don't hide top bar on iPad mini and above (>= 768px)
+      if (window.innerWidth >= 768) {
+        if (!isVisible) setIsVisible(true)
+        return
+      }
+
       const currentScrollY = window.scrollY
 
       // Always show when near the top (within 50px)
@@ -35,11 +41,11 @@ export default function Header() {
         setIsVisible(true)
         if (metaThemeColor) metaThemeColor.setAttribute("content", "#ffffff")
       } else if (currentScrollY > lastScrollY) {
-        // Scrolling down -> hide top bar and blend status bar with page background
+        // Scrolling down -> hide top bar on mobile
         setIsVisible(false)
         if (metaThemeColor) metaThemeColor.setAttribute("content", "#f8fafc")
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling up -> show top bar and tint status bar with frosted glass color
+        // Scrolling up -> show top bar
         setIsVisible(true)
         if (metaThemeColor) metaThemeColor.setAttribute("content", "#ffffff")
       }
@@ -49,7 +55,7 @@ export default function Header() {
 
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [isVisible])
 
   const handleShare = async () => {
     const shareData = {
@@ -103,7 +109,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 border-b border-white/40 bg-white/[0.12] backdrop-blur-2xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/[0.10] pt-[env(safe-area-inset-top,0px)] shadow-[0_10px_30px_rgba(0,0,0,0.04),inset_0_-1px_1px_rgba(255,255,255,0.4)] transition-all duration-300 transform-gpu ${
+        className={`fixed inset-x-0 top-0 z-50 border-b border-white/40 bg-white/[0.12] backdrop-blur-2xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/[0.10] pt-[env(safe-area-inset-top,0px)] shadow-[0_10px_30px_rgba(0,0,0,0.04),inset_0_-1px_1px_rgba(255,255,255,0.4)] transition-all duration-300 transform-gpu md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
           isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
         }`}
       >
