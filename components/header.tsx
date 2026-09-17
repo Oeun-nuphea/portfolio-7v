@@ -1,6 +1,6 @@
 "use client"
 
-import { User, Layers, Briefcase, Mail, Share2, Check, Search } from "lucide-react"
+import { User, Layers, Briefcase, Mail, Share2, Check } from "lucide-react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
@@ -43,16 +43,17 @@ export default function Header() {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-20% 0px -60% 0px",
-      threshold: 0,
+      rootMargin: "-25% 0px -55% 0px",
+      threshold: [0, 0.2, 0.5],
     }
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id)
-        }
-      })
+      // Pick the entry with the highest intersection ratio or is currently intersecting
+      const intersecting = entries.filter((e) => e.isIntersecting)
+      if (intersecting.length > 0) {
+        intersecting.sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+        setActiveSection(intersecting[0].target.id)
+      }
     }, observerOptions)
 
     navItems.forEach((item) => {
@@ -117,54 +118,61 @@ export default function Header() {
       </header>
 
       {/* Apple iOS Floating Glassmorphism Bottom Navigation Bar */}
-      <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex items-center justify-center gap-2 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] px-3 lg:hidden">
-        {/* Main Floating Glass Capsule */}
-        <nav className="pointer-events-auto flex items-center rounded-[32px] border border-white/40 bg-white/45 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.12),inset_0_1px_1px_rgba(255,255,255,0.7)] backdrop-blur-3xl backdrop-saturate-150">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const sectionKey = item.href.substring(1)
-            const isActive = activeSection === sectionKey
+      <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex items-center justify-center gap-3 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] px-4 lg:hidden">
+        {/* Main Floating Glass Capsule (3 items: About, Stack, Experience with equal flex-1 width) */}
+        <nav className="pointer-events-auto flex flex-1 max-w-[320px] items-center rounded-[32px] border border-white/60 bg-white/65 p-1.5 shadow-[0_16px_40px_rgba(15,23,42,0.1),inset_0_1px_1px_rgba(255,255,255,0.8)] backdrop-blur-3xl backdrop-saturate-150 transform-gpu">
+          {navItems
+            .filter((item) => item.href !== "#contact")
+            .map((item) => {
+              const Icon = item.icon
+              const sectionKey = item.href.substring(1)
+              const isActive = activeSection === sectionKey
 
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={() => setActiveSection(sectionKey)}
-                className={`group relative flex min-w-[58px] flex-col items-center justify-center rounded-[24px] px-2.5 py-1.5 transition-all duration-200 ${
-                  isActive
-                    ? "bg-black/[0.08] shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]"
-                    : "hover:bg-black/[0.04]"
-                }`}
-              >
-                <Icon
-                  size={21}
-                  strokeWidth={isActive ? 2.3 : 1.9}
-                  className={`transition-all duration-200 ${
-                    isActive ? "text-[#FA2D48] scale-105" : "text-neutral-500 group-hover:text-neutral-700"
-                  }`}
-                />
-                <span
-                  className={`mt-0.5 text-[10px] tracking-tight transition-all duration-200 ${
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setActiveSection(sectionKey)}
+                  className={`group relative flex-1 flex flex-col items-center justify-center rounded-[24px] py-1.5 transition-colors duration-200 ${
                     isActive
-                      ? "font-semibold text-[#FA2D48]"
-                      : "font-medium text-neutral-500 group-hover:text-neutral-700"
+                      ? "bg-white text-neutral-900 shadow-[0_2px_8px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)]"
+                      : "text-neutral-500 hover:text-neutral-800 hover:bg-black/[0.03]"
                   }`}
                 >
-                  {item.label}
-                </span>
-              </a>
-            )
-          })}
+                  <Icon
+                    size={20}
+                    strokeWidth={isActive ? 2.2 : 1.9}
+                    className={`transition-colors duration-200 ${
+                      isActive ? "text-neutral-900" : "text-neutral-500 group-hover:text-neutral-800"
+                    }`}
+                  />
+                  <span
+                    className={`mt-0.5 text-[10px] font-medium tracking-tight transition-colors duration-200 ${
+                      isActive
+                        ? "text-neutral-900 font-semibold"
+                        : "text-neutral-500 group-hover:text-neutral-800"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </a>
+              )
+            })}
         </nav>
 
-        {/* Circular Floating Search Button */}
+        {/* Circular Floating Contact Button */}
         <a
           href="#contact"
           onClick={() => setActiveSection("contact")}
-          className="pointer-events-auto flex h-[58px] w-[58px] shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/45 text-neutral-600 shadow-[0_12px_40px_rgba(0,0,0,0.12),inset_0_1px_1px_rgba(255,255,255,0.7)] backdrop-blur-3xl backdrop-saturate-150 transition-all duration-200 hover:bg-white/60 active:scale-95"
-          aria-label="Search"
+          className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full border border-white/60 shadow-[0_16px_40px_rgba(15,23,42,0.1),inset_0_1px_1px_rgba(255,255,255,0.8)] backdrop-blur-3xl backdrop-saturate-150 transition-all duration-200 active:scale-95 transform-gpu ${
+            activeSection === "contact"
+              ? "bg-white text-neutral-900 ring-2 ring-black/5 shadow-[0_4px_12px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)]"
+              : "bg-white/65 text-neutral-600 hover:bg-white/80 hover:text-neutral-900"
+          }`}
+          aria-label="Contact"
         >
-          <Search size={22} strokeWidth={2.1} />
+          <Mail size={20} strokeWidth={activeSection === "contact" ? 2.2 : 1.9} />
+          <span className="mt-0.5 text-[9px] font-medium leading-none">Contact</span>
         </a>
       </div>
     </>
