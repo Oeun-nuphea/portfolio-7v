@@ -1,8 +1,9 @@
 "use client"
 
-import { User, Layers, Briefcase, Mail, Share2, Check } from "lucide-react"
-import { useState, useEffect } from "react"
+import { User, Layers, Briefcase, Mail, Check, Settings, PanelLeft, PanelRight, PanelBottom, X } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
+import { motion, AnimatePresence } from "framer-motion"
 
 const navItems = [
   { label: "About", href: "#about", icon: User },
@@ -15,6 +16,10 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState("about")
   const [copied, setCopied] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
+  const [dockPosition, setDockPosition] = useState<"bottom" | "left" | "right">("bottom")
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const constraintsRef = useRef<HTMLDivElement>(null)
+  const navContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let lastScrollY = window.scrollY
@@ -151,81 +156,219 @@ export default function Header() {
               })}
             </div>
 
-            <button
-              onClick={handleShare}
-              className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-white/90"
-              aria-label="Share portfolio link"
-            >
-              {copied ? <Check size={14} className="text-emerald-500" /> : <Share2 size={14} />}
-              <span>{copied ? "Copied" : "Share"}</span>
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                className={`glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200 ${
+                  isSettingsOpen ? "bg-white text-neutral-900 shadow-sm ring-1 ring-black/10" : "text-foreground hover:bg-white/90"
+                }`}
+                aria-label="Navigation settings"
+              >
+                <Settings size={14} className={`transition-transform duration-300 ${isSettingsOpen ? "rotate-90" : ""}`} />
+                <span>Settings</span>
+              </button>
+
+              {/* Settings Dropdown Popover */}
+              <AnimatePresence>
+                {isSettingsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -6 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -6 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-white/70 bg-white/80 p-3 shadow-[0_16px_40px_rgba(0,0,0,0.12),inset_0_1px_1px_rgba(255,255,255,0.9)] backdrop-blur-2xl backdrop-saturate-150 z-50"
+                  >
+                    <div className="flex items-center justify-between pb-2 border-b border-black/[0.06]">
+                      <span className="text-[11px] font-semibold text-neutral-800 tracking-wide uppercase">Bar Position</span>
+                      <button
+                        onClick={() => setIsSettingsOpen(false)}
+                        className="rounded-full p-1 text-neutral-400 hover:text-neutral-700 hover:bg-black/[0.04] transition-colors"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+
+                    <div className="mt-2 space-y-1">
+                      <button
+                        onClick={() => {
+                          setDockPosition("bottom")
+                          setIsSettingsOpen(false)
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                          dockPosition === "bottom"
+                            ? "bg-neutral-900 text-white shadow-sm"
+                            : "text-neutral-700 hover:bg-black/[0.05]"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <PanelBottom size={15} />
+                          <span>Bottom</span>
+                        </span>
+                        {dockPosition === "bottom" && <Check size={13} className="text-white" />}
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setDockPosition("left")
+                          setIsSettingsOpen(false)
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                          dockPosition === "left"
+                            ? "bg-neutral-900 text-white shadow-sm"
+                            : "text-neutral-700 hover:bg-black/[0.05]"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <PanelLeft size={15} />
+                          <span>Left Dock</span>
+                        </span>
+                        {dockPosition === "left" && <Check size={13} className="text-white" />}
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setDockPosition("right")
+                          setIsSettingsOpen(false)
+                        }}
+                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                          dockPosition === "right"
+                            ? "bg-neutral-900 text-white shadow-sm"
+                            : "text-neutral-700 hover:bg-black/[0.05]"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <PanelRight size={15} />
+                          <span>Right Dock</span>
+                        </span>
+                        {dockPosition === "right" && <Check size={13} className="text-white" />}
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </nav>
       </header>
 
-      {/* Pure Crystal Glass Floating Bottom Navigation Bar */}
-      <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none flex items-center justify-center gap-3 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] px-4 lg:hidden">
-        {/* Main Crystal Glass Capsule (3 items: About, Stack, Experience) */}
-        <nav className="pointer-events-auto flex h-[58px] flex-1 max-w-[320px] items-center rounded-[32px] border border-white/60 bg-white/[0.06] p-0.5 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu">
-          {navItems
-            .filter((item) => item.href !== "#contact")
-            .map((item) => {
-              const Icon = item.icon
-              const sectionKey = item.href.substring(1)
-              const isActive = activeSection === sectionKey
+      {/* Screen Boundary for Dragging Navigation (iPad Pro, iPad, Mobile) */}
+      <div ref={constraintsRef} className="fixed inset-0 z-50 pointer-events-none p-4 lg:hidden">
+        {/* Pure Crystal Glass Draggable Floating Navigation Bar */}
+        <motion.div
+          ref={navContainerRef}
+          drag
+          dragConstraints={constraintsRef}
+          dragElastic={0.06}
+          dragMomentum={false}
+          whileDrag={{ scale: 1.04, cursor: "grabbing" }}
+          onDragEnd={(_e, info) => {
+            if (!navContainerRef.current) return
+            const rect = navContainerRef.current.getBoundingClientRect()
+            const screenWidth = window.innerWidth
+            const screenHeight = window.innerHeight
 
-              return (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setActiveSection(sectionKey)}
-                  className={`group relative flex h-full flex-1 flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
-                    isActive
-                      ? "border border-white/80 bg-white/[0.18] text-neutral-900 shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.3)] backdrop-blur-xl"
-                      : "border border-transparent text-neutral-500 hover:text-neutral-900 hover:bg-white/15"
-                  }`}
-                >
-                  <Icon
-                    size={20}
-                    strokeWidth={isActive ? 2.2 : 1.9}
-                    className={`transition-colors duration-200 ${
-                      isActive ? "text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "text-neutral-500 group-hover:text-neutral-900"
-                    }`}
-                  />
-                  <span
-                    className={`mt-0.5 text-[10px] font-medium tracking-tight transition-colors duration-200 ${
+            // If dragged close to the left edge (< 25% of screen)
+            if (rect.left < screenWidth * 0.25) {
+              setDockPosition("left")
+            }
+            // If dragged close to the right edge (> 75% of screen)
+            else if (rect.right > screenWidth * 0.75) {
+              setDockPosition("right")
+            }
+            // If near the bottom or center
+            else {
+              setDockPosition("bottom")
+            }
+          }}
+          animate={
+            dockPosition === "left"
+              ? { x: 0, y: 0, transition: { type: "spring", stiffness: 350, damping: 28 } }
+              : dockPosition === "right"
+              ? { x: 0, y: 0, transition: { type: "spring", stiffness: 350, damping: 28 } }
+              : { x: 0, y: 0, transition: { type: "spring", stiffness: 350, damping: 28 } }
+          }
+          className={`absolute pointer-events-none touch-none transition-all duration-300 ${
+            dockPosition === "left"
+              ? "left-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5"
+              : dockPosition === "right"
+              ? "right-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2.5"
+              : "bottom-4 left-0 right-0 mx-auto flex items-center justify-center gap-3 w-fit"
+          }`}
+        >
+          {/* Main Crystal Glass Capsule: Morphs between horizontal capsule and vertical side dock */}
+          <nav
+            className={`pointer-events-auto items-center rounded-[32px] border border-white/60 bg-white/[0.06] p-1 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-grab active:cursor-grabbing transition-all duration-300 ${
+              dockPosition === "bottom"
+                ? "flex h-[58px] min-w-[280px] max-w-[320px] flex-row"
+                : "flex w-[62px] flex-col gap-1.5 py-2 rounded-[36px]"
+            }`}
+          >
+            {navItems
+              .filter((item) => item.href !== "#contact")
+              .map((item) => {
+                const Icon = item.icon
+                const sectionKey = item.href.substring(1)
+                const isActive = activeSection === sectionKey
+
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setActiveSection(sectionKey)}
+                    className={`group relative flex flex-col items-center justify-center transition-all duration-200 ${
+                      dockPosition === "bottom"
+                        ? "h-full flex-1 rounded-[28px]"
+                        : "h-[50px] w-[50px] rounded-[22px]"
+                    } ${
                       isActive
-                        ? "text-neutral-900 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
-                        : "text-neutral-500 group-hover:text-neutral-900"
+                        ? "border border-white/80 bg-white/[0.18] text-neutral-900 shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_2px_3px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.4),inset_0_0_10px_rgba(255,255,255,0.3)] backdrop-blur-xl"
+                        : "border border-transparent text-neutral-500 hover:text-neutral-900 hover:bg-white/15"
                     }`}
                   >
-                    {item.label}
-                  </span>
-                </a>
-              )
-            })}
-        </nav>
+                    <Icon
+                      size={20}
+                      strokeWidth={isActive ? 2.2 : 1.9}
+                      className={`transition-colors duration-200 ${
+                        isActive ? "text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "text-neutral-500 group-hover:text-neutral-900"
+                      }`}
+                    />
+                    <span
+                      className={`mt-0.5 text-[10px] font-medium tracking-tight transition-colors duration-200 ${
+                        isActive
+                          ? "text-neutral-900 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
+                          : "text-neutral-500 group-hover:text-neutral-900"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </a>
+                )
+              })}
+          </nav>
 
-        {/* Circular Crystal Glass Contact Button */}
-        <a
-          href="#contact"
-          onClick={() => setActiveSection("contact")}
-          className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu ${
-            activeSection === "contact"
-              ? "border border-white/85 bg-white/[0.18] text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.1),0_6px_16px_rgba(0,0,0,0.06),inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(255,255,255,0.45),inset_0_0_12px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
-              : "border border-white/60 bg-white/[0.06] text-neutral-500 hover:bg-white/20 hover:text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
-          }`}
-          aria-label="Contact"
-        >
-          <Mail
-            size={20}
-            strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
-            className={activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : ""}
-          />
-          <span className={`mt-0.5 text-[9px] leading-none ${activeSection === "contact" ? "font-semibold text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "font-medium"}`}>
-            Contact
-          </span>
-        </a>
+          {/* Circular Crystal Glass Contact Button */}
+          <a
+            href="#contact"
+            onClick={() => setActiveSection("contact")}
+            className={`pointer-events-auto flex shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu cursor-grab active:cursor-grabbing ${
+              dockPosition === "bottom" ? "h-[58px] w-[58px]" : "h-[56px] w-[56px]"
+            } ${
+              activeSection === "contact"
+                ? "border border-white/85 bg-white/[0.18] text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.1),0_6px_16px_rgba(0,0,0,0.06),inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(255,255,255,0.45),inset_0_0_12px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
+                : "border border-white/60 bg-white/[0.06] text-neutral-500 hover:bg-white/20 hover:text-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_4px_16px_rgba(0,0,0,0.03),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(255,255,255,0.3)] backdrop-blur-2xl backdrop-saturate-150"
+            }`}
+            aria-label="Contact"
+          >
+            <Mail
+              size={20}
+              strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
+              className={activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : ""}
+            />
+            <span className={`mt-0.5 text-[9px] leading-none ${activeSection === "contact" ? "font-semibold text-neutral-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "font-medium"}`}>
+              Contact
+            </span>
+          </a>
+        </motion.div>
       </div>
     </>
   )
