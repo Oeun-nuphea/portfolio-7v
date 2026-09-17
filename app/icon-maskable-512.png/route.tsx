@@ -19,32 +19,20 @@ export async function GET(): Promise<Response> {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#0a0a0a",
-          padding: "48px",
+          backgroundColor: "#ffffff",
+          overflow: "hidden",
         }}
       >
-        <div
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={base64Image}
+          alt="Oeun Nuphea"
           style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: "50%",
-            overflow: "hidden",
+            width: "512px",
+            height: "512px",
+            objectFit: "cover",
           }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={base64Image}
-            alt="Oeun Nuphea"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </div>
+        />
       </div>
     ),
     {

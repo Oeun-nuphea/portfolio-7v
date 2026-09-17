@@ -20,8 +20,7 @@ export default async function AppleIcon(): Promise<ImageResponse> {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#0a0a0a",
-          borderRadius: "36px",
+          backgroundColor: "#ffffff",
           overflow: "hidden",
         }}
       >

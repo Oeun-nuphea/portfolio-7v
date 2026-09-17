@@ -19,8 +19,7 @@ export async function GET(): Promise<Response> {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#0a0a0a",
-          borderRadius: "96px",
+          backgroundColor: "#ffffff",
           overflow: "hidden",
         }}
       >
