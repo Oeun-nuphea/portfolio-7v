@@ -65,7 +65,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 pt-[env(safe-area-inset-top,0px)]">
         <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3 lg:px-8">
           <a href="#top" className="flex items-center gap-2.5">
             <div className="relative h-8 w-8 overflow-hidden rounded-full border border-border">
@@ -116,7 +116,7 @@ export default function Header() {
       </header>
 
       {/* Instagram-style Bottom Navigation Bar for Mobile */}
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur-md lg:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 lg:hidden pb-[env(safe-area-inset-bottom,0px)]">
         <div className="flex h-16 items-center justify-around px-2">
           {navItems.map((item) => {
             const Icon = item.icon
