@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Oeun Nuphea — Software Engineer & Freelancer",
+    name: "Oeun Nuphea — Backend Developer & Software Engineer",
     short_name: "Oeun Nuphea",
     description:
-      "Software Engineer specializing in scalable event-driven systems, high-performance APIs, and continuous deployment pipelines. Available for contract work and freelance projects.",
+      "Backend Developer & Software Engineer specializing in scalable REST APIs, real-time WebSockets, database design, and CI/CD pipelines.",
     start_url: "/",
     id: "/",
     scope: "/",

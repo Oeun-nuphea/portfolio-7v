@@ -1,23 +1,23 @@
 const buildAreas = [
   {
-    title: "Event-Driven Microservices",
+    title: "REST APIs & Backend Integration",
     description:
-      "Designing decoupled, fault-tolerant services utilizing message queues (RabbitMQ), dead-letter routing, and isolated datastores.",
+      "Developing robust, low-latency RESTful APIs using Node.js, ExpressJS, and NestJS, adhering to clean architecture and modular system design.",
   },
   {
-    title: "High-Performance APIs",
+    title: "Real-Time Systems & WebSockets",
     description:
-      "Developing low-latency RESTful APIs using Node.js, Express, and TypeScript, backed by Redis caching and clean code principles.",
+      "Building interactive web platforms and real-time communication services, including live business chat widgets and dynamic event handling.",
   },
   {
-    title: "Modern Frontend Platforms",
+    title: "SQL & NoSQL Datastores",
     description:
-      "Building responsive interfaces in React and Vue 3, ensuring fast rendering, intuitive UX, and clean state management.",
+      "Designing efficient database schemas, query optimization, and caching strategies utilizing MongoDB, MySQL, and Redis.",
   },
   {
-    title: "CI/CD & Continuous Delivery",
+    title: "CI/CD & DevOps Automation",
     description:
-      "Automating integration pipelines with GitHub Actions, containerizing environments with Docker, and hosting securely in AWS.",
+      "Automating testing and deployment workflows using GitHub Actions, containerizing environments with Docker, and ensuring rapid release cycles.",
   },
 ]
 
@@ -38,10 +38,10 @@ export default function About() {
             </div>
             <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
               <p>
-                I am a passionate Software Engineer and Freelancer dedicated to building stable, performance-oriented backend platforms. I enjoy translating complex business logic into clean, reusable service code and decoupled microservice event flows.
+                A Computer Science graduate from RUPP working as a Web Developer, experienced in building responsive web applications with REST APIs and real-time features using WebSockets, and working with both SQL and NoSQL databases.
               </p>
               <p>
-                With continuous learning at my core, I keep myself up to date with modern system design paradigms, caching patterns, and automated CI/CD practices. I value clear communication, observability, and clean API design.
+                Familiar with CI/CD pipelines, containerized deployment with Docker, and backend system integration. Passionate about writing maintainable code, self-development, and collaborating with cross-functional teams to solve technical challenges.
               </p>
             </div>
           </div>

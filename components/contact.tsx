@@ -1,12 +1,42 @@
-import { Github, Globe, Linkedin, Mail } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
+import { Github, Globe, Linkedin, Mail, MapPin, Phone } from "lucide-react"
 
-const contactLinks = [
+interface ContactLink {
+  label: string
+  value: string
+  href: string
+  icon: LucideIcon
+  external: boolean
+}
+
+const contactLinks: ContactLink[] = [
   {
     label: "Email",
     value: "nupheaoeun@gmail.com",
     href: "mailto:nupheaoeun@gmail.com",
     icon: Mail,
     external: false,
+  },
+  {
+    label: "Phone",
+    value: "096 2469031",
+    href: "tel:+855962469031",
+    icon: Phone,
+    external: false,
+  },
+  {
+    label: "Telegram",
+    value: "@oeunnuphea",
+    href: "https://t.me/oeunnuphea",
+    icon: Globe,
+    external: true,
+  },
+  {
+    label: "Location",
+    value: "Phnom Penh, Cambodia",
+    href: "https://maps.google.com/?q=Phnom+Penh,+Cambodia",
+    icon: MapPin,
+    external: true,
   },
   {
     label: "LinkedIn",
@@ -20,13 +50,6 @@ const contactLinks = [
     value: "github.com/Oeun-nuphea",
     href: "https://github.com/Oeun-nuphea",
     icon: Github,
-    external: true,
-  },
-  {
-    label: "Telegram",
-    value: "Oeun Nuphea",
-    href: "https://t.me/oeunnuphea",
-    icon: Globe,
     external: true,
   },
 ]

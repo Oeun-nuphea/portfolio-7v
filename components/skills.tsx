@@ -1,20 +1,35 @@
 const stackGroups = [
   {
-    category: "Application Frameworks",
-    skills: ["TypeScript", "Node.js", "Express", "NestJS", "Go", "Vue 3", "React"],
+    category: "Backend & APIs",
+    skills: ["Node.js", "ExpressJS", "NestJS", "REST APIs", "WebSockets", "Python"],
   },
   {
-    category: "Databases & Messaging Broker",
-    skills: ["PostgreSQL", "MongoDB", "Redis", "RabbitMQ"],
+    category: "Frontend Development",
+    skills: ["JavaScript", "TypeScript", "Vue.js", "React.js", "HTML5", "CSS / Tailwind"],
   },
   {
-    category: "Infrastructure & Tools",
-    skills: ["Docker", "Kubernetes", "GitHub Actions", "AWS"],
+    category: "Databases & Caching",
+    skills: ["MongoDB", "MySQL", "Redis"],
   },
   {
-    category: "Observability",
-    skills: ["Grafana", "Prometheus", "Sentry"],
+    category: "DevOps & Workflow",
+    skills: ["GitHub", "Docker", "GitHub Actions (CI/CD)", "Git"],
   },
+]
+
+const softSkills = [
+  "Self-Development",
+  "Teamwork",
+  "Time Management",
+  "Leadership",
+  "Effective Communication",
+  "Critical Thinking",
+  "Adaptability",
+]
+
+const languages = [
+  { language: "Khmer", level: "Native" },
+  { language: "English", level: "Good" },
 ]
 
 export default function Skills() {
@@ -26,13 +41,14 @@ export default function Skills() {
             Toolkit
           </p>
           <h2 className="text-2xl font-bold tracking-tight text-foreground">
-            Technologies & Tools
+            Technologies & Skills
           </h2>
           <p className="text-sm text-muted-foreground">
-            Languages, frameworks, databases, and DevOps tools I use daily.
+            Technical proficiencies, soft skills, and language capabilities.
           </p>
         </div>
 
+        {/* Technical Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {stackGroups.map((group) => (
             <div
@@ -54,6 +70,44 @@ export default function Skills() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Soft Skills & Languages Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Soft Skills */}
+          <div className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-all duration-300">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Soft Skills
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {softSkills.map((skill) => (
+                <span
+                  key={skill}
+                  className="glass-pill rounded-full px-3.5 py-1 text-xs font-medium text-foreground transition-all duration-200 hover:bg-white/90 shadow-sm"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Languages */}
+          <div className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-all duration-300">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Languages
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {languages.map((lang) => (
+                <div
+                  key={lang.language}
+                  className="rounded-2xl border border-white/60 bg-white/40 p-3.5 shadow-sm space-y-0.5"
+                >
+                  <p className="text-sm font-semibold text-foreground">{lang.language}</p>
+                  <p className="text-xs font-medium text-muted-foreground">{lang.level}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

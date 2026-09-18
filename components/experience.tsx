@@ -3,16 +3,25 @@ import Projects from "@/components/projects"
 const experiences = [
   {
     title: "Backend Developer",
-    company: "LTNG Properties",
-    period: "Jan 2026 – Present",
+    company: "LTNG Business",
+    period: "2026 – Present",
     achievements: [
-      // "Architected database schemas and streamlined API routing structures for core application features.",
-      // "Maintained microservice boundaries and optimized backend services to support high-throughput operations.",
-      // "Automated testing flows and continuous integration pipelines to guarantee service reliability.",
+      "Working on core backend architecture, service integration, and RESTful APIs.",
+      "Built a real-time chat application featuring an integrated business chat widget powered by WebSockets.",
+      "Engineered reliable datastores and caching layers using MongoDB and Redis for high-throughput messaging.",
     ],
-    tech: [
-      // "Express.js", "TypeScript", "MongoDB", "Docker", "GitLab CI/CD"
+    tech: ["Node.js", "ExpressJS", "WebSockets", "MongoDB", "Redis", "Docker", "REST APIs"],
+  },
+  {
+    title: "Freelance Full-Stack Developer",
+    company: "Freelance / Client Engagements",
+    period: "2026 – Present",
+    achievements: [
+      "Developing full-stack web applications and custom digital solutions for clients.",
+      "Built a specialized law management system tailored for legal professionals, featuring case tracking and document workflows.",
+      "Implemented responsive frontend interfaces backed by secure, robust server-side APIs.",
     ],
+    tech: ["React.js", "TypeScript", "Node.js", "MySQL", "MongoDB", "Tailwind CSS"],
   },
 ]
 

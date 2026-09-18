@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
 
 export const runtime = "edge"
-export const alt = "Oeun Nuphea — Software Engineer & Freelancer"
+export const alt = "Oeun Nuphea — Backend Developer & Software Engineer"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -50,7 +50,7 @@ export default async function OGImage() {
               color: "#374151",
             }}
           >
-            Software Engineer & Freelancer
+            Backend Developer & Software Engineer
           </div>
           <div
             style={{
@@ -61,7 +61,7 @@ export default async function OGImage() {
               marginTop: "8px",
             }}
           >
-            Building scalable, event-driven systems and high-performance APIs. Available for contract work.
+            Building scalable REST APIs, real-time WebSockets, robust databases, and CI/CD pipelines.
           </div>
         </div>
 
@@ -74,7 +74,7 @@ export default async function OGImage() {
           }}
         >
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            {["Node.js", "TypeScript", "Go", "Docker", "AWS"].map((tag) => (
+            {["Node.js", "ExpressJS", "NestJS", "Python", "MongoDB", "Redis", "Docker"].map((tag) => (
               <div
                 key={tag}
                 style={{

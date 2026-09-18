@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 })
 
 const siteUrl = "https://oeunnuphea.vercel.app"
-const siteTitle = "Oeun Nuphea — Software Engineer & Freelancer"
+const siteTitle = "Oeun Nuphea — Backend Developer & Software Engineer"
 const siteDescription =
-  "Software Engineer specializing in scalable event-driven systems, high-performance APIs, and continuous deployment pipelines. Available for contract work and freelance projects."
+  "Backend Developer & Software Engineer specializing in scalable REST APIs, real-time WebSockets, database design (MongoDB, MySQL, Redis), and CI/CD pipelines."
 
 export const viewport: Viewport = {
   themeColor: "#ffffff",
@@ -56,23 +56,26 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   keywords: [
-    "Software Engineer",
-    "Freelancer",
-    "Node.js",
-    "TypeScript",
-    "Go",
-    "Microservices",
-    "Docker",
-    "Kubernetes",
-    "AWS",
-    "RabbitMQ",
-    "Redis",
-    "MongoDB",
-    "PostgreSQL",
-    "API Development",
-    "Event-Driven Systems",
     "Oeun Nuphea",
+    "Backend Developer",
+    "Software Engineer",
+    "Full-Stack Developer",
     "Cambodia Developer",
+    "Node.js",
+    "ExpressJS",
+    "NestJS",
+    "Python",
+    "TypeScript",
+    "JavaScript",
+    "Vue.js",
+    "React.js",
+    "REST APIs",
+    "WebSockets",
+    "MongoDB",
+    "MySQL",
+    "Redis",
+    "Docker",
+    "CI/CD",
   ],
   authors: [{ name: "Oeun Nuphea", url: siteUrl }],
   creator: "Oeun Nuphea",
@@ -99,7 +102,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Oeun Nuphea — Software Engineer & Freelancer",
+        alt: "Oeun Nuphea — Backend Developer & Software Engineer",
       },
     ],
   },
