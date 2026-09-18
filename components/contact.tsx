@@ -19,7 +19,7 @@ const contactLinks: ContactLink[] = [
   },
   {
     label: "Phone",
-    value: "096 2469031",
+    value: "096 2469 031",
     href: "tel:+855962469031",
     icon: Phone,
     external: false,
