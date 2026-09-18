@@ -68,7 +68,7 @@ export default function Hero() {
                 Oeun Nuphea
               </h1>
               <p className="text-xl text-muted-foreground font-medium">
-                Backend Developer & Software Engineer
+                Software Engineer
               </p>
               <p className="max-w-lg text-base leading-relaxed text-muted-foreground">
                 Computer Science senior at RUPP and Web Developer experienced in building responsive web applications with REST APIs, real-time WebSocket features, and SQL/NoSQL databases.

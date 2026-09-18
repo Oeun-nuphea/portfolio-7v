@@ -12,9 +12,9 @@ const jsonLd = {
   "@type": "Person",
   name: "Oeun Nuphea",
   url: "https://oeunnuphea.vercel.app",
-  jobTitle: "Backend Developer & Software Engineer",
+  jobTitle: "Software Engineer",
   description:
-    "Backend Developer & Software Engineer specializing in scalable REST APIs, real-time WebSockets, database design (MongoDB, MySQL, Redis), and CI/CD automation.",
+    "Software Engineer specializing in scalable REST APIs, real-time WebSockets, database design (MongoDB, MySQL, Redis), and CI/CD automation.",
   email: "nupheaoeun@gmail.com",
   telephone: "+855962469031",
   address: {
