@@ -27,20 +27,40 @@ export default function Header() {
   const navContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("portfolio_dock_position")
-      if (saved === "bottom" || saved === "left" || saved === "right") {
-        setDockPosition(saved)
+    const handleScreenSizeAndDock = () => {
+      try {
+        const saved = localStorage.getItem("portfolio_dock_position")
+        const isLaptop = window.innerWidth >= 1024
+
+        if (isLaptop) {
+          // On big screens (laptop/desktop), bottom is not allowed -> allow left and right only
+          if (saved === "left" || saved === "right") {
+            setDockPosition(saved)
+          } else {
+            setDockPosition("left")
+          }
+        } else {
+          // On mobile / tablet, bottom, left, and right are all allowed
+          if (saved === "bottom" || saved === "left" || saved === "right") {
+            setDockPosition(saved)
+          }
+        }
+      } catch {
+        // localStorage may be unavailable or restricted
       }
-    } catch {
-      // localStorage may be unavailable or restricted
     }
+
+    handleScreenSizeAndDock()
+    window.addEventListener("resize", handleScreenSizeAndDock)
+    return () => window.removeEventListener("resize", handleScreenSizeAndDock)
   }, [])
 
   const updateDockPosition = (pos: "bottom" | "left" | "right") => {
-    setDockPosition(pos)
+    const isLaptop = window.innerWidth >= 1024
+    const finalPos = isLaptop && pos === "bottom" ? "left" : pos
+    setDockPosition(finalPos)
     try {
-      localStorage.setItem("portfolio_dock_position", pos)
+      localStorage.setItem("portfolio_dock_position", finalPos)
     } catch {
       // ignore
     }
@@ -220,7 +240,7 @@ export default function Header() {
           </a>
 
           <div className="flex items-center gap-4">
-            <div className="hidden lg:flex lg:items-center lg:gap-1 p-1 rounded-full border border-white/75 bg-white/[0.08] backdrop-blur-md backdrop-saturate-[180%] shadow-[0_8px_24px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.9),inset_0_-1px_2px_rgba(255,255,255,0.3)]">
+            <div className="hidden">
               {navItems.map((item) => {
                 const isActive = activeSection === item.href.substring(1)
                 return (
@@ -278,7 +298,7 @@ export default function Header() {
                           updateDockPosition("bottom")
                           setIsSettingsOpen(false)
                         }}
-                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                        className={`w-full flex lg:hidden items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
                           dockPosition === "bottom"
                             ? "bg-neutral-900 text-white shadow-sm"
                             : "text-neutral-700 hover:bg-black/[0.05]"
@@ -358,8 +378,8 @@ export default function Header() {
         </defs>
       </svg>
 
-      {/* Screen Boundary for Dragging Navigation (iPad Pro, iPad, Mobile) */}
-      <div ref={constraintsRef} className="fixed inset-0 z-50 pointer-events-none p-4 lg:hidden">
+      {/* Screen Boundary for Navigation (Desktop, iPad, Mobile) */}
+      <div ref={constraintsRef} className="fixed inset-0 z-50 pointer-events-none p-4 sm:p-6">
         {/* Pure Crystal Glass Floating Navigation Bar */}
         <motion.div
           ref={navContainerRef}
@@ -369,10 +389,10 @@ export default function Header() {
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
           className={`absolute pointer-events-none ${
             dockPosition === "left"
-              ? "left-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
+              ? "left-3 sm:left-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
               : dockPosition === "right"
-              ? "right-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
-              : "bottom-4 left-0 right-0 mx-auto flex items-center justify-center gap-3 w-fit"
+              ? "right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
+              : "bottom-4 sm:bottom-6 left-0 right-0 mx-auto flex items-center justify-center gap-3 w-fit"
           }`}
         >
           {/* Main Crystal Glass Capsule: Morphs between horizontal capsule and vertical side dock */}
