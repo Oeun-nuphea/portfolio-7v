@@ -1,8 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { saveAs } from "file-saver"
-import JSZip from "jszip"
 import Image from "next/image"
 import { Download, ArrowRight, Share2, Check } from "lucide-react"
 
@@ -31,29 +29,6 @@ export default function Hero() {
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
       console.error("Failed to copy share link:", error)
-    }
-  }
-
-  const downloadZip = async () => {
-    const zip = new JSZip()
-
-    const files = [
-      { url: "/OEUN NUPHEA.pdf", name: "OEUN NUPHEA.pdf" },
-      { url: "/Oeun Nuphea Cover Latter.pdf", name: "Cover Letter.pdf" },
-    ]
-
-    try {
-      for (const file of files) {
-        const response = await fetch(file.url)
-        if (!response.ok) throw new Error(`Failed to fetch ${file.name}`)
-        const blob = await response.blob()
-        zip.file(file.name, blob)
-      }
-
-      const content = await zip.generateAsync({ type: "blob" })
-      saveAs(content, "CVs.zip")
-    } catch (error) {
-      console.error("Failed to download CV package:", error)
     }
   }
 
@@ -91,13 +66,16 @@ export default function Hero() {
                 View Projects
               </a>
 
-              <button
-                onClick={downloadZip}
+              <a
+                href="/OEUN NUPHEA.pdf"
+                download="OEUN NUPHEA.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground active:scale-[0.98]"
               >
                 <Download size={15} />
-                Download CVs
-              </button>
+                Download CV
+              </a>
 
               <button
                 onClick={handleShare}
