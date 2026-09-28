@@ -51,10 +51,6 @@ const jsonLd = {
       "@type": "CollegeOrUniversity",
       name: "Royal University of Phnom Penh",
     },
-    {
-      "@type": "EducationalOrganization",
-      name: "ANT Training Center",
-    },
   ],
   worksFor: {
     "@type": "Organization",

@@ -21,12 +21,6 @@ const education: EducationItem[] = [
     period: "2022 – 2026 (Year 4)",
   },
   {
-    type: "Professional Training",
-    degree: "Web Development",
-    school: "ANT Training Center",
-    period: "2025 – Present",
-  },
-  {
     type: "Scholarship Program",
     degree: "Samsung Python Program",
     school: "Royal University of Phnom Penh (RUPP)",
@@ -41,11 +35,6 @@ const education: EducationItem[] = [
 ]
 
 const achievements: AchievementItem[] = [
-  {
-    title: "Government-Sponsored Web Development Scholarship",
-    issuer: "ANT Training Center",
-    description: "Awarded a competitive government scholarship for professional web development.",
-  },
   {
     title: "Python Programming Scholarship",
     issuer: "Royal University of Phnom Penh (RUPP)",
