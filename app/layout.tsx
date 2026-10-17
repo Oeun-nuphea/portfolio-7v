@@ -129,7 +129,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased relative min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased relative min-h-dvh`}>
         {/* Ambient iOS liquid glass refraction background lights */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
           <div className="absolute -top-32 right-1/4 h-[480px] w-[480px] rounded-full bg-gradient-to-br from-blue-300/20 to-sky-200/20 blur-[100px]" />

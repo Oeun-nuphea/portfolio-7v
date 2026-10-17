@@ -69,7 +69,7 @@ export default function PwaInstallPrompt(): React.ReactNode {
   return (
     <aside
       aria-label="Install App"
-      className="fixed bottom-24 left-4 right-4 z-50 mx-auto max-w-sm rounded-3xl glass-panel p-5 shadow-[0_16px_50px_rgba(15,23,42,0.12)] transition-all duration-300 sm:bottom-6 sm:left-auto sm:right-6"
+      className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom,0px))] left-4 right-4 z-50 mx-auto max-w-sm rounded-3xl glass-panel p-5 shadow-[0_16px_50px_rgba(15,23,42,0.12)] transform-gpu will-change-transform transition-all duration-300 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] sm:left-auto sm:right-6"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
