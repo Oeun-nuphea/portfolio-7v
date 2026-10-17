@@ -22,7 +22,7 @@ const siteDescription =
   "Software Engineer specializing in scalable REST APIs, real-time WebSockets, database design (MongoDB, MySQL, Redis), and CI/CD pipelines."
 
 export const viewport: Viewport = {
-  themeColor: "#f8fafc",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -129,16 +129,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased relative min-h-dvh bg-[#f8fafc]`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased relative min-h-dvh bg-white`}>
         {/* Ambient iOS liquid glass refraction background lights */}
         <div
-          className="pointer-events-none fixed -top-[env(safe-area-inset-top,0px)] -bottom-[env(safe-area-inset-bottom,0px)] inset-x-0 -z-10 overflow-hidden bg-[#f8fafc]"
+          className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-white"
           aria-hidden="true"
         >
-          <div className="absolute -top-32 right-1/4 h-[480px] w-[480px] rounded-full bg-gradient-to-br from-blue-300/20 to-sky-200/20 blur-[100px]" />
-          <div className="absolute top-1/3 -left-32 h-[520px] w-[520px] rounded-full bg-gradient-to-tr from-indigo-200/25 to-purple-200/15 blur-[120px]" />
-          <div className="absolute top-2/3 -right-24 h-[440px] w-[440px] rounded-full bg-gradient-to-bl from-teal-200/20 to-sky-200/15 blur-[100px]" />
-          <div className="absolute -bottom-24 left-1/3 h-[400px] w-[400px] rounded-full bg-gradient-to-r from-blue-200/20 to-indigo-200/15 blur-[110px]" />
+          <div className="absolute top-12 right-1/4 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-blue-300/15 to-sky-200/15 blur-[100px]" />
+          <div className="absolute top-1/3 -left-32 h-[480px] w-[480px] rounded-full bg-gradient-to-tr from-indigo-200/20 to-purple-200/15 blur-[120px]" />
+          <div className="absolute top-2/3 -right-24 h-[400px] w-[400px] rounded-full bg-gradient-to-bl from-teal-200/15 to-sky-200/15 blur-[100px]" />
+          <div className="absolute bottom-24 left-1/3 h-[360px] w-[360px] rounded-full bg-gradient-to-r from-blue-200/15 to-indigo-200/10 blur-[110px]" />
+          {/* Top and bottom edge fade to pure #ffffff so Android 15 system status & gesture bars blend with zero seam */}
+          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white via-white/80 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white via-white/85 to-transparent" />
         </div>
         {children}
         <PwaRegister />

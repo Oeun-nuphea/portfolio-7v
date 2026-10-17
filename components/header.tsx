@@ -207,7 +207,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 border-b border-white/60 bg-white/75 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_10px_30px_rgba(0,0,0,0.04),inset_0_-1px_1px_rgba(255,255,255,0.4)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
+        className={`fixed inset-x-0 top-0 z-50 border-b border-black/[0.04] bg-white/85 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
           isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
         }`}
       >
@@ -343,6 +343,12 @@ export default function Header() {
           </div>
         </nav>
       </header>
+
+      {/* Bottom Edge Soft Fade so content never hard-clips against Android 15 gesture bar */}
+      <div
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-8 bg-gradient-to-t from-white via-white/70 to-transparent lg:hidden"
+        aria-hidden="true"
+      />
 
       {/* Screen Boundary for Navigation (Desktop, iPad, Mobile) */}
       <div ref={constraintsRef} className="fixed inset-0 z-50 pointer-events-none p-4 sm:p-6">
