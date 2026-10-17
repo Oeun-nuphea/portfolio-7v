@@ -1,6 +1,6 @@
 "use client"
 
-import { User, Layers, Briefcase, Mail, Check, Settings, PanelLeft, PanelRight, PanelBottom, X, Share2 } from "lucide-react"
+import { User, Layers, Briefcase, Mail, Check, Share2 } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
@@ -16,8 +16,6 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState("about")
   const [copied, setCopied] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
-  const [dockPosition, setDockPosition] = useState<"bottom" | "left" | "right">("bottom")
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [transitionDirection, setTransitionDirection] = useState<"to-contact" | "to-experience" | null>(null)
   const prevSectionRef = useRef(activeSection)
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -26,56 +24,14 @@ export default function Header() {
   const constraintsRef = useRef<HTMLDivElement>(null)
   const navContainerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleScreenSizeAndDock = () => {
-      try {
-        const saved = localStorage.getItem("portfolio_dock_position")
-        const isLaptop = window.innerWidth >= 1024
-
-        if (isLaptop) {
-          // On big screens (laptop/desktop), bottom is not allowed -> allow left and right only
-          if (saved === "left" || saved === "right") {
-            setDockPosition(saved)
-          } else {
-            setDockPosition("left")
-          }
-        } else {
-          // On mobile / tablet, bottom, left, and right are all allowed
-          if (saved === "bottom" || saved === "left" || saved === "right") {
-            setDockPosition(saved)
-          }
-        }
-      } catch {
-        // localStorage may be unavailable or restricted
-      }
-    }
-
-    handleScreenSizeAndDock()
-    window.addEventListener("resize", handleScreenSizeAndDock)
-    return () => window.removeEventListener("resize", handleScreenSizeAndDock)
-  }, [])
-
-  const updateDockPosition = (pos: "bottom" | "left" | "right") => {
-    const isLaptop = window.innerWidth >= 1024
-    const finalPos = isLaptop && pos === "bottom" ? "left" : pos
-    setDockPosition(finalPos)
-    try {
-      localStorage.setItem("portfolio_dock_position", finalPos)
-    } catch {
-      // ignore
-    }
-  }
-
   const triggerTransition = (direction: "to-contact" | "to-experience") => {
-    if (dockPosition === "left" || dockPosition === "right") {
-      setTransitionDirection(direction)
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current)
-      }
-      animationTimeoutRef.current = setTimeout(() => {
-        setTransitionDirection(null)
-      }, 650)
+    setTransitionDirection(direction)
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current)
     }
+    animationTimeoutRef.current = setTimeout(() => {
+      setTransitionDirection(null)
+    }, 650)
   }
 
   const handleNavClick = (sectionKey: string) => {
@@ -87,12 +43,10 @@ export default function Header() {
       isManualClickRef.current = false
     }, 800)
 
-    if (dockPosition === "left" || dockPosition === "right") {
-      if (sectionKey === "contact" && activeSection !== "contact") {
-        triggerTransition("to-contact")
-      } else if (activeSection === "contact" && sectionKey !== "contact") {
-        triggerTransition("to-experience")
-      }
+    if (sectionKey === "contact" && activeSection !== "contact") {
+      triggerTransition("to-contact")
+    } else if (activeSection === "contact" && sectionKey !== "contact") {
+      triggerTransition("to-experience")
     }
 
     setActiveSection(sectionKey)
@@ -182,16 +136,14 @@ export default function Header() {
     const prev = prevSectionRef.current
     const current = activeSection
 
-    if (dockPosition === "left" || dockPosition === "right") {
-      if (current === "contact" && prev !== "contact") {
-        triggerTransition("to-contact")
-      } else if (prev === "contact" && current !== "contact") {
-        triggerTransition("to-experience")
-      }
+    if (current === "contact" && prev !== "contact") {
+      triggerTransition("to-contact")
+    } else if (prev === "contact" && current !== "contact") {
+      triggerTransition("to-experience")
     }
 
     prevSectionRef.current = activeSection
-  }, [activeSection, dockPosition])
+  }, [activeSection])
 
   useEffect(() => {
     return () => {
@@ -206,8 +158,14 @@ export default function Header() {
 
   return (
     <>
+      {/* Top Status Bar Soft Fade so scrolled content and header blend invisibly into Android 15 / iOS status bar */}
+      <div
+        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-10 bg-gradient-to-b from-white via-white/80 to-transparent"
+        aria-hidden="true"
+      />
+
       <header
-        className={`fixed inset-x-0 top-0 z-50 border-b border-black/[0.04] bg-white/85 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
+        className={`fixed inset-x-0 top-0 z-50 border-b border-black/[0.03] bg-gradient-to-b from-white via-white/95 to-white/80 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
           isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
         }`}
       >
@@ -248,98 +206,6 @@ export default function Header() {
                 )
               })}
             </div>
-
-            <div className="relative">
-              <button
-                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-                className={`glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200 ${
-                  isSettingsOpen ? "bg-white text-neutral-900 shadow-sm ring-1 ring-black/10" : "text-foreground hover:bg-white/90"
-                }`}
-                aria-label="Navigation settings"
-              >
-                <Settings size={14} className={`transition-transform duration-300 ${isSettingsOpen ? "rotate-90" : ""}`} />
-                <span>Settings</span>
-              </button>
-
-              {/* Settings Dropdown Popover */}
-              <AnimatePresence>
-                {isSettingsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: -6 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: -6 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-white/70 bg-white/80 p-3 shadow-[0_16px_40px_rgba(0,0,0,0.12),inset_0_1px_1px_rgba(255,255,255,0.9)] backdrop-blur-2xl backdrop-saturate-150 z-50"
-                  >
-                    <div className="flex items-center justify-between pb-2 border-b border-black/[0.06]">
-                      <span className="text-[11px] font-semibold text-neutral-800 tracking-wide uppercase">Bar Position</span>
-                      <button
-                        onClick={() => setIsSettingsOpen(false)}
-                        className="rounded-full p-1 text-neutral-400 hover:text-neutral-700 hover:bg-black/[0.04] transition-colors"
-                      >
-                        <X size={12} />
-                      </button>
-                    </div>
-
-                    <div className="mt-2 space-y-1">
-                      <button
-                        onClick={() => {
-                          updateDockPosition("bottom")
-                          setIsSettingsOpen(false)
-                        }}
-                        className={`w-full flex lg:hidden items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
-                          dockPosition === "bottom"
-                            ? "bg-neutral-900 text-white shadow-sm"
-                            : "text-neutral-700 hover:bg-black/[0.05]"
-                        }`}
-                      >
-                        <span className="flex items-center gap-2">
-                          <PanelBottom size={15} />
-                          <span>Bottom</span>
-                        </span>
-                        {dockPosition === "bottom" && <Check size={13} className="text-white" />}
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          updateDockPosition("left")
-                          setIsSettingsOpen(false)
-                        }}
-                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
-                          dockPosition === "left"
-                            ? "bg-neutral-900 text-white shadow-sm"
-                            : "text-neutral-700 hover:bg-black/[0.05]"
-                        }`}
-                      >
-                        <span className="flex items-center gap-2">
-                          <PanelLeft size={15} />
-                          <span>Left Dock</span>
-                        </span>
-                        {dockPosition === "left" && <Check size={13} className="text-white" />}
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          updateDockPosition("right")
-                          setIsSettingsOpen(false)
-                        }}
-                        className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
-                          dockPosition === "right"
-                            ? "bg-neutral-900 text-white shadow-sm"
-                            : "text-neutral-700 hover:bg-black/[0.05]"
-                        }`}
-                      >
-                        <span className="flex items-center gap-2">
-                          <PanelRight size={15} />
-                          <span>Right Dock</span>
-                        </span>
-                        {dockPosition === "right" && <Check size={13} className="text-white" />}
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
           </div>
         </nav>
       </header>
@@ -353,27 +219,13 @@ export default function Header() {
       {/* Screen Boundary for Navigation (Desktop, iPad, Mobile) */}
       <div ref={constraintsRef} className="fixed inset-0 z-50 pointer-events-none p-4 sm:p-6">
         {/* Pure Crystal Glass Floating Navigation Bar */}
-        <motion.div
+        <div
           ref={navContainerRef}
-          key={dockPosition}
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className={`absolute pointer-events-none ${
-            dockPosition === "left"
-              ? "left-3 sm:left-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
-              : dockPosition === "right"
-              ? "right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5"
-              : "bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] left-0 right-0 mx-auto flex items-center justify-center gap-3 w-fit"
-          }`}
+          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 pointer-events-none"
         >
-          {/* Main Crystal Glass Capsule: Morphs between horizontal capsule and vertical side dock */}
+          {/* Main Crystal Glass Capsule: Vertical side dock */}
           <nav
-            className={`pointer-events-auto items-center border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-all duration-300 ${
-              dockPosition === "bottom"
-                ? "flex h-[58px] min-w-[280px] max-w-[320px] flex-row p-0.5 rounded-[32px]"
-                : "flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px]"
-            }`}
+            className="pointer-events-auto flex w-[58px] flex-col items-center p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-all duration-300"
           >
             {navItems
               .filter((item) => item.href !== "#contact")
@@ -387,11 +239,7 @@ export default function Header() {
                     key={item.label}
                     href={item.href}
                     onClick={() => handleNavClick(sectionKey)}
-                    className={`group relative flex flex-col items-center justify-center transition-all duration-200 ${
-                      dockPosition === "bottom"
-                        ? "h-full flex-1 rounded-[28px]"
-                        : "h-[54px] w-full rounded-[28px]"
-                    } ${
+                    className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
                       isActive
                         ? "border border-white/85 bg-white/80 text-neutral-950 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
                         : "border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/40 hover:border-white/40"
@@ -407,148 +255,102 @@ export default function Header() {
                       />
                     )}
                     <Icon
-                      size={dockPosition === "bottom" ? 20 : 22}
+                      size={22}
                       strokeWidth={isActive ? 2.2 : 1.9}
                       className={`transition-colors duration-200 ${
                         isActive ? "text-neutral-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "text-neutral-600 group-hover:text-neutral-950"
                       }`}
                     />
-                    {dockPosition === "bottom" && (
-                      <span
-                        className={`mt-0.5 text-[10px] tracking-tight transition-colors duration-200 ${
-                          isActive
-                            ? "text-neutral-950 font-semibold drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
-                            : "text-neutral-600 group-hover:text-neutral-950 font-medium"
-                        }`}
-                      >
-                        {item.label}
-                      </span>
-                    )}
                   </a>
                 )
               })}
           </nav>
 
-          {/* Standalone Circular Crystal Glass Contact Button (Bottom dock only) */}
-          {dockPosition === "bottom" && (
+          {/* Dynamic Traveling Liquid Glass Droplet Animation between Experience and Contact */}
+          <div className="relative h-0 w-full flex items-center justify-center pointer-events-none z-30">
+            <AnimatePresence>
+              {transitionDirection && (
+                <motion.div
+                  key={transitionDirection}
+                  initial={{
+                    opacity: 0,
+                    y: transitionDirection === "to-contact" ? -22 : 26,
+                    scale: 0.7,
+                  }}
+                  animate={{
+                    opacity: [0, 1, 1, 0],
+                    y: transitionDirection === "to-contact" ? 26 : -22,
+                    scale: [0.7, 1.1, 0.75],
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    y: { duration: 0.55, ease: [0.25, 1, 0.5, 1] },
+                    scale: { duration: 0.55, ease: "easeInOut" },
+                    opacity: { duration: 0.55, times: [0, 0.15, 0.8, 1], ease: "easeInOut" },
+                  }}
+                  className="absolute flex flex-col items-center justify-center pointer-events-none transform-gpu"
+                >
+                  {/* Glowing liquid light streak trailing behind the droplet in direction of motion */}
+                  {transitionDirection === "to-contact" ? (
+                    <div className="absolute -top-3 h-4 w-[2px] rounded-full bg-gradient-to-t from-white/95 via-white/40 to-transparent blur-[0.5px]" />
+                  ) : (
+                    <div className="absolute -bottom-3 h-4 w-[2px] rounded-full bg-gradient-to-b from-white/95 via-white/40 to-transparent blur-[0.5px]" />
+                  )}
+
+                  {/* Liquid Glass Droplet Orb */}
+                  <div className="relative flex h-4 w-4 items-center justify-center rounded-full border border-white/95 bg-white/40 shadow-[0_2px_10px_rgba(255,255,255,0.85),0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_1.5px_rgba(255,255,255,1)] backdrop-blur-sm">
+                    <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,1)]" />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Paired Crystal Glass Capsule for Contact & Share */}
+          <div
+            className="pointer-events-auto flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-all duration-300"
+          >
             <a
               href="#contact"
               onClick={() => handleNavClick("contact")}
-              className={`pointer-events-auto flex h-[58px] w-[58px] shrink-0 flex-col items-center justify-center rounded-full transition-all duration-200 active:scale-95 transform-gpu will-change-transform backdrop-blur-xl backdrop-saturate-[180%] ${
+              className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
                 activeSection === "contact"
-                  ? "border border-white/85 bg-white/80 text-neutral-950 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
-                  : "border border-white/75 bg-white/60 text-neutral-600 hover:bg-white/75 hover:border-white/95 hover:text-neutral-950 hover:scale-[1.04] shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)]"
+                  ? "border border-white/85 bg-white/80 text-neutral-950 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
+                  : "border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/40 hover:border-white/40"
               }`}
               aria-label="Contact"
             >
+              {/* Expanding liquid ripple when droplet arrives at Contact */}
+              {transitionDirection === "to-contact" && (
+                <motion.span
+                  initial={{ scale: 0.85, opacity: 0.8 }}
+                  animate={{ scale: 1.18, opacity: 0 }}
+                  transition={{ duration: 0.4, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0 rounded-[28px] border border-white/90 bg-white/20 pointer-events-none"
+                />
+              )}
               <Mail
-                size={20}
+                size={22}
                 strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
                 className={`transition-colors duration-200 ${
                   activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] text-neutral-950" : "text-neutral-600 group-hover:text-neutral-950"
                 }`}
               />
-              <span
-                className={`mt-0.5 text-[9px] leading-none transition-colors duration-200 ${
-                  activeSection === "contact"
-                    ? "font-semibold text-neutral-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
-                    : "font-medium text-neutral-600"
-                }`}
-              >
-                Contact
-              </span>
             </a>
-          )}
 
-          {/* Dynamic Traveling Liquid Glass Droplet Animation between Experience and Contact (Left & Right Dock only) */}
-          {(dockPosition === "left" || dockPosition === "right") && (
-            <div className="relative h-0 w-full flex items-center justify-center pointer-events-none z-30">
-              <AnimatePresence>
-                {transitionDirection && (
-                  <motion.div
-                    key={transitionDirection}
-                    initial={{
-                      opacity: 0,
-                      y: transitionDirection === "to-contact" ? -22 : 26,
-                      scale: 0.7,
-                    }}
-                    animate={{
-                      opacity: [0, 1, 1, 0],
-                      y: transitionDirection === "to-contact" ? 26 : -22,
-                      scale: [0.7, 1.1, 0.75],
-                    }}
-                    exit={{ opacity: 0 }}
-                    transition={{
-                      y: { duration: 0.55, ease: [0.25, 1, 0.5, 1] },
-                      scale: { duration: 0.55, ease: "easeInOut" },
-                      opacity: { duration: 0.55, times: [0, 0.15, 0.8, 1], ease: "easeInOut" },
-                    }}
-                    className="absolute flex flex-col items-center justify-center pointer-events-none transform-gpu"
-                  >
-                    {/* Glowing liquid light streak trailing behind the droplet in direction of motion */}
-                    {transitionDirection === "to-contact" ? (
-                      <div className="absolute -top-3 h-4 w-[2px] rounded-full bg-gradient-to-t from-white/95 via-white/40 to-transparent blur-[0.5px]" />
-                    ) : (
-                      <div className="absolute -bottom-3 h-4 w-[2px] rounded-full bg-gradient-to-b from-white/95 via-white/40 to-transparent blur-[0.5px]" />
-                    )}
-
-                    {/* Liquid Glass Droplet Orb */}
-                    <div className="relative flex h-4 w-4 items-center justify-center rounded-full border border-white/95 bg-white/40 shadow-[0_2px_10px_rgba(255,255,255,0.85),0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_1.5px_rgba(255,255,255,1)] backdrop-blur-sm">
-                      <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,1)]" />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-
-          {/* Paired Crystal Glass Capsule for Contact & Share (Left & Right Dock only) */}
-          {(dockPosition === "left" || dockPosition === "right") && (
-            <div
-              className="pointer-events-auto flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-all duration-300"
+            <button
+              onClick={handleShare}
+              className="group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/[0.14] hover:border-white/40 transition-all duration-200 active:scale-95"
+              aria-label="Share portfolio"
             >
-              <a
-                href="#contact"
-                onClick={() => handleNavClick("contact")}
-                className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
-                  activeSection === "contact"
-                    ? "border border-white/85 bg-white/80 text-neutral-950 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
-                    : "border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/40 hover:border-white/40"
-                }`}
-                aria-label="Contact"
-              >
-                {/* Expanding liquid ripple when droplet arrives at Contact */}
-                {transitionDirection === "to-contact" && (
-                  <motion.span
-                    initial={{ scale: 0.85, opacity: 0.8 }}
-                    animate={{ scale: 1.18, opacity: 0 }}
-                    transition={{ duration: 0.4, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute inset-0 rounded-[28px] border border-white/90 bg-white/20 pointer-events-none"
-                  />
-                )}
-                <Mail
-                  size={22}
-                  strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
-                  className={`transition-colors duration-200 ${
-                    activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] text-neutral-950" : "text-neutral-600 group-hover:text-neutral-950"
-                  }`}
-                />
-              </a>
-
-              <button
-                onClick={handleShare}
-                className="group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/[0.14] hover:border-white/40 transition-all duration-200 active:scale-95"
-                aria-label="Share portfolio"
-              >
-                {copied ? (
-                  <Check size={22} strokeWidth={2.2} className="text-emerald-600 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" />
-                ) : (
-                  <Share2 size={22} strokeWidth={1.9} className="transition-colors duration-200 text-neutral-600 group-hover:text-neutral-950" />
-                )}
-              </button>
-            </div>
-          )}
-        </motion.div>
+              {copied ? (
+                <Check size={22} strokeWidth={2.2} className="text-emerald-600 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" />
+              ) : (
+                <Share2 size={22} strokeWidth={1.9} className="transition-colors duration-200 text-neutral-600 group-hover:text-neutral-950" />
+              )}
+            </button>
+          </div>
+        </div>
       </div>
     </>
   )
