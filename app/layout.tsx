@@ -22,7 +22,7 @@ const siteDescription =
   "Software Engineer specializing in scalable REST APIs, real-time WebSockets, database design (MongoDB, MySQL, Redis), and CI/CD pipelines."
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#f8fafc",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -129,9 +129,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased relative min-h-dvh`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased relative min-h-dvh bg-[#f8fafc]`}>
         {/* Ambient iOS liquid glass refraction background lights */}
-        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div
+          className="pointer-events-none fixed -top-[env(safe-area-inset-top,0px)] -bottom-[env(safe-area-inset-bottom,0px)] inset-x-0 -z-10 overflow-hidden bg-[#f8fafc]"
+          aria-hidden="true"
+        >
           <div className="absolute -top-32 right-1/4 h-[480px] w-[480px] rounded-full bg-gradient-to-br from-blue-300/20 to-sky-200/20 blur-[100px]" />
           <div className="absolute top-1/3 -left-32 h-[520px] w-[520px] rounded-full bg-gradient-to-tr from-indigo-200/25 to-purple-200/15 blur-[120px]" />
           <div className="absolute top-2/3 -right-24 h-[440px] w-[440px] rounded-full bg-gradient-to-bl from-teal-200/20 to-sky-200/15 blur-[100px]" />

@@ -101,14 +101,6 @@ export default function Header() {
   useEffect(() => {
     let lastScrollY = window.scrollY
 
-    // Find or create theme-color meta tag for Android status bar
-    let metaThemeColor = document.querySelector('meta[name="theme-color"]')
-    if (!metaThemeColor) {
-      metaThemeColor = document.createElement("meta")
-      metaThemeColor.setAttribute("name", "theme-color")
-      document.head.appendChild(metaThemeColor)
-    }
-
     const handleScroll = () => {
       // Don't hide top bar on iPad mini and above (>= 768px)
       if (window.innerWidth >= 768) {
@@ -121,15 +113,12 @@ export default function Header() {
       // Always show when near the top (within 50px)
       if (currentScrollY < 50) {
         setIsVisible(true)
-        if (metaThemeColor) metaThemeColor.setAttribute("content", "#ffffff")
       } else if (currentScrollY > lastScrollY) {
         // Scrolling down -> hide top bar on mobile
         setIsVisible(false)
-        if (metaThemeColor) metaThemeColor.setAttribute("content", "#f8fafc")
       } else if (currentScrollY < lastScrollY) {
         // Scrolling up -> show top bar
         setIsVisible(true)
-        if (metaThemeColor) metaThemeColor.setAttribute("content", "#ffffff")
       }
 
       lastScrollY = currentScrollY
@@ -218,7 +207,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 border-b border-white/40 bg-white/[0.12] backdrop-blur-2xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/[0.10] pt-[env(safe-area-inset-top,0px)] shadow-[0_10px_30px_rgba(0,0,0,0.04),inset_0_-1px_1px_rgba(255,255,255,0.4)] transition-all duration-300 transform-gpu md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
+        className={`fixed inset-x-0 top-0 z-50 border-b border-white/60 bg-white/75 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_10px_30px_rgba(0,0,0,0.04),inset_0_-1px_1px_rgba(255,255,255,0.4)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
           isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
         }`}
       >
