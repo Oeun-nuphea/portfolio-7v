@@ -37,6 +37,7 @@ export default function Header() {
   const isManualClickRef = useRef(false)
   const manualClickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isPointerDraggingRef = useRef(false)
+  const isTouchDeviceRef = useRef(false)
   const navBarRef = useRef<HTMLElement>(null)
 
   const highlightedSection = hoveredSection ?? activeSection
@@ -50,13 +51,13 @@ export default function Header() {
   })
   const lensVelocityX = useVelocity(springLensLeft)
 
-  // iOS 26 Liquid Glass: Flush (1x) at rest; bulges bigger/taller than the bar when swiping/hovering
-  const baseScaleX = useSpring(1, { stiffness: 380, damping: 24, mass: 0.5 })
-  const baseScaleY = useSpring(1, { stiffness: 380, damping: 24, mass: 0.5 })
+  // iOS 26 Liquid Glass: Flush (1x) at rest; bulges bigger/taller than the bar ONLY while actively swiping/hovering
+  const baseScaleX = useSpring(1, { stiffness: 380, damping: 26, mass: 0.5 })
+  const baseScaleY = useSpring(1, { stiffness: 380, damping: 26, mass: 0.5 })
 
   // Velocity-driven horizontal liquid stretch & vertical tension while swiping
-  const velocityStretchX = useTransform(lensVelocityX, [-1200, 0, 1200], [0.22, 0, 0.22])
-  const velocitySquashY = useTransform(lensVelocityX, [-1200, 0, 1200], [-0.1, 0, -0.1])
+  const velocityStretchX = useTransform(lensVelocityX, [-1200, 0, 1200], [0.2, 0, 0.2])
+  const velocitySquashY = useTransform(lensVelocityX, [-1200, 0, 1200], [-0.08, 0, -0.08])
 
   const dropletScaleX = useTransform(
     [baseScaleX, velocityStretchX],
@@ -69,9 +70,8 @@ export default function Header() {
 
   useEffect(() => {
     if (isLensActive) {
-      // Bulges noticeably wider and taller than the 64px tab bar capsule when swiping
-      baseScaleX.set(1.22)
-      baseScaleY.set(1.32)
+      baseScaleX.set(1.18)
+      baseScaleY.set(1.26)
     } else {
       baseScaleX.set(1)
       baseScaleY.set(1)
@@ -128,9 +128,14 @@ export default function Header() {
     }, 800)
 
     setActiveSection(sectionKey)
+    setIsLensActive(false)
+    setHoveredSection(null)
+    const metrics = getSectionMetrics(sectionKey)
+    setPillWidth(metrics.width)
+    rawLensLeft.set(metrics.left)
   }
 
-  const updateLensFromClientX = (clientX: number, shouldScroll: boolean) => {
+  const updateLensFromClientX = (clientX: number, shouldScroll: boolean, activateLens: boolean) => {
     if (!navBarRef.current) return
     const navRect = navBarRef.current.getBoundingClientRect()
     const items = navBarRef.current.querySelectorAll<HTMLElement>("[data-nav-section]")
@@ -163,12 +168,21 @@ export default function Header() {
     const localPointerX = clientX - navRect.left
     const clampedLeft = Math.max(minLeft, Math.min(maxLeft, localPointerX - currentWidth / 2))
     rawLensLeft.set(clampedLeft)
-    setIsLensActive(true)
+    if (activateLens) {
+      setIsLensActive(true)
+    }
 
     if (closestSection) {
       setHoveredSection(closestSection)
       if (shouldScroll && closestSection !== activeSection) {
-        handleNavClick(closestSection)
+        isManualClickRef.current = true
+        if (manualClickTimeoutRef.current) {
+          clearTimeout(manualClickTimeoutRef.current)
+        }
+        manualClickTimeoutRef.current = setTimeout(() => {
+          isManualClickRef.current = false
+        }, 800)
+        setActiveSection(closestSection)
         const sectionEl = document.getElementById(closestSection)
         if (sectionEl) {
           sectionEl.scrollIntoView({ behavior: "smooth" })
@@ -178,18 +192,21 @@ export default function Header() {
   }
 
   const handleTouchStart = (event: React.TouchEvent<HTMLElement>) => {
+    isTouchDeviceRef.current = true
     const touch = event.touches[0]
     if (!touch) return
-    updateLensFromClientX(touch.clientX, false)
+    // Do not swell on simple tap start; only swell when finger drags in handleTouchMove
+    updateLensFromClientX(touch.clientX, false, false)
   }
 
   const handleTouchMove = (event: React.TouchEvent<HTMLElement>) => {
+    isTouchDeviceRef.current = true
     const touch = event.touches[0]
     if (!touch) return
     if (event.cancelable) {
       event.preventDefault()
     }
-    updateLensFromClientX(touch.clientX, true)
+    updateLensFromClientX(touch.clientX, true, true)
   }
 
   const handleTouchEnd = () => {
@@ -209,15 +226,18 @@ export default function Header() {
   }
 
   const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+    if (isTouchDeviceRef.current) return
     isPointerDraggingRef.current = true
-    updateLensFromClientX(event.clientX, true)
+    updateLensFromClientX(event.clientX, true, true)
   }
 
   const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
-    updateLensFromClientX(event.clientX, isPointerDraggingRef.current)
+    if (isTouchDeviceRef.current) return
+    updateLensFromClientX(event.clientX, isPointerDraggingRef.current, true)
   }
 
   const handleMouseUp = () => {
+    if (isTouchDeviceRef.current) return
     isPointerDraggingRef.current = false
   }
 
@@ -237,7 +257,7 @@ export default function Header() {
     const itemCenterX = metrics.left + metrics.width / 2
     const distance = Math.abs(lensCenterX - itemCenterX)
     const proximity = Math.max(0, 1 - distance / (metrics.width * 0.9))
-    return 1 + proximity * 0.22
+    return 1 + proximity * 0.18
   }
 
   useEffect(() => {
@@ -306,16 +326,16 @@ export default function Header() {
           <filter id="ios-liquid-glass-refraction" x="-20%" y="-20%" width="140%" height="140%">
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.015 0.022"
+              baseFrequency="0.014 0.024"
               numOctaves="2"
               seed="7"
               result="refractionNoise"
             />
-            <feGaussianBlur in="refractionNoise" stdDeviation="1.4" result="smoothNoise" />
+            <feGaussianBlur in="refractionNoise" stdDeviation="1.2" result="smoothNoise" />
             <feDisplacementMap
               in="SourceGraphic"
               in2="smoothNoise"
-              scale="9"
+              scale="14"
               xChannelSelector="R"
               yChannelSelector="G"
             />
@@ -325,7 +345,13 @@ export default function Header() {
 
       {/* Top Status Bar Soft Fade so scrolled content and header blend invisibly into Android 15 / iOS status bar */}
       <div
-        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-10 bg-gradient-to-b from-white via-white/80 to-transparent"
+        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-12 bg-gradient-to-b from-white via-white/85 to-transparent"
+        aria-hidden="true"
+      />
+
+      {/* Bottom Gesture Navigation Bar Soft Fade so scrolled cards never hard-clip below the floating navbar */}
+      <div
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-16 bg-gradient-to-t from-white via-white/90 to-transparent"
         aria-hidden="true"
       />
 
@@ -353,8 +379,8 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* iPhone iOS 26/27 Bottom-Center Liquid Glass Tab Bar */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 sm:bottom-6 z-50 flex items-center justify-center px-3 pb-[env(safe-area-inset-bottom,0px)]">
+      {/* iPhone iOS 26/27 Bottom-Center Ultra-Transparent 3D Liquid Glass Tab Bar */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-3 sm:bottom-6 z-50 flex items-center justify-center px-4 pb-[env(safe-area-inset-bottom,0px)]">
         <div className="pointer-events-auto flex items-center select-none">
           {/* 4-Tab Horizontal Liquid Glass Capsule (About, Stack, Experience, Contact) */}
           <nav
@@ -369,25 +395,28 @@ export default function Header() {
             onMouseLeave={handleMouseLeave}
             className="relative flex h-[64px] items-center p-[4px] rounded-full touch-none"
           >
-            {/* Layer 1 (z-0): Outer 3D Beveled Liquid Glass Shell */}
+            {/* Layer 1 (z-0): Ultra-Transparent 3D Beveled Optical Glass Shell */}
             <div
               style={{
-                backdropFilter: "url(#ios-liquid-glass-refraction) blur(10px) saturate(195%) brightness(1.02)",
-                WebkitBackdropFilter: "blur(10px) saturate(195%) brightness(1.02)",
+                backdropFilter:
+                  "url(#ios-liquid-glass-refraction) blur(4px) saturate(210%) contrast(1.05) brightness(1.02)",
+                WebkitBackdropFilter: "blur(4px) saturate(210%) contrast(1.05) brightness(1.02)",
                 background:
-                  "linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, rgba(246, 246, 250, 0.22) 50%, rgba(255, 255, 255, 0.30) 100%)",
+                  "linear-gradient(125deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.04) 32%, rgba(255, 255, 255, 0.02) 68%, rgba(255, 255, 255, 0.22) 100%)",
                 boxShadow:
-                  "0 12px 34px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.05), 0 0 0 0.5px rgba(0, 0, 0, 0.1), inset 0 1.5px 1px rgba(255, 255, 255, 0.96), inset 0 -1.5px 1px rgba(255, 255, 255, 0.82), inset 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 3px 6px rgba(255, 255, 255, 0.35), inset 0 -3px 6px rgba(255, 255, 255, 0.25)",
+                  "0 14px 36px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05), 0 0 0 0.5px rgba(0, 0, 0, 0.11), inset 0 2px 1.5px rgba(255, 255, 255, 1), inset 0 -2px 1.5px rgba(255, 255, 255, 0.88), inset 0 0 0 1px rgba(255, 255, 255, 0.55), inset 0 5px 8px -2px rgba(255, 255, 255, 0.42), inset 0 -5px 8px -2px rgba(255, 255, 255, 0.28)",
               }}
               className="pointer-events-none absolute inset-0 z-0 rounded-full transform-gpu"
               aria-hidden="true"
             >
+              {/* Top specular glass reflection arc */}
+              <div className="absolute inset-x-4 top-[1px] h-[2px] rounded-full bg-gradient-to-r from-transparent via-white/95 to-transparent" />
               {/* Left & Right internal curved glass lens crescents */}
-              <div className="absolute left-[4px] top-1/2 -translate-y-1/2 h-8 w-3 rounded-l-full bg-gradient-to-r from-white/55 via-white/20 to-transparent blur-[0.3px]" />
-              <div className="absolute right-[4px] top-1/2 -translate-y-1/2 h-8 w-3 rounded-r-full bg-gradient-to-l from-white/55 via-white/20 to-transparent blur-[0.3px]" />
+              <div className="absolute left-[3.5px] top-1/2 -translate-y-1/2 h-9 w-3.5 rounded-l-full bg-gradient-to-r from-white/65 via-white/25 to-transparent blur-[0.2px]" />
+              <div className="absolute right-[3.5px] top-1/2 -translate-y-1/2 h-9 w-3.5 rounded-r-full bg-gradient-to-l from-white/65 via-white/25 to-transparent blur-[0.2px]" />
             </div>
 
-            {/* Layer 2 (z-10): Resting Smoky Pill -> Swells Bigger than the Bar into Crystal-Clear Liquid Glass when Swiping */}
+            {/* Layer 2 (z-10): Ultra-Clear 3D Glass Active Pill (Flush 56px inside 64px bar at rest; swells bigger when swiping) */}
             <motion.div
               style={{
                 x: springLensLeft,
@@ -395,22 +424,22 @@ export default function Header() {
                 scaleX: dropletScaleX,
                 scaleY: dropletScaleY,
                 backdropFilter: isLensActive
-                  ? "url(#ios-liquid-glass-refraction) blur(2px) saturate(220%) brightness(1.06) contrast(1.04)"
+                  ? "url(#ios-liquid-glass-refraction) blur(1.5px) saturate(240%) brightness(1.06) contrast(1.08)"
                   : "none",
                 WebkitBackdropFilter: isLensActive
-                  ? "blur(2px) saturate(220%) brightness(1.06) contrast(1.04)"
+                  ? "blur(1.5px) saturate(240%) brightness(1.06) contrast(1.08)"
                   : "none",
                 background: isLensActive
-                  ? "radial-gradient(120% 100% at 50% 15%, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.04) 48%, rgba(255, 255, 255, 0.02) 74%, rgba(255, 255, 255, 0.24) 100%)"
-                  : "linear-gradient(180deg, rgba(130, 132, 144, 0.22) 0%, rgba(152, 154, 166, 0.18) 100%)",
+                  ? "radial-gradient(125% 100% at 50% 12%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.015) 45%, rgba(255, 255, 255, 0.01) 75%, rgba(255, 255, 255, 0.22) 100%)"
+                  : "linear-gradient(180deg, rgba(140, 142, 154, 0.14) 0%, rgba(160, 162, 174, 0.1) 100%)",
                 boxShadow: isLensActive
-                  ? "0 14px 34px rgba(0, 0, 0, 0.16), 0 3px 10px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.08)"
-                  : "inset 0 1px 1px rgba(255, 255, 255, 0.7), inset 0 -1px 1px rgba(255, 255, 255, 0.35)",
+                  ? "0 16px 36px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.1)"
+                  : "inset 0 1.5px 1px rgba(255, 255, 255, 0.85), inset 0 -1px 1px rgba(255, 255, 255, 0.5), 0 1px 3px rgba(0, 0, 0, 0.04)",
               }}
               className="pointer-events-none absolute top-[4px] left-0 z-10 h-[56px] rounded-full transform-gpu will-change-transform transition-[background,box-shadow] duration-200"
             />
 
-            {/* Layer 3 (z-30): Specular 3D Glass Meniscus Rim on the Oversized Lens (transparent center so icons stay razor-sharp) */}
+            {/* Layer 3 (z-30): Specular 3D Glass Meniscus Rim when Swiping */}
             <motion.div
               style={{
                 x: springLensLeft,
@@ -418,20 +447,20 @@ export default function Header() {
                 scaleX: dropletScaleX,
                 scaleY: dropletScaleY,
                 boxShadow: isLensActive
-                  ? "inset 0 2px 2px rgba(255, 255, 255, 1), inset 0 -2px 2px rgba(255, 255, 255, 0.9), inset 2px 0 2px rgba(255, 255, 255, 0.8), inset -2px 0 2px rgba(255, 255, 255, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.9)"
+                  ? "inset 0 2.5px 2px rgba(255, 255, 255, 1), inset 0 -2px 2px rgba(255, 255, 255, 0.92), inset 2px 0 2px rgba(255, 255, 255, 0.85), inset -2px 0 2px rgba(255, 255, 255, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.92)"
                   : "none",
               }}
               className="pointer-events-none absolute top-[4px] left-0 z-30 h-[56px] rounded-full transform-gpu will-change-transform transition-shadow duration-200"
             >
-              {/* Top curved specular reflection arc when the lens bulges above the bar */}
+              {/* Top curved specular reflection arc */}
               <div
-                className={`pointer-events-none absolute inset-x-3 top-[1.5px] h-2.5 rounded-t-full bg-gradient-to-b from-white/90 via-white/30 to-transparent transition-opacity duration-200 ${
+                className={`pointer-events-none absolute inset-x-3 top-[1.5px] h-2.5 rounded-t-full bg-gradient-to-b from-white/95 via-white/35 to-transparent transition-opacity duration-200 ${
                   isLensActive ? "opacity-100" : "opacity-0"
                 }`}
               />
-              {/* Bottom curved caustic rim when the lens bulges below the bar */}
+              {/* Bottom curved caustic rim */}
               <div
-                className={`pointer-events-none absolute inset-x-4 bottom-[1.5px] h-2 rounded-b-full bg-gradient-to-t from-white/75 to-transparent transition-opacity duration-200 ${
+                className={`pointer-events-none absolute inset-x-4 bottom-[1.5px] h-2 rounded-b-full bg-gradient-to-t from-white/80 to-transparent transition-opacity duration-200 ${
                   isLensActive ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -450,7 +479,7 @@ export default function Header() {
                   href={item.href}
                   data-nav-section={sectionKey}
                   onClick={() => handleNavClick(sectionKey)}
-                  className={`group relative z-20 flex h-[56px] w-[82px] sm:w-[94px] flex-col items-center justify-center rounded-full transition-colors duration-150 ${
+                  className={`group relative z-20 flex h-[56px] w-[80px] sm:w-[94px] flex-col items-center justify-center rounded-full transition-colors duration-150 ${
                     isHighlighted
                       ? "text-[#09090B]"
                       : "text-neutral-600 hover:text-[#09090B]"
