@@ -425,6 +425,16 @@ export default function Header() {
         aria-hidden="true"
       />
 
+      {/* Bottom Gesture Bar Seamless Blend (z-40: 100% #ffffff across the 12px gap below the navbar, feathering to 0% at 28px so Android 15 gesture bar has zero cutoff seam) */}
+      <div
+        style={{
+          background:
+            "linear-gradient(to top, #ffffff 0px, #ffffff 14px, rgba(255, 255, 255, 0.85) 20px, rgba(255, 255, 255, 0) 28px)",
+        }}
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-[28px] sm:hidden"
+        aria-hidden="true"
+      />
+
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b border-black/[0.03] bg-gradient-to-b from-white via-white/95 to-white/80 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
           isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
