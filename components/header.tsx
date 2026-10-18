@@ -452,8 +452,8 @@ export default function Header() {
                   onClick={() => handleNavClick(sectionKey)}
                   className={`group relative z-20 flex h-[56px] w-[82px] sm:w-[94px] flex-col items-center justify-center rounded-full transition-colors duration-150 ${
                     isHighlighted
-                      ? "text-[#5826E0]"
-                      : "text-[#0B0B0F] hover:text-[#5826E0]"
+                      ? "text-[#09090B]"
+                      : "text-neutral-600 hover:text-[#09090B]"
                   }`}
                 >
                   <span
@@ -462,18 +462,18 @@ export default function Header() {
                   >
                     <Icon
                       size={21}
-                      strokeWidth={isHighlighted ? 2.4 : 2.1}
+                      strokeWidth={isHighlighted ? 2.6 : 1.9}
                       className={`transition-colors duration-150 ${
                         isHighlighted
-                          ? "text-[#5826E0]"
-                          : "text-[#0B0B0F] group-hover:text-[#5826E0]"
+                          ? "text-[#09090B]"
+                          : "text-neutral-600 group-hover:text-[#09090B]"
                       }`}
                     />
                     <span
                       className={`text-[11px] leading-none tracking-[-0.01em] transition-colors duration-150 ${
                         isHighlighted
-                          ? "font-semibold text-[#5826E0]"
-                          : "font-medium text-[#0B0B0F] group-hover:text-[#5826E0]"
+                          ? "font-bold text-[#09090B]"
+                          : "font-medium text-neutral-600 group-hover:text-[#09090B]"
                       }`}
                     >
                       {item.label}
