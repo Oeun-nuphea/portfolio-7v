@@ -6,7 +6,6 @@ import type React from "react"
 import Image from "next/image"
 import {
   motion,
-  AnimatePresence,
   useMotionValue,
   useSpring,
   useVelocity,
@@ -20,62 +19,59 @@ const navItems = [
   { label: "Contact", href: "#contact", icon: Mail },
 ]
 
-const SECTION_DEFAULT_TOP: Record<string, number> = {
-  about: 3,
-  stack: 57,
-  experience: 111,
-  contact: 185,
+const SECTION_DEFAULT_LEFT: Record<string, number> = {
+  about: 4,
+  stack: 88,
+  experience: 172,
+  contact: 256,
 }
 
 export default function Header() {
   const [activeSection, setActiveSection] = useState("about")
   const [hoveredSection, setHoveredSection] = useState<string | null>(null)
   const [isLensActive, setIsLensActive] = useState(false)
-  const [lensCenterY, setLensCenterY] = useState<number>(SECTION_DEFAULT_TOP.about + 26)
+  const [lensCenterX, setLensCenterX] = useState<number>(SECTION_DEFAULT_LEFT.about + 41)
+  const [pillWidth, setPillWidth] = useState<number>(82)
   const [copied, setCopied] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
-  const [transitionDirection, setTransitionDirection] = useState<"to-contact" | "to-experience" | null>(null)
 
-  const prevSectionRef = useRef(activeSection)
-  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isManualClickRef = useRef(false)
   const manualClickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isPointerDraggingRef = useRef(false)
-  const constraintsRef = useRef<HTMLDivElement>(null)
-  const navContainerRef = useRef<HTMLDivElement>(null)
+  const navBarRef = useRef<HTMLElement>(null)
 
   const highlightedSection = hoveredSection ?? activeSection
 
-  // Continuous pixel-tracked Y coordinate of the liquid glass droplet inside navContainerRef
-  const rawLensTop = useMotionValue<number>(SECTION_DEFAULT_TOP.about)
-  const springLensTop = useSpring(rawLensTop, {
-    stiffness: 520,
-    damping: 32,
+  // Continuous pixel-tracked X coordinate of the liquid glass pill inside navBarRef
+  const rawLensLeft = useMotionValue<number>(SECTION_DEFAULT_LEFT.about)
+  const springLensLeft = useSpring(rawLensLeft, {
+    stiffness: 500,
+    damping: 34,
     mass: 0.45,
   })
-  const lensVelocity = useVelocity(springLensTop)
+  const lensVelocityX = useVelocity(springLensLeft)
 
-  // Subtle, refined Apple iOS 26 pill expansion when hovering/dragging (no oversized ballooning)
+  // Refined iOS 26/27 Liquid Glass swell when hovering or swiping across tabs
   const baseScaleX = useSpring(1, { stiffness: 420, damping: 28 })
   const baseScaleY = useSpring(1, { stiffness: 420, damping: 28 })
 
-  // Subtle velocity-driven elastic stretch while gliding
-  const velocityStretchY = useTransform(lensVelocity, [-1000, 0, 1000], [0.08, 0, 0.08])
-  const velocitySquashX = useTransform(lensVelocity, [-1000, 0, 1000], [-0.04, 0, -0.04])
+  // Velocity-driven horizontal elastic stretch & vertical squash while swiping
+  const velocityStretchX = useTransform(lensVelocityX, [-1200, 0, 1200], [0.14, 0, 0.14])
+  const velocitySquashY = useTransform(lensVelocityX, [-1200, 0, 1200], [-0.06, 0, -0.06])
 
   const dropletScaleX = useTransform(
-    [baseScaleX, velocitySquashX],
-    ([bx, vx]: number[]) => Math.max(0.95, bx + vx)
+    [baseScaleX, velocityStretchX],
+    ([bx, vx]: number[]) => bx + vx
   )
   const dropletScaleY = useTransform(
-    [baseScaleY, velocityStretchY],
-    ([by, vy]: number[]) => by + vy
+    [baseScaleY, velocitySquashY],
+    ([by, vy]: number[]) => Math.max(0.94, by + vy)
   )
 
   useEffect(() => {
     if (isLensActive) {
-      baseScaleX.set(1.08)
-      baseScaleY.set(1.06)
+      baseScaleX.set(1.06)
+      baseScaleY.set(1.1)
     } else {
       baseScaleX.set(1)
       baseScaleY.set(1)
@@ -83,44 +79,44 @@ export default function Header() {
   }, [isLensActive, baseScaleX, baseScaleY])
 
   useEffect(() => {
-    const unsubscribe = springLensTop.on("change", (latestTop: number) => {
-      setLensCenterY(latestTop + 27)
+    const unsubscribe = springLensLeft.on("change", (latestLeft: number) => {
+      setLensCenterX(latestLeft + pillWidth / 2)
     })
     return () => unsubscribe()
-  }, [springLensTop])
+  }, [springLensLeft, pillWidth])
 
-  const getSectionLocalTop = useCallback((sectionKey: string): number => {
-    if (!navContainerRef.current) {
-      return SECTION_DEFAULT_TOP[sectionKey] ?? 2
+  const getSectionMetrics = useCallback((sectionKey: string): { left: number; width: number } => {
+    if (!navBarRef.current) {
+      return { left: SECTION_DEFAULT_LEFT[sectionKey] ?? 4, width: 82 }
     }
-    const containerRect = navContainerRef.current.getBoundingClientRect()
-    const targetEl = navContainerRef.current.querySelector<HTMLElement>(
+    const navRect = navBarRef.current.getBoundingClientRect()
+    const targetEl = navBarRef.current.querySelector<HTMLElement>(
       `[data-nav-section="${sectionKey}"]`
     )
     if (!targetEl) {
-      return SECTION_DEFAULT_TOP[sectionKey] ?? 2
+      return { left: SECTION_DEFAULT_LEFT[sectionKey] ?? 4, width: 82 }
     }
     const rect = targetEl.getBoundingClientRect()
-    return rect.top - containerRect.top
+    return {
+      left: rect.left - navRect.left,
+      width: rect.width,
+    }
   }, [])
 
-  // Snap droplet to active section when not actively scrubbing/hovering
+  // Snap pill to active tab when not actively hovering/swiping, and keep width synced on resize
   useEffect(() => {
-    if (!isLensActive) {
-      const targetTop = getSectionLocalTop(activeSection)
-      rawLensTop.set(targetTop)
+    const syncPillToActive = () => {
+      if (!isLensActive) {
+        const metrics = getSectionMetrics(activeSection)
+        setPillWidth(metrics.width)
+        rawLensLeft.set(metrics.left)
+        setLensCenterX(metrics.left + metrics.width / 2)
+      }
     }
-  }, [activeSection, isLensActive, getSectionLocalTop, rawLensTop])
-
-  const triggerTransition = (direction: "to-contact" | "to-experience") => {
-    setTransitionDirection(direction)
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current)
-    }
-    animationTimeoutRef.current = setTimeout(() => {
-      setTransitionDirection(null)
-    }, 650)
-  }
+    syncPillToActive()
+    window.addEventListener("resize", syncPillToActive)
+    return () => window.removeEventListener("resize", syncPillToActive)
+  }, [activeSection, isLensActive, getSectionMetrics, rawLensLeft])
 
   const handleNavClick = (sectionKey: string) => {
     isManualClickRef.current = true
@@ -131,53 +127,42 @@ export default function Header() {
       isManualClickRef.current = false
     }, 800)
 
-    if (sectionKey === "contact" && activeSection !== "contact") {
-      triggerTransition("to-contact")
-    } else if (activeSection === "contact" && sectionKey !== "contact") {
-      triggerTransition("to-experience")
-    }
-
     setActiveSection(sectionKey)
   }
 
-  const updateLensFromClientY = (clientY: number, shouldScroll: boolean) => {
-    if (!navContainerRef.current) return
-    const containerRect = navContainerRef.current.getBoundingClientRect()
-    const items = navContainerRef.current.querySelectorAll<HTMLElement>("[data-nav-section]")
+  const updateLensFromClientX = (clientX: number, shouldScroll: boolean) => {
+    if (!navBarRef.current) return
+    const navRect = navBarRef.current.getBoundingClientRect()
+    const items = navBarRef.current.querySelectorAll<HTMLElement>("[data-nav-section]")
 
-    let minTop = 2
-    let maxTop = 178
+    let minLeft = 4
+    let maxLeft = 256
+    let currentWidth = pillWidth
     let closestSection: string | null = null
     let minDistance = Number.POSITIVE_INFINITY
 
     items.forEach((el, index) => {
       const rect = el.getBoundingClientRect()
-      const localTop = rect.top - containerRect.top
-      if (index === 0) minTop = localTop
-      maxTop = localTop
+      const localLeft = rect.left - navRect.left
+      currentWidth = rect.width
+      if (index === 0) minLeft = localLeft
+      maxLeft = localLeft
 
       const section = el.dataset.navSection
       if (!section) return
 
-      const center = rect.top + rect.height / 2
-      const distance = Math.abs(clientY - center)
+      const center = rect.left + rect.width / 2
+      const distance = Math.abs(clientX - center)
       if (distance < minDistance) {
         minDistance = distance
         closestSection = section
       }
     })
 
-    // If pointer is below Contact (over the Share button), release the lens
-    const localPointerY = clientY - containerRect.top
-    if (localPointerY > maxTop + 56) {
-      setIsLensActive(false)
-      setHoveredSection(null)
-      rawLensTop.set(getSectionLocalTop(activeSection))
-      return
-    }
-
-    const clampedTop = Math.max(minTop, Math.min(maxTop, localPointerY - 27))
-    rawLensTop.set(clampedTop)
+    setPillWidth(currentWidth)
+    const localPointerX = clientX - navRect.left
+    const clampedLeft = Math.max(minLeft, Math.min(maxLeft, localPointerX - currentWidth / 2))
+    rawLensLeft.set(clampedLeft)
     setIsLensActive(true)
 
     if (closestSection) {
@@ -192,19 +177,19 @@ export default function Header() {
     }
   }
 
-  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = (event: React.TouchEvent<HTMLElement>) => {
     const touch = event.touches[0]
     if (!touch) return
-    updateLensFromClientY(touch.clientY, false)
+    updateLensFromClientX(touch.clientX, false)
   }
 
-  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchMove = (event: React.TouchEvent<HTMLElement>) => {
     const touch = event.touches[0]
     if (!touch) return
     if (event.cancelable) {
       event.preventDefault()
     }
-    updateLensFromClientY(touch.clientY, true)
+    updateLensFromClientX(touch.clientX, true)
   }
 
   const handleTouchEnd = () => {
@@ -218,16 +203,18 @@ export default function Header() {
     const finalSection = hoveredSection ?? activeSection
     setIsLensActive(false)
     setHoveredSection(null)
-    rawLensTop.set(getSectionLocalTop(finalSection))
+    const metrics = getSectionMetrics(finalSection)
+    setPillWidth(metrics.width)
+    rawLensLeft.set(metrics.left)
   }
 
-  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
     isPointerDraggingRef.current = true
-    updateLensFromClientY(event.clientY, true)
+    updateLensFromClientX(event.clientX, true)
   }
 
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    updateLensFromClientY(event.clientY, isPointerDraggingRef.current)
+  const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+    updateLensFromClientX(event.clientX, isPointerDraggingRef.current)
   }
 
   const handleMouseUp = () => {
@@ -238,16 +225,19 @@ export default function Header() {
     isPointerDraggingRef.current = false
     setIsLensActive(false)
     setHoveredSection(null)
-    rawLensTop.set(getSectionLocalTop(activeSection))
+    const metrics = getSectionMetrics(activeSection)
+    setPillWidth(metrics.width)
+    rawLensLeft.set(metrics.left)
   }
 
-  // Subtle optical magnification of the icon under the lens
-  const getIconMagnification = (sectionKey: string): number => {
+  // Continuous optical magnification as the liquid glass lens passes over a tab
+  const getTabMagnification = (sectionKey: string): number => {
     if (!isLensActive) return 1
-    const itemCenterY = (SECTION_DEFAULT_TOP[sectionKey] ?? 2) + 27
-    const distance = Math.abs(lensCenterY - itemCenterY)
-    const proximity = Math.max(0, 1 - distance / 52)
-    return 1 + proximity * 0.12
+    const metrics = getSectionMetrics(sectionKey)
+    const itemCenterX = metrics.left + metrics.width / 2
+    const distance = Math.abs(lensCenterX - itemCenterX)
+    const proximity = Math.max(0, 1 - distance / (metrics.width * 0.85))
+    return 1 + proximity * 0.08
   }
 
   useEffect(() => {
@@ -326,23 +316,7 @@ export default function Header() {
   }, [])
 
   useEffect(() => {
-    const prev = prevSectionRef.current
-    const current = activeSection
-
-    if (current === "contact" && prev !== "contact") {
-      triggerTransition("to-contact")
-    } else if (prev === "contact" && current !== "contact") {
-      triggerTransition("to-experience")
-    }
-
-    prevSectionRef.current = activeSection
-  }, [activeSection])
-
-  useEffect(() => {
     return () => {
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current)
-      }
       if (manualClickTimeoutRef.current) {
         clearTimeout(manualClickTimeoutRef.current)
       }
@@ -351,6 +325,29 @@ export default function Header() {
 
   return (
     <>
+      {/* SVG Optical Refraction Filter for iOS 26/27 Liquid Glass */}
+      <svg className="pointer-events-none fixed h-0 w-0" aria-hidden="true">
+        <defs>
+          <filter id="ios-liquid-glass-refraction" x="-15%" y="-15%" width="130%" height="130%">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.014 0.022"
+              numOctaves="2"
+              seed="7"
+              result="refractionNoise"
+            />
+            <feGaussianBlur in="refractionNoise" stdDeviation="1.8" result="smoothNoise" />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="smoothNoise"
+              scale="6"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+          </filter>
+        </defs>
+      </svg>
+
       {/* Top Status Bar Soft Fade so scrolled content and header blend invisibly into Android 15 / iOS status bar */}
       <div
         className="pointer-events-none fixed inset-x-0 top-0 z-40 h-10 bg-gradient-to-b from-white via-white/80 to-transparent"
@@ -378,207 +375,137 @@ export default function Header() {
               <span className="text-xs text-muted-foreground leading-tight">Software Engineer</span>
             </div>
           </a>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden">
-              {navItems.map((item) => {
-                const isActive = activeSection === item.href.substring(1)
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => handleNavClick(item.href.substring(1))}
-                    className={`rounded-full px-3.5 py-1 text-xs font-medium transition-all duration-200 ${
-                      isActive
-                        ? "border border-white/85 bg-white/[0.15] text-foreground shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1px_2px_rgba(255,255,255,0.35)] backdrop-blur-md"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/30"
-                    }`}
-                  >
-                    {item.label}
-                  </a>
-                )
-              })}
-            </div>
-          </div>
         </nav>
       </header>
 
-      {/* Bottom Edge Soft Fade so content never hard-clips against Android 15 gesture bar */}
-      <div
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-8 bg-gradient-to-t from-white via-white/70 to-transparent lg:hidden"
-        aria-hidden="true"
-      />
-
-      {/* Screen Boundary for Navigation (Desktop, iPad, Mobile) */}
-      <div ref={constraintsRef} className="fixed inset-0 z-50 pointer-events-none p-4 sm:p-6">
-        {/* Apple iOS 26 Liquid Glass Floating Navigation Bar */}
-        <div
-          ref={navContainerRef}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onTouchCancel={handleTouchEnd}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 pointer-events-auto touch-none select-none"
-        >
-          {/* Apple iOS 26 Selection Pill: Smoky systemFill at rest, crisp clear Liquid Glass when sliding */}
-          <motion.div
-            style={{
-              y: springLensTop,
-              scaleX: dropletScaleX,
-              scaleY: dropletScaleY,
-              background: isLensActive
-                ? "linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.52) 100%)"
-                : "rgba(118, 118, 128, 0.15)",
-              boxShadow: isLensActive
-                ? "0 6px 20px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.06), inset 0 1.5px 1px rgba(255, 255, 255, 0.98), inset 0 -1px 1px rgba(255, 255, 255, 0.75)"
-                : "inset 0 1px 0.5px rgba(255, 255, 255, 0.65), inset 0 0 0 0.5px rgba(0, 0, 0, 0.03)",
-            }}
-            className="pointer-events-none absolute top-0 left-[3px] z-10 h-[52px] w-[52px] rounded-full transform-gpu will-change-transform transition-[background,box-shadow] duration-200"
-          />
-
-          {/* Main Apple Neutral Liquid Glass Capsule: Vertical side dock */}
-          <nav className="relative flex w-[58px] flex-col items-center p-[3px] gap-0.5 rounded-full">
-            {/* Capsule Glass Backdrop (z-0): Apple neutral #F5F5F7 translucent glass with crisp 0.5px hairline */}
+      {/* iPhone iOS 26/27 Bottom-Center Liquid Glass Tab Bar */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 sm:bottom-6 z-50 flex items-center justify-center px-3 pb-[env(safe-area-inset-bottom,0px)]">
+        <div className="pointer-events-auto flex items-center gap-2.5 select-none">
+          {/* Main 4-Tab Horizontal Liquid Glass Capsule (About, Stack, Experience, Contact) */}
+          <nav
+            ref={navBarRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            className="relative flex h-[64px] items-center p-[4px] rounded-full touch-none"
+          >
+            {/* Layer 1 (z-0): Outer 3D Beveled Liquid Glass Shell (refracts scrolling content underneath) */}
             <div
               style={{
-                background: "rgba(245, 245, 247, 0.68)",
+                backdropFilter: "url(#ios-liquid-glass-refraction) blur(16px) saturate(200%) brightness(1.02)",
+                WebkitBackdropFilter: "blur(16px) saturate(200%) brightness(1.02)",
+                background:
+                  "linear-gradient(180deg, rgba(255, 255, 255, 0.44) 0%, rgba(246, 246, 250, 0.34) 50%, rgba(255, 255, 255, 0.42) 100%)",
                 boxShadow:
-                  "0 10px 30px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.08), inset 0 1.5px 1px rgba(255, 255, 255, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.6)",
+                  "0 14px 38px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.05), 0 0 0 0.5px rgba(0, 0, 0, 0.11), inset 0 1.5px 1px rgba(255, 255, 255, 0.98), inset 0 -1.5px 1px rgba(255, 255, 255, 0.82), inset 0 0 0 1px rgba(255, 255, 255, 0.55), inset 0 3.5px 6px rgba(255, 255, 255, 0.45), inset 0 -3.5px 6px rgba(255, 255, 255, 0.35)",
               }}
-              className="pointer-events-none absolute inset-0 z-0 rounded-full backdrop-blur-2xl backdrop-saturate-[190%] transform-gpu"
+              className="pointer-events-none absolute inset-0 z-0 rounded-full transform-gpu"
               aria-hidden="true"
+            >
+              {/* Left & Right internal curved glass lens crescents (visible on the capsule ends in Apple's reference) */}
+              <div className="absolute left-[4px] top-1/2 -translate-y-1/2 h-8 w-3 rounded-l-full bg-gradient-to-r from-white/55 via-white/25 to-transparent blur-[0.3px]" />
+              <div className="absolute right-[4px] top-1/2 -translate-y-1/2 h-8 w-3 rounded-r-full bg-gradient-to-l from-white/55 via-white/25 to-transparent blur-[0.3px]" />
+            </div>
+
+            {/* Layer 2 (z-10): Active / Sliding Tab Pill (Smoky slate at rest like "Home" in screenshot; clear magnifying glass when sliding) */}
+            <motion.div
+              style={{
+                x: springLensLeft,
+                width: pillWidth,
+                scaleX: dropletScaleX,
+                scaleY: dropletScaleY,
+                backdropFilter: isLensActive
+                  ? "blur(4px) saturate(210%) brightness(1.06)"
+                  : "blur(8px) saturate(160%)",
+                WebkitBackdropFilter: isLensActive
+                  ? "blur(4px) saturate(210%) brightness(1.06)"
+                  : "blur(8px) saturate(160%)",
+                background: isLensActive
+                  ? "linear-gradient(180deg, rgba(255, 255, 255, 0.68) 0%, rgba(242, 244, 250, 0.34) 55%, rgba(255, 255, 255, 0.54) 100%)"
+                  : "linear-gradient(180deg, rgba(132, 134, 146, 0.24) 0%, rgba(154, 156, 168, 0.19) 100%)",
+                boxShadow: isLensActive
+                  ? "0 8px 24px rgba(0, 0, 0, 0.11), 0 0 0 0.5px rgba(0, 0, 0, 0.06), inset 0 2px 1.5px rgba(255, 255, 255, 1), inset 0 -1.5px 1.5px rgba(255, 255, 255, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.8)"
+                  : "inset 0 1px 1px rgba(255, 255, 255, 0.72), inset 0 -1px 1px rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.03)",
+              }}
+              className="pointer-events-none absolute top-[4px] left-0 z-10 h-[56px] rounded-full transform-gpu will-change-transform transition-[background,box-shadow] duration-200"
             />
 
-            {navItems
-              .filter((item) => item.href !== "#contact")
-              .map((item) => {
-                const Icon = item.icon
-                const sectionKey = item.href.substring(1)
-                const isHighlighted = highlightedSection === sectionKey
-                const iconScale = getIconMagnification(sectionKey)
+            {/* Layer 3 (z-20): Crisp Apple Tab Items (Icon + Label) */}
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const sectionKey = item.href.substring(1)
+              const isHighlighted = highlightedSection === sectionKey
+              const tabScale = getTabMagnification(sectionKey)
 
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    data-nav-section={sectionKey}
-                    onClick={() => handleNavClick(sectionKey)}
-                    className={`group relative z-20 flex h-[52px] w-[52px] flex-col items-center justify-center rounded-full transition-colors duration-150 ${
-                      isHighlighted
-                        ? "text-[#5826E0]"
-                        : "text-[#1C1C1E] hover:text-[#5826E0]"
-                    }`}
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  data-nav-section={sectionKey}
+                  onClick={() => handleNavClick(sectionKey)}
+                  className={`group relative z-20 flex h-[56px] w-[76px] sm:w-[88px] flex-col items-center justify-center rounded-full transition-colors duration-150 ${
+                    isHighlighted
+                      ? "text-[#5826E0]"
+                      : "text-[#0B0B0F] hover:text-[#5826E0]"
+                  }`}
+                >
+                  <span
+                    style={{ transform: `scale(${tabScale})` }}
+                    className="flex flex-col items-center justify-center gap-1 transition-transform duration-75 ease-out will-change-transform"
                   >
+                    <Icon
+                      size={21}
+                      strokeWidth={isHighlighted ? 2.4 : 2.1}
+                      className={`transition-colors duration-150 ${
+                        isHighlighted
+                          ? "text-[#5826E0]"
+                          : "text-[#0B0B0F] group-hover:text-[#5826E0]"
+                      }`}
+                    />
                     <span
-                      style={{ transform: `scale(${iconScale})` }}
-                      className="relative z-20 flex items-center justify-center transition-transform duration-75 ease-out will-change-transform"
+                      className={`text-[11px] leading-none tracking-[-0.01em] transition-colors duration-150 ${
+                        isHighlighted
+                          ? "font-semibold text-[#5826E0]"
+                          : "font-medium text-[#0B0B0F] group-hover:text-[#5826E0]"
+                      }`}
                     >
-                      <Icon
-                        size={21}
-                        strokeWidth={isHighlighted ? 2.3 : 2}
-                        className={`transition-colors duration-150 ${
-                          isHighlighted
-                            ? "text-[#5826E0]"
-                            : "text-[#1C1C1E] group-hover:text-[#5826E0]"
-                        }`}
-                      />
+                      {item.label}
                     </span>
-                  </a>
-                )
-              })}
+                  </span>
+                </a>
+              )
+            })}
           </nav>
 
-          {/* Dynamic Traveling Liquid Glass Droplet Animation between Experience and Contact */}
-          <div className="relative h-0 w-full flex items-center justify-center pointer-events-none z-20">
-            <AnimatePresence>
-              {transitionDirection && (
-                <motion.div
-                  key={transitionDirection}
-                  initial={{
-                    opacity: 0,
-                    y: transitionDirection === "to-contact" ? -22 : 26,
-                    scale: 0.7,
-                  }}
-                  animate={{
-                    opacity: [0, 1, 1, 0],
-                    y: transitionDirection === "to-contact" ? 26 : -22,
-                    scale: [0.7, 1.1, 0.75],
-                  }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    y: { duration: 0.55, ease: [0.25, 1, 0.5, 1] },
-                    scale: { duration: 0.55, ease: "easeInOut" },
-                    opacity: { duration: 0.55, times: [0, 0.15, 0.8, 1], ease: "easeInOut" },
-                  }}
-                  className="absolute flex flex-col items-center justify-center pointer-events-none transform-gpu"
-                >
-                  <div className="relative flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.08),0_0_0_0.5px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)] backdrop-blur-md" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Paired Apple Neutral Liquid Glass Capsule for Contact & Share */}
-          <div className="relative flex w-[58px] flex-col items-center p-[3px] gap-0.5 rounded-full">
-            {/* Capsule Glass Backdrop (z-0) */}
-            <div
-              style={{
-                background: "rgba(245, 245, 247, 0.68)",
-                boxShadow:
-                  "0 10px 30px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.08), inset 0 1.5px 1px rgba(255, 255, 255, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.6)",
-              }}
-              className="pointer-events-none absolute inset-0 z-0 rounded-full backdrop-blur-2xl backdrop-saturate-[190%] transform-gpu"
-              aria-hidden="true"
-            />
-
-            <a
-              href="#contact"
-              data-nav-section="contact"
-              onClick={() => handleNavClick("contact")}
-              className={`group relative z-20 flex h-[52px] w-[52px] flex-col items-center justify-center rounded-full transition-colors duration-150 ${
-                highlightedSection === "contact"
-                  ? "text-[#5826E0]"
-                  : "text-[#1C1C1E] hover:text-[#5826E0]"
-              }`}
-              aria-label="Contact"
-            >
-              <span
-                style={{ transform: `scale(${getIconMagnification("contact")})` }}
-                className="relative z-20 flex items-center justify-center transition-transform duration-75 ease-out will-change-transform"
-              >
-                <Mail
-                  size={21}
-                  strokeWidth={highlightedSection === "contact" ? 2.3 : 2}
-                  className={`transition-colors duration-150 ${
-                    highlightedSection === "contact"
-                      ? "text-[#5826E0]"
-                      : "text-[#1C1C1E] group-hover:text-[#5826E0]"
-                  }`}
-                />
-              </span>
-            </a>
-
-            <button
-              onClick={handleShare}
-              onMouseEnter={() => {
-                setIsLensActive(false)
-                setHoveredSection(null)
-                rawLensTop.set(getSectionLocalTop(activeSection))
-              }}
-              className="group relative z-20 flex h-[52px] w-[52px] flex-col items-center justify-center rounded-full text-[#1C1C1E] hover:text-[#5826E0] hover:bg-black/[0.04] transition-all duration-150 active:scale-95"
-              aria-label="Share portfolio"
-            >
-              {copied ? (
-                <Check size={21} strokeWidth={2.3} className="text-emerald-600" />
-              ) : (
-                <Share2 size={21} strokeWidth={2} className="transition-colors duration-150 text-[#1C1C1E] group-hover:text-[#5826E0]" />
-              )}
-            </button>
-          </div>
+          {/* Detached iOS 26/27 Liquid Glass Share Circle Button */}
+          <button
+            onClick={handleShare}
+            style={{
+              backdropFilter: "url(#ios-liquid-glass-refraction) blur(16px) saturate(200%) brightness(1.02)",
+              WebkitBackdropFilter: "blur(16px) saturate(200%) brightness(1.02)",
+              background:
+                "linear-gradient(180deg, rgba(255, 255, 255, 0.44) 0%, rgba(246, 246, 250, 0.34) 50%, rgba(255, 255, 255, 0.42) 100%)",
+              boxShadow:
+                "0 14px 38px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.05), 0 0 0 0.5px rgba(0, 0, 0, 0.11), inset 0 1.5px 1px rgba(255, 255, 255, 0.98), inset 0 -1.5px 1px rgba(255, 255, 255, 0.82), inset 0 0 0 1px rgba(255, 255, 255, 0.55), inset 0 3.5px 6px rgba(255, 255, 255, 0.45)",
+            }}
+            className="group relative flex h-[64px] w-[64px] items-center justify-center rounded-full text-[#0B0B0F] hover:text-[#5826E0] transition-all duration-150 active:scale-95 transform-gpu"
+            aria-label="Share portfolio"
+          >
+            {copied ? (
+              <Check size={21} strokeWidth={2.4} className="text-emerald-600" />
+            ) : (
+              <Share2
+                size={21}
+                strokeWidth={2.1}
+                className="transition-colors duration-150 text-[#0B0B0F] group-hover:text-[#5826E0]"
+              />
+            )}
+          </button>
         </div>
       </div>
     </>
