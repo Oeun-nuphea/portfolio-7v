@@ -338,36 +338,30 @@ export default function Hero() {
                 className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-blue-500/30 via-indigo-400/25 to-purple-500/30 blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-500"
               />
 
-              {/* Mid 3D Crystal Glass Frame */}
+              {/* Raised 3D Portrait Layer */}
               <div
-                style={{ transformStyle: "preserve-3d" }}
-                className="relative p-2.5 rounded-3xl glass-panel shadow-[0_28px_60px_rgba(15,23,42,0.16),0_10px_24px_rgba(15,23,42,0.08)]"
+                style={{ transform: "translateZ(24px)" }}
+                className="relative h-56 w-56 overflow-hidden rounded-3xl shadow-[0_24px_50px_rgba(15,23,42,0.22),0_10px_20px_rgba(15,23,42,0.12)] sm:h-64 sm:w-64"
               >
-                {/* Raised 3D Portrait Pop-out Layer */}
-                <div
-                  style={{ transform: "translateZ(32px)" }}
-                  className="relative h-56 w-56 overflow-hidden rounded-2xl shadow-[0_14px_30px_rgba(0,0,0,0.22)] ring-1 ring-white/60 sm:h-64 sm:w-64"
-                >
-                  <Image
-                    src={portraitSrc}
-                    alt="Portrait of Nuphea"
-                    fill
-                    priority
-                    onError={() => {
-                      if (portraitSrc !== "/OUENNUPHEA.jpg") {
-                        setPortraitSrc("/OUENNUPHEA.jpg")
-                      }
-                    }}
-                    className="object-cover scale-[1.03] transition-transform duration-500 group-hover:scale-110"
-                    sizes="(min-width: 640px) 256px, 224px"
-                  />
+                <Image
+                  src={portraitSrc}
+                  alt="Portrait of Nuphea"
+                  fill
+                  priority
+                  onError={() => {
+                    if (portraitSrc !== "/OUENNUPHEA.jpg") {
+                      setPortraitSrc("/OUENNUPHEA.jpg")
+                    }
+                  }}
+                  className="object-cover scale-[1.03] transition-transform duration-500 group-hover:scale-110"
+                  sizes="(min-width: 640px) 256px, 224px"
+                />
 
-                  {/* Dynamic 3D Specular Light Glare */}
-                  <motion.div
-                    style={{ background: glareBackground }}
-                    className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  />
-                </div>
+                {/* Dynamic 3D Specular Light Glare */}
+                <motion.div
+                  style={{ background: glareBackground }}
+                  className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
               </div>
             </motion.div>
           </div>
