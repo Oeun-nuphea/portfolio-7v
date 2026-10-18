@@ -425,16 +425,6 @@ export default function Header() {
         aria-hidden="true"
       />
 
-      {/* Bottom Edge-to-Edge System Gesture Bar Mask (z-40: hides clipped text below the navbar without blocking glass refraction) */}
-      <div
-        style={{
-          background:
-            "linear-gradient(to top, #ffffff 0%, #ffffff 45%, rgba(255, 255, 255, 0.88) 75%, rgba(255, 255, 255, 0) 100%)",
-        }}
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-7 sm:h-8"
-        aria-hidden="true"
-      />
-
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b border-black/[0.03] bg-gradient-to-b from-white via-white/95 to-white/80 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
           isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
@@ -459,8 +449,8 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Bottom-Center 3D Optical Liquid Glass Menu Bar */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-3 sm:bottom-6 z-50 flex items-center justify-center px-4 pb-[env(safe-area-inset-bottom,0px)]">
+      {/* Bottom-Center 3D Optical Liquid Glass Menu Bar (uses bottom property instead of padding-bottom so Chrome Android 15 Edge-to-Edge retracts the chin) */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] z-50 flex items-center justify-center px-4">
         <div className="pointer-events-auto flex items-center select-none">
           <nav
             ref={navBarRef}

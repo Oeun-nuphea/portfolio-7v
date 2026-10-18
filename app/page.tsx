@@ -65,7 +65,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main id="top" className="min-h-dvh bg-transparent text-foreground pb-[calc(6rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
+      <main id="top" className="min-h-dvh bg-transparent text-foreground pb-[calc(6rem+env(safe-area-max-inset-bottom,36px))] lg:pb-0">
         <Header />
         <Hero />
         <About />

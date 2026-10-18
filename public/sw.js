@@ -1,5 +1,5 @@
 // Portfolio Service Worker for PWA Installation and Offline Support
-const CACHE_NAME = "portfolio-pwa-v6"
+const CACHE_NAME = "portfolio-pwa-v7"
 
 const PRECACHE_ASSETS = [
   "/",
