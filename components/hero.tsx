@@ -1,8 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import type React from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { Download, ArrowRight, Share2, Check, Eye, X, ExternalLink, Loader2 } from "lucide-react"
 
 interface PdfViewport {
@@ -107,6 +109,51 @@ export default function Hero() {
   const [cvPages, setCvPages] = useState<string[]>([])
   const [isLoadingCv, setIsLoadingCv] = useState(false)
   const [cvRenderFailed, setCvRenderFailed] = useState(false)
+  const [portraitSrc, setPortraitSrc] = useState("/OUENNUPHEA-3D.jpg")
+
+  const cardRef = useRef<HTMLDivElement>(null)
+  const pointerX = useMotionValue(0)
+  const pointerY = useMotionValue(0)
+
+  const rotateX = useSpring(useTransform(pointerY, [-0.5, 0.5], [14, -14]), {
+    stiffness: 260,
+    damping: 22,
+  })
+  const rotateY = useSpring(useTransform(pointerX, [-0.5, 0.5], [-14, 14]), {
+    stiffness: 260,
+    damping: 22,
+  })
+  const glareX = useTransform(pointerX, [-0.5, 0.5], [0, 100])
+  const glareY = useTransform(pointerY, [-0.5, 0.5], [0, 100])
+  const glareBackground = useTransform(
+    [glareX, glareY],
+    ([latestX, latestY]: number[]) =>
+      `radial-gradient(circle at ${latestX}% ${latestY}%, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0) 65%)`
+  )
+
+  const handleCardPointerMove = (clientX: number, clientY: number) => {
+    const rect = cardRef.current?.getBoundingClientRect()
+    if (!rect) return
+    const normalizedX = (clientX - rect.left) / rect.width - 0.5
+    const normalizedY = (clientY - rect.top) / rect.height - 0.5
+    pointerX.set(Math.max(-0.5, Math.min(0.5, normalizedX)))
+    pointerY.set(Math.max(-0.5, Math.min(0.5, normalizedY)))
+  }
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    handleCardPointerMove(event.clientX, event.clientY)
+  }
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0]
+    if (!touch) return
+    handleCardPointerMove(touch.clientX, touch.clientY)
+  }
+
+  const resetCardTilt = () => {
+    pointerX.set(0)
+    pointerY.set(0)
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -267,22 +314,62 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative group">
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-blue-400/20 via-indigo-300/20 to-purple-400/20 blur-xl opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative p-2 rounded-3xl glass-panel shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
-                <div className="relative h-56 w-56 overflow-hidden rounded-2xl sm:h-64 sm:w-64">
+          <div className="flex justify-center lg:justify-end [perspective:1100px]">
+            <motion.div
+              ref={cardRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={resetCardTilt}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={resetCardTilt}
+              animate={{ y: [0, -7, 0] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.99 }}
+              className="relative group cursor-pointer select-none"
+            >
+              {/* Deep 3D Back Ambient Glow Layer */}
+              <div
+                style={{ transform: "translateZ(-28px)" }}
+                className="absolute -inset-2 rounded-3xl bg-gradient-to-tr from-blue-500/30 via-indigo-400/25 to-purple-500/30 blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-500"
+              />
+
+              {/* Mid 3D Crystal Glass Frame */}
+              <div
+                style={{ transformStyle: "preserve-3d" }}
+                className="relative p-2.5 rounded-3xl glass-panel shadow-[0_28px_60px_rgba(15,23,42,0.16),0_10px_24px_rgba(15,23,42,0.08)]"
+              >
+                {/* Raised 3D Portrait Pop-out Layer */}
+                <div
+                  style={{ transform: "translateZ(32px)" }}
+                  className="relative h-56 w-56 overflow-hidden rounded-2xl shadow-[0_14px_30px_rgba(0,0,0,0.22)] ring-1 ring-white/60 sm:h-64 sm:w-64"
+                >
                   <Image
-                    src="/OUENNUPHEA.jpg"
+                    src={portraitSrc}
                     alt="Portrait of Nuphea"
                     fill
                     priority
-                    className="object-cover transition-transform duration-500"
+                    onError={() => {
+                      if (portraitSrc !== "/OUENNUPHEA.jpg") {
+                        setPortraitSrc("/OUENNUPHEA.jpg")
+                      }
+                    }}
+                    className="object-cover scale-[1.03] transition-transform duration-500 group-hover:scale-110"
                     sizes="(min-width: 640px) 256px, 224px"
+                  />
+
+                  {/* Dynamic 3D Specular Light Glare */}
+                  <motion.div
+                    style={{ background: glareBackground }}
+                    className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
