@@ -1,10 +1,17 @@
 "use client"
 
 import { User, Layers, Briefcase, Mail, Check, Share2 } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import type React from "react"
 import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+  useVelocity,
+  useTransform,
+} from "framer-motion"
 
 const navItems = [
   { label: "About", href: "#about", icon: User },
@@ -13,13 +20,22 @@ const navItems = [
   { label: "Contact", href: "#contact", icon: Mail },
 ]
 
+const SECTION_DEFAULT_TOP: Record<string, number> = {
+  about: 3,
+  stack: 57,
+  experience: 111,
+  contact: 185,
+}
+
 export default function Header() {
   const [activeSection, setActiveSection] = useState("about")
   const [hoveredSection, setHoveredSection] = useState<string | null>(null)
-  const [isSwipingDock, setIsSwipingDock] = useState(false)
+  const [isLensActive, setIsLensActive] = useState(false)
+  const [lensCenterY, setLensCenterY] = useState<number>(SECTION_DEFAULT_TOP.about + 26)
   const [copied, setCopied] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [transitionDirection, setTransitionDirection] = useState<"to-contact" | "to-experience" | null>(null)
+
   const prevSectionRef = useRef(activeSection)
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isManualClickRef = useRef(false)
@@ -29,7 +45,72 @@ export default function Header() {
   const navContainerRef = useRef<HTMLDivElement>(null)
 
   const highlightedSection = hoveredSection ?? activeSection
-  const isLensExpanded = hoveredSection !== null || isSwipingDock
+
+  // Continuous pixel-tracked Y coordinate of the liquid glass droplet inside navContainerRef
+  const rawLensTop = useMotionValue<number>(SECTION_DEFAULT_TOP.about)
+  const springLensTop = useSpring(rawLensTop, {
+    stiffness: 520,
+    damping: 32,
+    mass: 0.45,
+  })
+  const lensVelocity = useVelocity(springLensTop)
+
+  // Subtle, refined Apple iOS 26 pill expansion when hovering/dragging (no oversized ballooning)
+  const baseScaleX = useSpring(1, { stiffness: 420, damping: 28 })
+  const baseScaleY = useSpring(1, { stiffness: 420, damping: 28 })
+
+  // Subtle velocity-driven elastic stretch while gliding
+  const velocityStretchY = useTransform(lensVelocity, [-1000, 0, 1000], [0.08, 0, 0.08])
+  const velocitySquashX = useTransform(lensVelocity, [-1000, 0, 1000], [-0.04, 0, -0.04])
+
+  const dropletScaleX = useTransform(
+    [baseScaleX, velocitySquashX],
+    ([bx, vx]: number[]) => Math.max(0.95, bx + vx)
+  )
+  const dropletScaleY = useTransform(
+    [baseScaleY, velocityStretchY],
+    ([by, vy]: number[]) => by + vy
+  )
+
+  useEffect(() => {
+    if (isLensActive) {
+      baseScaleX.set(1.08)
+      baseScaleY.set(1.06)
+    } else {
+      baseScaleX.set(1)
+      baseScaleY.set(1)
+    }
+  }, [isLensActive, baseScaleX, baseScaleY])
+
+  useEffect(() => {
+    const unsubscribe = springLensTop.on("change", (latestTop: number) => {
+      setLensCenterY(latestTop + 27)
+    })
+    return () => unsubscribe()
+  }, [springLensTop])
+
+  const getSectionLocalTop = useCallback((sectionKey: string): number => {
+    if (!navContainerRef.current) {
+      return SECTION_DEFAULT_TOP[sectionKey] ?? 2
+    }
+    const containerRect = navContainerRef.current.getBoundingClientRect()
+    const targetEl = navContainerRef.current.querySelector<HTMLElement>(
+      `[data-nav-section="${sectionKey}"]`
+    )
+    if (!targetEl) {
+      return SECTION_DEFAULT_TOP[sectionKey] ?? 2
+    }
+    const rect = targetEl.getBoundingClientRect()
+    return rect.top - containerRect.top
+  }, [])
+
+  // Snap droplet to active section when not actively scrubbing/hovering
+  useEffect(() => {
+    if (!isLensActive) {
+      const targetTop = getSectionLocalTop(activeSection)
+      rawLensTop.set(targetTop)
+    }
+  }, [activeSection, isLensActive, getSectionLocalTop, rawLensTop])
 
   const triggerTransition = (direction: "to-contact" | "to-experience") => {
     setTransitionDirection(direction)
@@ -59,43 +140,54 @@ export default function Header() {
     setActiveSection(sectionKey)
   }
 
-  const resolveSectionAtY = (clientY: number): string | null => {
-    if (!navContainerRef.current) return null
+  const updateLensFromClientY = (clientY: number, shouldScroll: boolean) => {
+    if (!navContainerRef.current) return
+    const containerRect = navContainerRef.current.getBoundingClientRect()
     const items = navContainerRef.current.querySelectorAll<HTMLElement>("[data-nav-section]")
+
+    let minTop = 2
+    let maxTop = 178
     let closestSection: string | null = null
     let minDistance = Number.POSITIVE_INFINITY
 
-    items.forEach((el) => {
+    items.forEach((el, index) => {
       const rect = el.getBoundingClientRect()
+      const localTop = rect.top - containerRect.top
+      if (index === 0) minTop = localTop
+      maxTop = localTop
+
       const section = el.dataset.navSection
       if (!section) return
 
-      if (clientY >= rect.top && clientY <= rect.bottom) {
+      const center = rect.top + rect.height / 2
+      const distance = Math.abs(clientY - center)
+      if (distance < minDistance) {
+        minDistance = distance
         closestSection = section
-        minDistance = 0
-      } else if (minDistance > 0) {
-        const center = (rect.top + rect.bottom) / 2
-        const distance = Math.abs(clientY - center)
-        if (distance < minDistance && distance < 44) {
-          minDistance = distance
-          closestSection = section
-        }
       }
     })
 
-    return closestSection
-  }
+    // If pointer is below Contact (over the Share button), release the lens
+    const localPointerY = clientY - containerRect.top
+    if (localPointerY > maxTop + 56) {
+      setIsLensActive(false)
+      setHoveredSection(null)
+      rawLensTop.set(getSectionLocalTop(activeSection))
+      return
+    }
 
-  const scrubToY = (clientY: number, shouldScroll: boolean) => {
-    const targetSection = resolveSectionAtY(clientY)
-    if (!targetSection) return
+    const clampedTop = Math.max(minTop, Math.min(maxTop, localPointerY - 27))
+    rawLensTop.set(clampedTop)
+    setIsLensActive(true)
 
-    setHoveredSection(targetSection)
-    if (shouldScroll && targetSection !== activeSection) {
-      handleNavClick(targetSection)
-      const sectionEl = document.getElementById(targetSection)
-      if (sectionEl) {
-        sectionEl.scrollIntoView({ behavior: "smooth" })
+    if (closestSection) {
+      setHoveredSection(closestSection)
+      if (shouldScroll && closestSection !== activeSection) {
+        handleNavClick(closestSection)
+        const sectionEl = document.getElementById(closestSection)
+        if (sectionEl) {
+          sectionEl.scrollIntoView({ behavior: "smooth" })
+        }
       }
     }
   }
@@ -103,8 +195,7 @@ export default function Header() {
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
     const touch = event.touches[0]
     if (!touch) return
-    setIsSwipingDock(true)
-    scrubToY(touch.clientY, false)
+    updateLensFromClientY(touch.clientY, false)
   }
 
   const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
@@ -113,8 +204,7 @@ export default function Header() {
     if (event.cancelable) {
       event.preventDefault()
     }
-    setIsSwipingDock(true)
-    scrubToY(touch.clientY, true)
+    updateLensFromClientY(touch.clientY, true)
   }
 
   const handleTouchEnd = () => {
@@ -125,32 +215,45 @@ export default function Header() {
         sectionEl.scrollIntoView({ behavior: "smooth" })
       }
     }
-    setIsSwipingDock(false)
+    const finalSection = hoveredSection ?? activeSection
+    setIsLensActive(false)
     setHoveredSection(null)
+    rawLensTop.set(getSectionLocalTop(finalSection))
   }
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     isPointerDraggingRef.current = true
-    setIsSwipingDock(true)
-    scrubToY(event.clientY, false)
+    updateLensFromClientY(event.clientY, true)
   }
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (isPointerDraggingRef.current) {
-      scrubToY(event.clientY, true)
-    }
+    updateLensFromClientY(event.clientY, isPointerDraggingRef.current)
   }
 
   const handleMouseUp = () => {
     isPointerDraggingRef.current = false
-    setIsSwipingDock(false)
+  }
+
+  const handleMouseLeave = () => {
+    isPointerDraggingRef.current = false
+    setIsLensActive(false)
+    setHoveredSection(null)
+    rawLensTop.set(getSectionLocalTop(activeSection))
+  }
+
+  // Subtle optical magnification of the icon under the lens
+  const getIconMagnification = (sectionKey: string): number => {
+    if (!isLensActive) return 1
+    const itemCenterY = (SECTION_DEFAULT_TOP[sectionKey] ?? 2) + 27
+    const distance = Math.abs(lensCenterY - itemCenterY)
+    const proximity = Math.max(0, 1 - distance / 52)
+    return 1 + proximity * 0.12
   }
 
   useEffect(() => {
     let lastScrollY = window.scrollY
 
     const handleScroll = () => {
-      // Don't hide top bar on iPad mini and above (>= 768px)
       if (window.innerWidth >= 768) {
         if (!isVisible) setIsVisible(true)
         return
@@ -158,14 +261,11 @@ export default function Header() {
 
       const currentScrollY = window.scrollY
 
-      // Always show when near the top (within 50px)
       if (currentScrollY < 50) {
         setIsVisible(true)
       } else if (currentScrollY > lastScrollY) {
-        // Scrolling down -> hide top bar on mobile
         setIsVisible(false)
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling up -> show top bar
         setIsVisible(true)
       }
 
@@ -210,7 +310,6 @@ export default function Header() {
 
     const observer = new IntersectionObserver((entries) => {
       if (isManualClickRef.current) return
-      // Pick the entry with the highest intersection ratio or is currently intersecting
       const intersecting = entries.filter((e) => e.isIntersecting)
       if (intersecting.length > 0) {
         intersecting.sort((a, b) => b.intersectionRatio - a.intersectionRatio)
@@ -312,7 +411,7 @@ export default function Header() {
 
       {/* Screen Boundary for Navigation (Desktop, iPad, Mobile) */}
       <div ref={constraintsRef} className="fixed inset-0 z-50 pointer-events-none p-4 sm:p-6">
-        {/* Pure Crystal Glass Floating Navigation Bar */}
+        {/* Apple iOS 26 Liquid Glass Floating Navigation Bar */}
         <div
           ref={navContainerRef}
           onTouchStart={handleTouchStart}
@@ -322,85 +421,79 @@ export default function Header() {
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
-          onMouseLeave={() => {
-            isPointerDraggingRef.current = false
-            setIsSwipingDock(false)
-            setHoveredSection(null)
-          }}
-          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 pointer-events-auto touch-none select-none"
+          onMouseLeave={handleMouseLeave}
+          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 pointer-events-auto touch-none select-none"
         >
-          {/* Main Crystal Glass Capsule: Vertical side dock */}
-          <nav
-            className={`flex w-[58px] flex-col items-center p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-transform duration-300 ${
-              isLensExpanded && highlightedSection !== "contact" ? "scale-[1.04]" : "scale-100"
-            }`}
-          >
+          {/* Apple iOS 26 Selection Pill: Smoky systemFill at rest, crisp clear Liquid Glass when sliding */}
+          <motion.div
+            style={{
+              y: springLensTop,
+              scaleX: dropletScaleX,
+              scaleY: dropletScaleY,
+              background: isLensActive
+                ? "linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.52) 100%)"
+                : "rgba(118, 118, 128, 0.15)",
+              boxShadow: isLensActive
+                ? "0 6px 20px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.06), inset 0 1.5px 1px rgba(255, 255, 255, 0.98), inset 0 -1px 1px rgba(255, 255, 255, 0.75)"
+                : "inset 0 1px 0.5px rgba(255, 255, 255, 0.65), inset 0 0 0 0.5px rgba(0, 0, 0, 0.03)",
+            }}
+            className="pointer-events-none absolute top-0 left-[3px] z-10 h-[52px] w-[52px] rounded-full transform-gpu will-change-transform transition-[background,box-shadow] duration-200"
+          />
+
+          {/* Main Apple Neutral Liquid Glass Capsule: Vertical side dock */}
+          <nav className="relative flex w-[58px] flex-col items-center p-[3px] gap-0.5 rounded-full">
+            {/* Capsule Glass Backdrop (z-0): Apple neutral #F5F5F7 translucent glass with crisp 0.5px hairline */}
+            <div
+              style={{
+                background: "rgba(245, 245, 247, 0.68)",
+                boxShadow:
+                  "0 10px 30px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.08), inset 0 1.5px 1px rgba(255, 255, 255, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.6)",
+              }}
+              className="pointer-events-none absolute inset-0 z-0 rounded-full backdrop-blur-2xl backdrop-saturate-[190%] transform-gpu"
+              aria-hidden="true"
+            />
+
             {navItems
               .filter((item) => item.href !== "#contact")
               .map((item) => {
                 const Icon = item.icon
                 const sectionKey = item.href.substring(1)
                 const isHighlighted = highlightedSection === sectionKey
+                const iconScale = getIconMagnification(sectionKey)
 
                 return (
                   <a
                     key={item.label}
                     href={item.href}
                     data-nav-section={sectionKey}
-                    onMouseEnter={() => setHoveredSection(sectionKey)}
                     onClick={() => handleNavClick(sectionKey)}
-                    className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-colors duration-200 ${
+                    className={`group relative z-20 flex h-[52px] w-[52px] flex-col items-center justify-center rounded-full transition-colors duration-150 ${
                       isHighlighted
-                        ? "text-neutral-950"
-                        : "border border-transparent text-neutral-600 hover:text-neutral-950"
+                        ? "text-[#5826E0]"
+                        : "text-[#1C1C1E] hover:text-[#5826E0]"
                     }`}
                   >
-                    {isHighlighted && (
-                      <motion.span
-                        layoutId="activeNavBubble"
-                        animate={{
-                          scaleX: isLensExpanded ? 1.22 : 1,
-                          scaleY: isLensExpanded ? 1.14 : 1,
-                        }}
-                        transition={{
-                          layout: { type: "spring", stiffness: 420, damping: 28, mass: 0.7 },
-                          scaleX: { type: "spring", stiffness: 380, damping: 22 },
-                          scaleY: { type: "spring", stiffness: 380, damping: 22 },
-                        }}
-                        className={`absolute inset-0 z-20 rounded-[28px] pointer-events-none transition-colors duration-200 ${
-                          isLensExpanded
-                            ? "border border-white bg-white/55 backdrop-blur-2xl backdrop-saturate-200 shadow-[0_10px_28px_rgba(0,0,0,0.12),inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(255,255,255,0.65),0_0_16px_rgba(255,255,255,0.75)]"
-                            : "border border-white/85 bg-white/80 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
+                    <span
+                      style={{ transform: `scale(${iconScale})` }}
+                      className="relative z-20 flex items-center justify-center transition-transform duration-75 ease-out will-change-transform"
+                    >
+                      <Icon
+                        size={21}
+                        strokeWidth={isHighlighted ? 2.3 : 2}
+                        className={`transition-colors duration-150 ${
+                          isHighlighted
+                            ? "text-[#5826E0]"
+                            : "text-[#1C1C1E] group-hover:text-[#5826E0]"
                         }`}
                       />
-                    )}
-                    {/* Expanding liquid ripple when droplet arrives at Experience */}
-                    {sectionKey === "experience" && transitionDirection === "to-experience" && (
-                      <motion.span
-                        initial={{ scale: 0.85, opacity: 0.8 }}
-                        animate={{ scale: 1.18, opacity: 0 }}
-                        transition={{ duration: 0.4, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                        className="absolute inset-0 rounded-[28px] border border-white/90 bg-white/20 pointer-events-none"
-                      />
-                    )}
-                    <Icon
-                      size={22}
-                      strokeWidth={isHighlighted ? 2.2 : 1.9}
-                      className={`relative z-30 transition-all duration-200 ${
-                        isHighlighted
-                          ? `text-neutral-950 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] ${
-                              isLensExpanded ? "scale-110" : "scale-100"
-                            }`
-                          : "text-neutral-600 group-hover:text-neutral-950"
-                      }`}
-                    />
+                    </span>
                   </a>
                 )
               })}
           </nav>
 
           {/* Dynamic Traveling Liquid Glass Droplet Animation between Experience and Contact */}
-          <div className="relative h-0 w-full flex items-center justify-center pointer-events-none z-30">
+          <div className="relative h-0 w-full flex items-center justify-center pointer-events-none z-20">
             <AnimatePresence>
               {transitionDirection && (
                 <motion.div
@@ -423,91 +516,66 @@ export default function Header() {
                   }}
                   className="absolute flex flex-col items-center justify-center pointer-events-none transform-gpu"
                 >
-                  {/* Glowing liquid light streak trailing behind the droplet in direction of motion */}
-                  {transitionDirection === "to-contact" ? (
-                    <div className="absolute -top-3 h-4 w-[2px] rounded-full bg-gradient-to-t from-white/95 via-white/40 to-transparent blur-[0.5px]" />
-                  ) : (
-                    <div className="absolute -bottom-3 h-4 w-[2px] rounded-full bg-gradient-to-b from-white/95 via-white/40 to-transparent blur-[0.5px]" />
-                  )}
-
-                  {/* Liquid Glass Droplet Orb */}
-                  <div className="relative flex h-4 w-4 items-center justify-center rounded-full border border-white/95 bg-white/40 shadow-[0_2px_10px_rgba(255,255,255,0.85),0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_1.5px_rgba(255,255,255,1)] backdrop-blur-sm">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,1)]" />
-                  </div>
+                  <div className="relative flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.08),0_0_0_0.5px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)] backdrop-blur-md" />
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Paired Crystal Glass Capsule for Contact & Share */}
-          <div
-            className={`flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-transform duration-300 ${
-              isLensExpanded && highlightedSection === "contact" ? "scale-[1.04]" : "scale-100"
-            }`}
-          >
+          {/* Paired Apple Neutral Liquid Glass Capsule for Contact & Share */}
+          <div className="relative flex w-[58px] flex-col items-center p-[3px] gap-0.5 rounded-full">
+            {/* Capsule Glass Backdrop (z-0) */}
+            <div
+              style={{
+                background: "rgba(245, 245, 247, 0.68)",
+                boxShadow:
+                  "0 10px 30px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.08), inset 0 1.5px 1px rgba(255, 255, 255, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.6)",
+              }}
+              className="pointer-events-none absolute inset-0 z-0 rounded-full backdrop-blur-2xl backdrop-saturate-[190%] transform-gpu"
+              aria-hidden="true"
+            />
+
             <a
               href="#contact"
               data-nav-section="contact"
-              onMouseEnter={() => setHoveredSection("contact")}
               onClick={() => handleNavClick("contact")}
-              className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-colors duration-200 ${
+              className={`group relative z-20 flex h-[52px] w-[52px] flex-col items-center justify-center rounded-full transition-colors duration-150 ${
                 highlightedSection === "contact"
-                  ? "text-neutral-950"
-                  : "border border-transparent text-neutral-600 hover:text-neutral-950"
+                  ? "text-[#5826E0]"
+                  : "text-[#1C1C1E] hover:text-[#5826E0]"
               }`}
               aria-label="Contact"
             >
-              {highlightedSection === "contact" && (
-                <motion.span
-                  layoutId="activeNavBubble"
-                  animate={{
-                    scaleX: isLensExpanded ? 1.22 : 1,
-                    scaleY: isLensExpanded ? 1.14 : 1,
-                  }}
-                  transition={{
-                    layout: { type: "spring", stiffness: 420, damping: 28, mass: 0.7 },
-                    scaleX: { type: "spring", stiffness: 380, damping: 22 },
-                    scaleY: { type: "spring", stiffness: 380, damping: 22 },
-                  }}
-                  className={`absolute inset-0 z-20 rounded-[28px] pointer-events-none transition-colors duration-200 ${
-                    isLensExpanded
-                      ? "border border-white bg-white/55 backdrop-blur-2xl backdrop-saturate-200 shadow-[0_10px_28px_rgba(0,0,0,0.12),inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(255,255,255,0.65),0_0_16px_rgba(255,255,255,0.75)]"
-                      : "border border-white/85 bg-white/80 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
+              <span
+                style={{ transform: `scale(${getIconMagnification("contact")})` }}
+                className="relative z-20 flex items-center justify-center transition-transform duration-75 ease-out will-change-transform"
+              >
+                <Mail
+                  size={21}
+                  strokeWidth={highlightedSection === "contact" ? 2.3 : 2}
+                  className={`transition-colors duration-150 ${
+                    highlightedSection === "contact"
+                      ? "text-[#5826E0]"
+                      : "text-[#1C1C1E] group-hover:text-[#5826E0]"
                   }`}
                 />
-              )}
-              {/* Expanding liquid ripple when droplet arrives at Contact */}
-              {transitionDirection === "to-contact" && (
-                <motion.span
-                  initial={{ scale: 0.85, opacity: 0.8 }}
-                  animate={{ scale: 1.18, opacity: 0 }}
-                  transition={{ duration: 0.4, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute inset-0 rounded-[28px] border border-white/90 bg-white/20 pointer-events-none"
-                />
-              )}
-              <Mail
-                size={22}
-                strokeWidth={highlightedSection === "contact" ? 2.2 : 1.9}
-                className={`relative z-30 transition-all duration-200 ${
-                  highlightedSection === "contact"
-                    ? `drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] text-neutral-950 ${
-                        isLensExpanded ? "scale-110" : "scale-100"
-                      }`
-                    : "text-neutral-600 group-hover:text-neutral-950"
-                }`}
-              />
+              </span>
             </a>
 
             <button
               onClick={handleShare}
-              onMouseEnter={() => setHoveredSection(null)}
-              className="group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/[0.14] hover:border-white/40 transition-all duration-200 active:scale-95"
+              onMouseEnter={() => {
+                setIsLensActive(false)
+                setHoveredSection(null)
+                rawLensTop.set(getSectionLocalTop(activeSection))
+              }}
+              className="group relative z-20 flex h-[52px] w-[52px] flex-col items-center justify-center rounded-full text-[#1C1C1E] hover:text-[#5826E0] hover:bg-black/[0.04] transition-all duration-150 active:scale-95"
               aria-label="Share portfolio"
             >
               {copied ? (
-                <Check size={22} strokeWidth={2.2} className="text-emerald-600 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" />
+                <Check size={21} strokeWidth={2.3} className="text-emerald-600" />
               ) : (
-                <Share2 size={22} strokeWidth={1.9} className="transition-colors duration-200 text-neutral-600 group-hover:text-neutral-950" />
+                <Share2 size={21} strokeWidth={2} className="transition-colors duration-150 text-[#1C1C1E] group-hover:text-[#5826E0]" />
               )}
             </button>
           </div>
