@@ -337,25 +337,77 @@ export default function Header() {
 
   return (
     <>
-      {/* SVG Liquid Glass Wavy Optical Refraction Filter (matches reference demo) */}
+      {/* SVG Optical Refraction + RGB Chromatic Dispersion Filter for 3D Liquid Glass */}
       <svg className="pointer-events-none fixed h-0 w-0" aria-hidden="true">
         <defs>
-          <filter id="ios-liquid-glass-refraction" x="-20%" y="-20%" width="140%" height="140%">
+          <filter
+            id="ios-liquid-glass-refraction"
+            x="-20%"
+            y="-20%"
+            width="140%"
+            height="140%"
+            colorInterpolationFilters="sRGB"
+          >
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.015 0.04"
+              baseFrequency="0.012 0.034"
               numOctaves="2"
-              seed="3"
+              seed="5"
               result="refractionNoise"
             />
-            <feGaussianBlur in="refractionNoise" stdDeviation="1.5" result="smoothNoise" />
+            <feGaussianBlur in="refractionNoise" stdDeviation="1.8" result="smoothMap" />
+
+            {/* Red Wavelength Refraction (Strongest Bend = Chromatic Fringe) */}
             <feDisplacementMap
               in="SourceGraphic"
-              in2="smoothNoise"
-              scale="18"
+              in2="smoothMap"
+              scale="26"
               xChannelSelector="R"
               yChannelSelector="G"
+              result="dispR"
             />
+            <feColorMatrix
+              in="dispR"
+              type="matrix"
+              values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+              result="rChannel"
+            />
+
+            {/* Green Wavelength Refraction (Center Optical Axis) */}
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="smoothMap"
+              scale="20"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="dispG"
+            />
+            <feColorMatrix
+              in="dispG"
+              type="matrix"
+              values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"
+              result="gChannel"
+            />
+
+            {/* Blue Wavelength Refraction (Tighter Bend = Opposite Chromatic Fringe) */}
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="smoothMap"
+              scale="14"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="dispB"
+            />
+            <feColorMatrix
+              in="dispB"
+              type="matrix"
+              values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"
+              result="bChannel"
+            />
+
+            {/* Recombine RGB Channels into Prismatic Refracted Glass */}
+            <feBlend in="rChannel" in2="gChannel" mode="screen" result="rgChannels" />
+            <feBlend in="rgChannels" in2="bChannel" mode="screen" result="prismaticGlass" />
           </filter>
         </defs>
       </svg>
@@ -390,7 +442,7 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Bottom-Center Liquid Glass Menu Bar (Matches Reference Screenshot) */}
+      {/* Bottom-Center 3D Optical Liquid Glass Menu Bar */}
       <div className="pointer-events-none fixed inset-x-0 bottom-3 sm:bottom-6 z-50 flex items-center justify-center px-4 pb-[env(safe-area-inset-bottom,0px)]">
         <div className="pointer-events-auto flex items-center select-none">
           <nav
@@ -406,36 +458,64 @@ export default function Header() {
             onMouseLeave={handleMouseLeave}
             className="relative flex h-[64px] items-center p-[4px] rounded-full touch-none"
           >
-            {/* Layer 1 (z-0): Clear Wavy-Refraction Liquid Glass Bar with Radial White Inner Rim Glow */}
+            {/* Layer 1A (z-0): Prismatic RGB Optical Refraction + 3D Beveled Meniscus Capsule */}
             <div
               style={{
                 backdropFilter:
-                  "url(#ios-liquid-glass-refraction) blur(1.2px) saturate(185%) brightness(1.02)",
-                WebkitBackdropFilter: "blur(2px) saturate(185%) brightness(1.02)",
+                  "url(#ios-liquid-glass-refraction) blur(1.4px) saturate(210%) contrast(1.05) brightness(1.03)",
+                WebkitBackdropFilter: "blur(2.5px) saturate(210%) contrast(1.05) brightness(1.03)",
                 background:
-                  "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.06) 65%, rgba(255, 255, 255, 0.24) 100%)",
+                  "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.05) 60%, rgba(255, 255, 255, 0.34) 100%)",
                 boxShadow:
-                  "0 10px 30px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 0 14px rgba(255, 255, 255, 0.42), inset 0 1.5px 2px rgba(255, 255, 255, 0.95), inset 0 -1.5px 2px rgba(255, 255, 255, 0.8), inset 0 0 0 1.5px rgba(255, 255, 255, 0.55)",
+                  "0 14px 36px -4px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 0 18px rgba(255, 255, 255, 0.52), inset 2px 2.5px 2px rgba(255, 255, 255, 1), inset -2px -2px 2px rgba(255, 255, 255, 0.88), inset 3px 0 6px rgba(56, 189, 248, 0.14), inset -3px 0 6px rgba(168, 85, 247, 0.14), inset 0 0 0 1.5px rgba(255, 255, 255, 0.65)",
               }}
               className="pointer-events-none absolute inset-0 z-0 rounded-full transform-gpu"
               aria-hidden="true"
             />
 
-            {/* Layer 2 (z-10): Active / Sliding Liquid Glass Bubble (Clear Center + Glowing White Radial Meniscus Rim) */}
+            {/* Layer 1B (z-0): Curved Upper Glass Cylinder Reflection & Pointer-Reactive Caustic Rim Glint */}
+            <div
+              style={{
+                background: `radial-gradient(110px 44px at ${lensCenterX}px 0px, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(110px 44px at ${lensCenterX}px 64px, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.06) 44%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.18) 100%)`,
+              }}
+              className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-full"
+              aria-hidden="true"
+            >
+              {/* Top Specular Filament */}
+              <div className="absolute inset-x-6 top-[1px] h-[1.5px] rounded-full bg-gradient-to-r from-transparent via-white to-transparent opacity-95" />
+              {/* Bottom Caustic Reflection Line */}
+              <div className="absolute inset-x-8 bottom-[1px] h-[1px] rounded-full bg-gradient-to-r from-transparent via-white/90 to-transparent opacity-80" />
+            </div>
+
+            {/* Layer 2 (z-10): 3D Convex Water-Droplet Active / Sliding Lens */}
             <motion.div
               style={{
                 x: springLensLeft,
                 width: pillWidth,
                 scaleX: dropletScaleX,
                 scaleY: dropletScaleY,
-                background:
-                  "radial-gradient(58% 58% at 50% 50%, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.14) 60%, rgba(255, 255, 255, 0.48) 100%)",
+                background: isLensActive
+                  ? "radial-gradient(54% 54% at 50% 50%, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.12) 55%, rgba(255, 255, 255, 0.58) 100%)"
+                  : "radial-gradient(58% 58% at 50% 50%, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.15) 58%, rgba(255, 255, 255, 0.52) 100%)",
                 boxShadow: isLensActive
-                  ? "0 8px 24px rgba(0, 0, 0, 0.14), 0 0 0 0.5px rgba(0, 0, 0, 0.08), inset 0 0 14px rgba(255, 255, 255, 0.7), inset 0 2px 2.5px rgba(255, 255, 255, 1), inset 0 -2px 2.5px rgba(255, 255, 255, 0.95), inset 0 0 0 1.5px rgba(255, 255, 255, 0.9)"
-                  : "0 4px 14px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.06), inset 0 0 12px rgba(255, 255, 255, 0.58), inset 0 2px 2px rgba(255, 255, 255, 0.98), inset 0 -2px 2px rgba(255, 255, 255, 0.88), inset 0 0 0 1.5px rgba(255, 255, 255, 0.82)",
+                  ? "0 14px 32px -4px rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.1), inset 0 0 18px rgba(255, 255, 255, 0.8), inset 2.5px 3px 3px rgba(255, 255, 255, 1), inset -2.5px -2.5px 3px rgba(255, 255, 255, 0.95), inset 3.5px 0 7px rgba(56, 189, 248, 0.24), inset -3.5px 0 7px rgba(168, 85, 247, 0.24), inset 0 0 0 1.5px rgba(255, 255, 255, 0.95)"
+                  : "0 6px 16px rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.07), inset 0 0 14px rgba(255, 255, 255, 0.65), inset 2px 2.5px 2px rgba(255, 255, 255, 1), inset -2px -2px 2px rgba(255, 255, 255, 0.9), inset 2.5px 0 5px rgba(56, 189, 248, 0.16), inset -2.5px 0 5px rgba(168, 85, 247, 0.16), inset 0 0 0 1.5px rgba(255, 255, 255, 0.88)",
               }}
-              className="pointer-events-none absolute top-[4px] left-0 z-10 h-[56px] rounded-full transform-gpu will-change-transform transition-shadow duration-200"
-            />
+              className="pointer-events-none absolute top-[4px] left-0 z-10 h-[56px] overflow-hidden rounded-full transform-gpu will-change-transform transition-shadow duration-200"
+            >
+              {/* Upper Convex Dome Specular Crescent */}
+              <div
+                className={`pointer-events-none absolute inset-x-2.5 top-[2px] h-[15px] rounded-t-full bg-gradient-to-b from-white/95 via-white/30 to-transparent transition-opacity duration-200 ${
+                  isLensActive ? "opacity-100" : "opacity-80"
+                }`}
+              />
+              {/* Lower Internal Caustic Focus Arc */}
+              <div
+                className={`pointer-events-none absolute inset-x-3.5 bottom-[2px] h-[9px] rounded-b-full bg-gradient-to-t from-white/90 via-white/25 to-transparent transition-opacity duration-200 ${
+                  isLensActive ? "opacity-100" : "opacity-65"
+                }`}
+              />
+            </motion.div>
 
             {/* Layer 3 (z-20): Tab Items (Icon + Label) */}
             {navItems.map((item) => {
@@ -465,14 +545,14 @@ export default function Header() {
                       strokeWidth={isHighlighted ? 2.6 : 1.9}
                       className={`transition-colors duration-150 ${
                         isHighlighted
-                          ? "text-[#09090B]"
+                          ? "text-[#09090B] drop-shadow-[0_1px_1px_rgba(255,255,255,0.65)]"
                           : "text-neutral-600 group-hover:text-[#09090B]"
                       }`}
                     />
                     <span
                       className={`text-[11px] leading-none tracking-[-0.01em] transition-colors duration-150 ${
                         isHighlighted
-                          ? "font-bold text-[#09090B]"
+                          ? "font-bold text-[#09090B] drop-shadow-[0_1px_1px_rgba(255,255,255,0.65)]"
                           : "font-medium text-neutral-600 group-hover:text-[#09090B]"
                       }`}
                     >
