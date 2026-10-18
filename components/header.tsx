@@ -138,7 +138,15 @@ export default function Header() {
     rawLensLeft.set(metrics.left)
   }
 
-  const updateLensFromClientX = (clientX: number, shouldScroll: boolean, activateLens: boolean) => {
+  const commitSectionAndScroll = (sectionKey: string) => {
+    handleNavClick(sectionKey)
+    const sectionEl = document.getElementById(sectionKey)
+    if (sectionEl) {
+      sectionEl.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  const updateLensFromClientX = (clientX: number, activateLens: boolean) => {
     if (!navBarRef.current) return
     const navRect = navBarRef.current.getBoundingClientRect()
     const items = navBarRef.current.querySelectorAll<HTMLElement>("[data-nav-section]")
@@ -177,20 +185,6 @@ export default function Header() {
 
     if (closestSection) {
       setHoveredSection(closestSection)
-      if (shouldScroll && closestSection !== activeSection) {
-        isManualClickRef.current = true
-        if (manualClickTimeoutRef.current) {
-          clearTimeout(manualClickTimeoutRef.current)
-        }
-        manualClickTimeoutRef.current = setTimeout(() => {
-          isManualClickRef.current = false
-        }, 800)
-        setActiveSection(closestSection)
-        const sectionEl = document.getElementById(closestSection)
-        if (sectionEl) {
-          sectionEl.scrollIntoView({ behavior: "smooth" })
-        }
-      }
     }
   }
 
@@ -214,22 +208,28 @@ export default function Header() {
     if (event.cancelable) {
       event.preventDefault()
     }
-    updateLensFromClientX(touch.clientX, true, true)
+    // Only move the liquid glass lens while finger is down — do NOT scroll until finger is lifted
+    updateLensFromClientX(touch.clientX, true)
   }
 
   const handleTouchEnd = () => {
     dragStartXRef.current = null
-    if (hoveredSection && hoveredSection !== activeSection) {
-      handleNavClick(hoveredSection)
-      const sectionEl = document.getElementById(hoveredSection)
-      if (sectionEl) {
-        sectionEl.scrollIntoView({ behavior: "smooth" })
-      }
+    if (hoveredSection) {
+      commitSectionAndScroll(hoveredSection)
+      return
     }
-    const finalSection = hoveredSection ?? activeSection
     setIsLensActive(false)
     setHoveredSection(null)
-    const metrics = getSectionMetrics(finalSection)
+    const metrics = getSectionMetrics(activeSection)
+    setPillWidth(metrics.width)
+    rawLensLeft.set(metrics.left)
+  }
+
+  const handleTouchCancel = () => {
+    dragStartXRef.current = null
+    setIsLensActive(false)
+    setHoveredSection(null)
+    const metrics = getSectionMetrics(activeSection)
     setPillWidth(metrics.width)
     rawLensLeft.set(metrics.left)
   }
@@ -238,23 +238,30 @@ export default function Header() {
     if (isTouchDeviceRef.current) return
     isPointerDraggingRef.current = true
     dragStartXRef.current = event.clientX
-    updateLensFromClientX(event.clientX, true, true)
+    updateLensFromClientX(event.clientX, true)
   }
 
   const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
     if (isTouchDeviceRef.current) return
-    updateLensFromClientX(event.clientX, false, true)
+    updateLensFromClientX(event.clientX, true)
   }
 
   const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
     if (isTouchDeviceRef.current) return
-    updateLensFromClientX(event.clientX, isPointerDraggingRef.current, true)
+    updateLensFromClientX(event.clientX, true)
   }
 
   const handleMouseUp = () => {
     if (isTouchDeviceRef.current) return
+    const wasDragging =
+      isPointerDraggingRef.current &&
+      dragStartXRef.current !== null &&
+      hoveredSection !== null
     isPointerDraggingRef.current = false
     dragStartXRef.current = null
+    if (wasDragging && hoveredSection) {
+      commitSectionAndScroll(hoveredSection)
+    }
   }
 
   const handleMouseLeave = () => {
@@ -418,6 +425,16 @@ export default function Header() {
         aria-hidden="true"
       />
 
+      {/* Bottom Edge-to-Edge System Gesture Bar Mask (z-40: hides clipped text below the navbar without blocking glass refraction) */}
+      <div
+        style={{
+          background:
+            "linear-gradient(to top, #ffffff 0%, #ffffff 45%, rgba(255, 255, 255, 0.88) 75%, rgba(255, 255, 255, 0) 100%)",
+        }}
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-7 sm:h-8"
+        aria-hidden="true"
+      />
+
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b border-black/[0.03] bg-gradient-to-b from-white via-white/95 to-white/80 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
           isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
@@ -450,7 +467,7 @@ export default function Header() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            onTouchCancel={handleTouchEnd}
+            onTouchCancel={handleTouchCancel}
             onMouseEnter={handleMouseEnter}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -494,6 +511,12 @@ export default function Header() {
                 width: pillWidth,
                 scaleX: dropletScaleX,
                 scaleY: dropletScaleY,
+                transformOrigin:
+                  highlightedSection === "about"
+                    ? "15% 50%"
+                    : highlightedSection === "contact"
+                      ? "85% 50%"
+                      : "50% 50%",
                 background: isLensActive
                   ? "radial-gradient(62% 62% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 68%, rgba(255, 255, 255, 0.32) 100%)"
                   : "radial-gradient(64% 64% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.06) 72%, rgba(255, 255, 255, 0.28) 100%)",
