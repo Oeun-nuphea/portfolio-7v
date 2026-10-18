@@ -1,3 +1,6 @@
+"use client"
+
+import { motion } from "framer-motion"
 import type { LucideIcon } from "lucide-react"
 import { Github, Globe, Linkedin, Mail, MapPin, Phone } from "lucide-react"
 
@@ -58,7 +61,13 @@ export default function Contact() {
   return (
     <section id="contact" className="scroll-mt-20 sm:scroll-mt-24 py-8 sm:py-10 lg:py-12 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-8 sm:mb-12 space-y-2 max-w-xl">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8 sm:mb-12 space-y-2 max-w-xl"
+        >
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Connect
           </p>
@@ -68,21 +77,41 @@ export default function Contact() {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Whether you want to discuss system design, a job opportunity, or just chat about backend architectures — feel free to reach out.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 max-w-2xl">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-40px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.08 },
+            },
+          }}
+          className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 max-w-2xl"
+        >
           {contactLinks.map((link) => {
             const Icon = link.icon
 
             return (
-              <a
+              <motion.a
                 key={link.label}
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noreferrer" : undefined}
-                className="glass-panel group flex items-center gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-white/85 hover:shadow-lg"
+                variants={{
+                  hidden: { opacity: 0, y: 18 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className="glass-panel group flex items-center gap-4 rounded-2xl p-4 transition-colors duration-300 hover:bg-white/85 hover:shadow-lg"
               >
-                <div className="flex shrink-0 h-10 w-10 items-center justify-center rounded-xl bg-white/80 border border-white text-muted-foreground group-hover:text-foreground shadow-sm transition-all duration-200">
+                <div className="flex shrink-0 h-10 w-10 items-center justify-center rounded-xl bg-white/80 border border-white text-muted-foreground group-hover:text-foreground shadow-sm transition-colors duration-200">
                   <Icon size={18} />
                 </div>
                 <div className="min-w-0">
@@ -93,11 +122,12 @@ export default function Contact() {
                     {link.value}
                   </p>
                 </div>
-              </a>
+              </motion.a>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
 }
+

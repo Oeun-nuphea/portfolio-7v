@@ -1,3 +1,6 @@
+"use client"
+
+import { motion } from "framer-motion"
 import { Award } from "lucide-react"
 
 interface EducationItem {
@@ -51,7 +54,13 @@ export default function Education() {
   return (
     <section id="education" className="scroll-mt-20 sm:scroll-mt-24 py-8 sm:py-10 lg:py-12 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl space-y-10">
-        <div className="space-y-2">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="space-y-2"
+        >
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Credentials
           </p>
@@ -61,13 +70,33 @@ export default function Education() {
           <p className="text-sm text-muted-foreground">
             Academic background, specialized training programs, and recognitions.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="space-y-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1 },
+            },
+          }}
+          className="space-y-4"
+        >
           {education.map((item) => (
-            <div
+            <motion.div
               key={item.degree}
-              className="glass-panel p-6 sm:p-7 rounded-3xl grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-4 sm:gap-8 items-start transition-all duration-300 hover:bg-white/80 hover:shadow-lg"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              className="glass-panel p-6 sm:p-7 rounded-3xl grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-4 sm:gap-8 items-start transition-colors duration-300 hover:bg-white/80 hover:shadow-lg"
             >
               <div className="space-y-1">
                 <span className="glass-pill inline-block text-[10px] font-semibold uppercase tracking-widest text-muted-foreground px-2.5 py-0.5 rounded-full">
@@ -81,22 +110,48 @@ export default function Education() {
                 </h3>
                 <p className="text-sm font-medium text-muted-foreground">{item.school}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Achievements & Honors */}
         <div className="space-y-4">
-          <div className="space-y-1">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-1"
+          >
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Achievements & Honors
             </h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          </motion.div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.1 },
+              },
+            }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
             {achievements.map((item) => (
-              <div
+              <motion.div
                 key={item.title}
-                className="glass-panel p-6 rounded-3xl space-y-3 hover:bg-white/80 transition-all duration-300 flex flex-col justify-between"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className="glass-panel group p-6 rounded-3xl space-y-3 hover:bg-white/80 transition-colors duration-300 flex flex-col justify-between"
               >
                 <div className="space-y-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/80 border border-white text-foreground shadow-sm">
@@ -112,11 +167,12 @@ export default function Education() {
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   {item.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
   )
 }
+

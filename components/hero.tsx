@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import type React from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { Download, ArrowRight, Share2, Check, Eye, X, ExternalLink, Loader2 } from "lucide-react"
 
 interface PdfViewport {
@@ -264,21 +264,74 @@ export default function Hero() {
     <section className="min-h-[80vh] flex items-center px-6 pt-28 pb-10 sm:pt-32 sm:pb-12 lg:pb-12 lg:px-8">
       <div className="mx-auto w-full max-w-5xl">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_auto]">
-          <div className="space-y-8">
-
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.1, delayChildren: 0.05 },
+              },
+            }}
+            className="space-y-8"
+          >
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              <motion.h1
+                variants={{
+                  hidden: { opacity: 0, y: 18, filter: "blur(6px)" },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
+              >
                 Oeun Nuphea
-              </h1>
-              <p className="text-xl text-muted-foreground font-medium">
+              </motion.h1>
+              <motion.p
+                variants={{
+                  hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className="text-xl text-muted-foreground font-medium"
+              >
                 Software Engineer
-              </p>
-              <p className="max-w-lg text-base leading-relaxed text-muted-foreground">
+              </motion.p>
+              <motion.p
+                variants={{
+                  hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className="max-w-lg text-base leading-relaxed text-muted-foreground"
+              >
                 Computer Science senior at RUPP and Web Developer experienced in building responsive web applications with REST APIs, real-time WebSocket features, and SQL/NoSQL databases.
-              </p>
+              </motion.p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 14 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              className="flex flex-wrap items-center gap-3"
+            >
               <a
                 href="#contact"
                 className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-all duration-200 shadow-md shadow-black/10 hover:shadow-lg active:scale-[0.98]"
@@ -311,10 +364,15 @@ export default function Hero() {
                 {copied ? <Check size={15} className="text-emerald-500" /> : <Share2 size={15} />}
                 {copied ? "Copied!" : "Share"}
               </button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="flex justify-center lg:justify-end [perspective:1100px]">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="flex justify-center lg:justify-end [perspective:1100px]"
+          >
             <motion.div
               ref={cardRef}
               onMouseMove={handleMouseMove}
@@ -328,9 +386,7 @@ export default function Hero() {
                 rotateY,
                 transformStyle: "preserve-3d",
               }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.99 }}
-              className="relative group cursor-pointer select-none"
+              className="relative group select-none"
             >
               {/* Deep 3D Back Ambient Glow Layer */}
               <div
@@ -353,7 +409,7 @@ export default function Hero() {
                       setPortraitSrc("/OUENNUPHEA.jpg")
                     }
                   }}
-                  className="object-cover scale-[1.03] transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover"
                   sizes="(min-width: 640px) 256px, 224px"
                 />
 
@@ -364,98 +420,109 @@ export default function Hero() {
                 />
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {mounted &&
-        isCvPreviewOpen &&
         createPortal(
-          <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-3 pt-[max(0.75rem,env(safe-area-inset-top,0px))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-2xl backdrop-saturate-150 sm:p-6"
-            style={{
-              background:
-                "linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.98) 6%, rgba(255,255,255,0.9) 14%, rgba(255,255,255,0.78) 28%, rgba(255,255,255,0.78) 72%, rgba(255,255,255,0.9) 86%, rgba(255,255,255,0.98) 94%, #ffffff 100%)",
-            }}
-            onClick={() => setIsCvPreviewOpen(false)}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="cv-preview-title"
-          >
-            <div
-              className="relative z-10 flex h-[86dvh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-[0_20px_50px_rgba(15,23,42,0.1),0_4px_16px_rgba(15,23,42,0.05)]"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-neutral-200/80 bg-white px-4 py-3 sm:px-6 sm:py-3.5">
-                <h2
-                  id="cv-preview-title"
-                  className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground sm:text-base"
+          <AnimatePresence>
+            {isCvPreviewOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="fixed inset-0 z-[9999] flex items-center justify-center p-3 pt-[max(0.75rem,env(safe-area-inset-top,0px))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-2xl backdrop-saturate-150 sm:p-6"
+                style={{
+                  background:
+                    "linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.98) 6%, rgba(255,255,255,0.9) 14%, rgba(255,255,255,0.78) 28%, rgba(255,255,255,0.78) 72%, rgba(255,255,255,0.9) 86%, rgba(255,255,255,0.98) 94%, #ffffff 100%)",
+                }}
+                onClick={() => setIsCvPreviewOpen(false)}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="cv-preview-title"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.94, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: 12 }}
+                  transition={{ type: "spring", stiffness: 360, damping: 28 }}
+                  className="relative z-10 flex h-[86dvh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white shadow-[0_20px_50px_rgba(15,23,42,0.1),0_4px_16px_rgba(15,23,42,0.05)]"
+                  onClick={(event) => event.stopPropagation()}
                 >
-                  Oeun Nuphea — CV
-                </h2>
+                  <div className="flex shrink-0 items-center justify-between gap-2 border-b border-neutral-200/80 bg-white px-4 py-3 sm:px-6 sm:py-3.5">
+                    <h2
+                      id="cv-preview-title"
+                      className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground sm:text-base"
+                    >
+                      Oeun Nuphea — CV
+                    </h2>
 
-                <div className="flex shrink-0 items-center gap-2">
-                  <a
-                    href={CV_PDF_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="glass-button hidden shrink-0 whitespace-nowrap items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground sm:inline-flex"
-                  >
-                    <ExternalLink size={14} />
-                    Open in Tab
-                  </a>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <a
+                        href={CV_PDF_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="glass-button hidden shrink-0 whitespace-nowrap items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground sm:inline-flex"
+                      >
+                        <ExternalLink size={14} />
+                        Open in Tab
+                      </a>
 
-                  <a
-                    href={CV_PDF_URL}
-                    download="OEUN NUPHEA.pdf"
-                    className="inline-flex shrink-0 whitespace-nowrap items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-xs font-medium text-background transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-                  >
-                    <Download size={14} className="shrink-0" />
-                    <span>Download CV</span>
-                  </a>
+                      <a
+                        href={CV_PDF_URL}
+                        download="OEUN NUPHEA.pdf"
+                        className="inline-flex shrink-0 whitespace-nowrap items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-xs font-medium text-background transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+                      >
+                        <Download size={14} className="shrink-0" />
+                        <span>Download CV</span>
+                      </a>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsCvPreviewOpen(false)}
-                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-100/80 text-muted-foreground transition-colors hover:bg-neutral-200/80 hover:text-foreground"
-                    aria-label="Close CV preview"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex-1 overflow-y-auto bg-neutral-100 p-2.5 sm:p-6">
-                {isLoadingCv && (
-                  <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">
-                    <Loader2 size={24} className="animate-spin text-foreground" />
-                    <p className="text-xs font-medium">Loading CV preview...</p>
+                      <button
+                        type="button"
+                        onClick={() => setIsCvPreviewOpen(false)}
+                        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-100/80 text-muted-foreground transition-colors hover:bg-neutral-200/80 hover:text-foreground"
+                        aria-label="Close CV preview"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
                   </div>
-                )}
 
-                {!isLoadingCv && cvPages.length > 0 && (
-                  <div className="mx-auto flex max-w-3xl flex-col gap-4">
-                    {cvPages.map((pageDataUrl, index) => (
-                      <img
-                        key={`cv-page-${index + 1}`}
-                        src={pageDataUrl}
-                        alt={`Oeun Nuphea CV Page ${index + 1}`}
-                        className="h-auto w-full rounded-xl bg-white shadow-md"
+                  <div className="flex-1 overflow-y-auto bg-neutral-100 p-2.5 sm:p-6">
+                    {isLoadingCv && (
+                      <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">
+                        <Loader2 size={24} className="animate-spin text-foreground" />
+                        <p className="text-xs font-medium">Loading CV preview...</p>
+                      </div>
+                    )}
+
+                    {!isLoadingCv && cvPages.length > 0 && (
+                      <div className="mx-auto flex max-w-3xl flex-col gap-4">
+                        {cvPages.map((pageDataUrl, index) => (
+                          <img
+                            key={`cv-page-${index + 1}`}
+                            src={pageDataUrl}
+                            alt={`Oeun Nuphea CV Page ${index + 1}`}
+                            className="h-auto w-full rounded-xl bg-white shadow-md"
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {!isLoadingCv && cvRenderFailed && (
+                      <iframe
+                        src={CV_PDF_URL}
+                        title="Oeun Nuphea CV Preview"
+                        className="h-full w-full rounded-xl border-0 bg-white"
                       />
-                    ))}
+                    )}
                   </div>
-                )}
-
-                {!isLoadingCv && cvRenderFailed && (
-                  <iframe
-                    src={CV_PDF_URL}
-                    title="Oeun Nuphea CV Preview"
-                    className="h-full w-full rounded-xl border-0 bg-white"
-                  />
-                )}
-              </div>
-            </div>
-          </div>,
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
           document.body
         )}
     </section>

@@ -1,3 +1,7 @@
+"use client"
+
+import { motion } from "framer-motion"
+
 const buildAreas = [
   {
     title: "REST APIs & Backend Integration",
@@ -27,7 +31,13 @@ export default function About() {
       <div className="mx-auto max-w-5xl">
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] items-start">
           {/* Left Side: Bio */}
-          <div className="glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="glass-panel p-6 sm:p-8 rounded-3xl space-y-6"
+          >
             <div className="space-y-2">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Who I Am
@@ -44,26 +54,52 @@ export default function About() {
                 Familiar with CI/CD pipelines, containerized deployment with Docker, and backend system integration. Passionate about writing maintainable code, self-development, and collaborating with cross-functional teams to solve technical challenges.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Side: Areas of Expertise */}
           <div className="space-y-6">
-            <div className="space-y-2">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-2"
+            >
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Technical Focus
               </p>
               <h3 className="text-2xl font-bold text-foreground">
                 Areas of Expertise
               </h3>
-            </div>
+            </motion.div>
 
-            <div className="space-y-3">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.1 },
+                },
+              }}
+              className="space-y-3"
+            >
               {buildAreas.map((area, index) => (
-                <div
+                <motion.div
                   key={area.title}
-                  className="glass-panel group p-4 sm:p-5 rounded-2xl flex gap-4 items-start transition-all duration-300 hover:bg-white/85 hover:shadow-lg"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                  className="glass-panel group p-4 sm:p-5 rounded-2xl flex gap-4 items-start transition-colors duration-300 hover:bg-white/85 hover:shadow-lg"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/80 border border-white text-xs font-bold text-foreground shadow-sm transition-transform duration-200">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/80 border border-white text-xs font-bold text-foreground shadow-sm">
                     0{index + 1}
                   </span>
                   <div className="space-y-1">
@@ -74,12 +110,13 @@ export default function About() {
                       {area.description}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
     </section>
   )
 }
+

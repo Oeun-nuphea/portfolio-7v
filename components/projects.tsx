@@ -1,3 +1,6 @@
+"use client"
+
+import { motion } from "framer-motion"
 import { Github, ExternalLink, Package } from "lucide-react"
 
 interface Project {
@@ -82,7 +85,13 @@ const projects: Project[] = [
 export default function Projects() {
   return (
     <div id="projects" className="scroll-mt-20 sm:scroll-mt-24 pt-10 sm:pt-16 space-y-8 sm:space-y-10">
-      <div className="space-y-2">
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="space-y-2"
+      >
         <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           My Portfolio
         </p>
@@ -92,13 +101,33 @@ export default function Projects() {
         <p className="text-sm text-muted-foreground">
           A selection of backend systems, microservice deployments, and full-stack applications.
         </p>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 },
+          },
+        }}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
         {projects.map((project) => (
-          <article
+          <motion.article
             key={project.title}
-            className="glass-panel flex flex-col rounded-3xl overflow-hidden transition-all duration-300 hover:bg-white/85 hover:shadow-xl"
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+              },
+            }}
+            className="glass-panel group flex flex-col rounded-3xl overflow-hidden transition-colors duration-300 hover:bg-white/85 hover:shadow-xl"
           >
             <div className="flex flex-1 flex-col p-6 sm:p-7 space-y-5">
               <div className="space-y-3">
@@ -143,7 +172,7 @@ export default function Projects() {
                       href={project.codeUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-white"
+                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-white active:scale-95"
                     >
                       <Github size={13} />
                       Source Code
@@ -154,7 +183,7 @@ export default function Projects() {
                       href={project.npmUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-white"
+                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-white active:scale-95"
                     >
                       <Package size={13} />
                       NPM Package
@@ -165,7 +194,7 @@ export default function Projects() {
                       href={project.demoUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-white"
+                      className="glass-button inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-white active:scale-95"
                     >
                       <ExternalLink size={13} />
                       Live Demo
@@ -174,9 +203,10 @@ export default function Projects() {
                 </div>
               </div>
             </div>
-          </article>
+          </motion.article>
         ))}
-      </div>
+      </motion.div>
     </div>
   )
 }
+

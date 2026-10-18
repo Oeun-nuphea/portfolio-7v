@@ -135,10 +135,10 @@ export default function RootLayout({
           className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-white"
           aria-hidden="true"
         >
-          <div className="absolute top-12 right-1/4 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-blue-300/15 to-sky-200/15 blur-[100px]" />
-          <div className="absolute top-1/3 -left-32 h-[480px] w-[480px] rounded-full bg-gradient-to-tr from-indigo-200/20 to-purple-200/15 blur-[120px]" />
-          <div className="absolute top-2/3 -right-24 h-[400px] w-[400px] rounded-full bg-gradient-to-bl from-teal-200/15 to-sky-200/15 blur-[100px]" />
-          <div className="absolute bottom-24 left-1/3 h-[360px] w-[360px] rounded-full bg-gradient-to-r from-blue-200/15 to-indigo-200/10 blur-[110px]" />
+          <div className="animate-orb-slow absolute top-12 right-1/4 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-blue-300/15 to-sky-200/15 blur-[100px]" />
+          <div className="animate-orb-reverse absolute top-1/3 -left-32 h-[480px] w-[480px] rounded-full bg-gradient-to-tr from-indigo-200/20 to-purple-200/15 blur-[120px]" />
+          <div className="animate-orb-slow absolute top-2/3 -right-24 h-[400px] w-[400px] rounded-full bg-gradient-to-bl from-teal-200/15 to-sky-200/15 blur-[100px]" />
+          <div className="animate-orb-reverse absolute bottom-24 left-1/3 h-[360px] w-[360px] rounded-full bg-gradient-to-r from-blue-200/15 to-indigo-200/10 blur-[110px]" />
           {/* Top and bottom edge fade to pure #ffffff so Android 15 system status & gesture bars blend with zero seam */}
           <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white via-white/80 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white via-white/85 to-transparent" />

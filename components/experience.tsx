@@ -1,3 +1,6 @@
+"use client"
+
+import { motion } from "framer-motion"
 import Projects from "@/components/projects"
 
 const experiences = [
@@ -30,20 +33,46 @@ export default function Experience() {
     <section id="experience" className="scroll-mt-20 sm:scroll-mt-24 py-8 sm:py-10 lg:py-12 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl space-y-10 sm:space-y-16">
         <div>
-          <div className="mb-10 space-y-2">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-10 space-y-2"
+          >
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Career History
             </p>
             <h2 className="text-2xl font-bold tracking-tight text-foreground">
               Experience
             </h2>
-          </div>
+          </motion.div>
 
-          <div className="space-y-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.12 },
+              },
+            }}
+            className="space-y-6"
+          >
             {experiences.map((exp) => (
-              <article
+              <motion.article
                 key={exp.title}
-                className="glass-panel p-6 sm:p-8 rounded-3xl space-y-4 transition-all duration-300 hover:bg-white/80 hover:shadow-lg"
+                variants={{
+                  hidden: { opacity: 0, y: 24 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className="glass-panel p-6 sm:p-8 rounded-3xl space-y-4 transition-colors duration-300 hover:bg-white/80 hover:shadow-lg"
               >
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
                   <div className="space-y-1">
@@ -78,9 +107,9 @@ export default function Experience() {
                     ))}
                   </div>
                 )}
-              </article>
+              </motion.article>
             ))}
-          </div>
+          </motion.div>
         </div>
 
         <Projects />
@@ -88,3 +117,4 @@ export default function Experience() {
     </section>
   )
 }
+

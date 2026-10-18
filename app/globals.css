@@ -110,5 +110,29 @@ body[data-cv-modal-open="true"] #top .fixed {
   pointer-events: none !important;
 }
 
+@keyframes orb-float-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(32px, -24px, 0) scale(1.06);
+  }
+}
 
+@keyframes orb-float-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-28px, 28px, 0) scale(1.05);
+  }
+}
+
+@utility animate-orb-slow {
+  animation: orb-float-1 18s ease-in-out infinite;
+}
+
+@utility animate-orb-reverse {
+  animation: orb-float-2 22s ease-in-out infinite;
+}
 

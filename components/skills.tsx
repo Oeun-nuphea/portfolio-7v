@@ -1,3 +1,7 @@
+"use client"
+
+import { motion } from "framer-motion"
+
 const stackGroups = [
   {
     category: "Backend & APIs",
@@ -36,7 +40,13 @@ export default function Skills() {
   return (
     <section id="stack" className="scroll-mt-20 sm:scroll-mt-24 py-8 sm:py-10 lg:py-12 px-6 sm:px-8">
       <div className="mx-auto max-w-5xl space-y-10">
-        <div className="space-y-2">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="space-y-2"
+        >
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Toolkit
           </p>
@@ -46,53 +56,121 @@ export default function Skills() {
           <p className="text-sm text-muted-foreground">
             Technical proficiencies, soft skills, and language capabilities.
           </p>
-        </div>
+        </motion.div>
 
         {/* Technical Skills Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1 },
+            },
+          }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           {stackGroups.map((group) => (
-            <div
+            <motion.div
               key={group.category}
-              className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-all duration-300"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1], staggerChildren: 0.04 },
+                },
+              }}
+              className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-colors duration-300"
             >
               <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 {group.category}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {group.skills.map((skill) => (
-                  <span
+                  <motion.span
                     key={skill}
-                    className="glass-pill rounded-full px-3.5 py-1 text-xs font-medium text-foreground transition-all duration-200 hover:bg-white/90 shadow-sm"
+                    variants={{
+                      hidden: { opacity: 0, y: 8 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+                      },
+                    }}
+                    className="glass-pill rounded-full px-3.5 py-1 text-xs font-medium text-foreground transition-colors duration-200 hover:bg-white/90 shadow-sm"
                   >
                     {skill}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Soft Skills & Languages Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.12 },
+            },
+          }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           {/* Soft Skills */}
-          <div className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-all duration-300">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1], staggerChildren: 0.04 },
+              },
+            }}
+            className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-colors duration-300"
+          >
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Soft Skills
             </h3>
             <div className="flex flex-wrap gap-2">
               {softSkills.map((skill) => (
-                <span
+                <motion.span
                   key={skill}
-                  className="glass-pill rounded-full px-3.5 py-1 text-xs font-medium text-foreground transition-all duration-200 hover:bg-white/90 shadow-sm"
+                  variants={{
+                    hidden: { opacity: 0, y: 8 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                  className="glass-pill rounded-full px-3.5 py-1 text-xs font-medium text-foreground transition-colors duration-200 hover:bg-white/90 shadow-sm"
                 >
                   {skill}
-                </span>
+                </motion.span>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Languages */}
-          <div className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-all duration-300">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+              },
+            }}
+            className="glass-panel p-6 rounded-3xl space-y-4 hover:bg-white/80 transition-colors duration-300"
+          >
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Languages
             </h3>
@@ -100,16 +178,17 @@ export default function Skills() {
               {languages.map((lang) => (
                 <div
                   key={lang.language}
-                  className="rounded-2xl border border-white/60 bg-white/40 p-3.5 shadow-sm space-y-0.5"
+                  className="rounded-2xl border border-white/60 bg-white/40 p-3.5 shadow-sm space-y-0.5 transition-colors hover:bg-white/70"
                 >
                   <p className="text-sm font-semibold text-foreground">{lang.language}</p>
                   <p className="text-xs font-medium text-muted-foreground">{lang.level}</p>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   )
 }
+

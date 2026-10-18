@@ -2,6 +2,7 @@
 
 import { User, Layers, Briefcase, Mail, Check, Share2 } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
+import type React from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -14,6 +15,8 @@ const navItems = [
 
 export default function Header() {
   const [activeSection, setActiveSection] = useState("about")
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null)
+  const [isSwipingDock, setIsSwipingDock] = useState(false)
   const [copied, setCopied] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [transitionDirection, setTransitionDirection] = useState<"to-contact" | "to-experience" | null>(null)
@@ -21,8 +24,12 @@ export default function Header() {
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isManualClickRef = useRef(false)
   const manualClickTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const isPointerDraggingRef = useRef(false)
   const constraintsRef = useRef<HTMLDivElement>(null)
   const navContainerRef = useRef<HTMLDivElement>(null)
+
+  const highlightedSection = hoveredSection ?? activeSection
+  const isLensExpanded = hoveredSection !== null || isSwipingDock
 
   const triggerTransition = (direction: "to-contact" | "to-experience") => {
     setTransitionDirection(direction)
@@ -50,6 +57,93 @@ export default function Header() {
     }
 
     setActiveSection(sectionKey)
+  }
+
+  const resolveSectionAtY = (clientY: number): string | null => {
+    if (!navContainerRef.current) return null
+    const items = navContainerRef.current.querySelectorAll<HTMLElement>("[data-nav-section]")
+    let closestSection: string | null = null
+    let minDistance = Number.POSITIVE_INFINITY
+
+    items.forEach((el) => {
+      const rect = el.getBoundingClientRect()
+      const section = el.dataset.navSection
+      if (!section) return
+
+      if (clientY >= rect.top && clientY <= rect.bottom) {
+        closestSection = section
+        minDistance = 0
+      } else if (minDistance > 0) {
+        const center = (rect.top + rect.bottom) / 2
+        const distance = Math.abs(clientY - center)
+        if (distance < minDistance && distance < 44) {
+          minDistance = distance
+          closestSection = section
+        }
+      }
+    })
+
+    return closestSection
+  }
+
+  const scrubToY = (clientY: number, shouldScroll: boolean) => {
+    const targetSection = resolveSectionAtY(clientY)
+    if (!targetSection) return
+
+    setHoveredSection(targetSection)
+    if (shouldScroll && targetSection !== activeSection) {
+      handleNavClick(targetSection)
+      const sectionEl = document.getElementById(targetSection)
+      if (sectionEl) {
+        sectionEl.scrollIntoView({ behavior: "smooth" })
+      }
+    }
+  }
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0]
+    if (!touch) return
+    setIsSwipingDock(true)
+    scrubToY(touch.clientY, false)
+  }
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0]
+    if (!touch) return
+    if (event.cancelable) {
+      event.preventDefault()
+    }
+    setIsSwipingDock(true)
+    scrubToY(touch.clientY, true)
+  }
+
+  const handleTouchEnd = () => {
+    if (hoveredSection && hoveredSection !== activeSection) {
+      handleNavClick(hoveredSection)
+      const sectionEl = document.getElementById(hoveredSection)
+      if (sectionEl) {
+        sectionEl.scrollIntoView({ behavior: "smooth" })
+      }
+    }
+    setIsSwipingDock(false)
+    setHoveredSection(null)
+  }
+
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    isPointerDraggingRef.current = true
+    setIsSwipingDock(true)
+    scrubToY(event.clientY, false)
+  }
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (isPointerDraggingRef.current) {
+      scrubToY(event.clientY, true)
+    }
+  }
+
+  const handleMouseUp = () => {
+    isPointerDraggingRef.current = false
+    setIsSwipingDock(false)
   }
 
   useEffect(() => {
@@ -221,30 +315,65 @@ export default function Header() {
         {/* Pure Crystal Glass Floating Navigation Bar */}
         <div
           ref={navContainerRef}
-          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 pointer-events-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={() => {
+            isPointerDraggingRef.current = false
+            setIsSwipingDock(false)
+            setHoveredSection(null)
+          }}
+          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 pointer-events-auto touch-none select-none"
         >
           {/* Main Crystal Glass Capsule: Vertical side dock */}
           <nav
-            className="pointer-events-auto flex w-[58px] flex-col items-center p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-all duration-300"
+            className={`flex w-[58px] flex-col items-center p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-transform duration-300 ${
+              isLensExpanded && highlightedSection !== "contact" ? "scale-[1.04]" : "scale-100"
+            }`}
           >
             {navItems
               .filter((item) => item.href !== "#contact")
               .map((item) => {
                 const Icon = item.icon
                 const sectionKey = item.href.substring(1)
-                const isActive = activeSection === sectionKey
+                const isHighlighted = highlightedSection === sectionKey
 
                 return (
                   <a
                     key={item.label}
                     href={item.href}
+                    data-nav-section={sectionKey}
+                    onMouseEnter={() => setHoveredSection(sectionKey)}
                     onClick={() => handleNavClick(sectionKey)}
-                    className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
-                      isActive
-                        ? "border border-white/85 bg-white/80 text-neutral-950 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
-                        : "border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/40 hover:border-white/40"
+                    className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-colors duration-200 ${
+                      isHighlighted
+                        ? "text-neutral-950"
+                        : "border border-transparent text-neutral-600 hover:text-neutral-950"
                     }`}
                   >
+                    {isHighlighted && (
+                      <motion.span
+                        layoutId="activeNavBubble"
+                        animate={{
+                          scaleX: isLensExpanded ? 1.22 : 1,
+                          scaleY: isLensExpanded ? 1.14 : 1,
+                        }}
+                        transition={{
+                          layout: { type: "spring", stiffness: 420, damping: 28, mass: 0.7 },
+                          scaleX: { type: "spring", stiffness: 380, damping: 22 },
+                          scaleY: { type: "spring", stiffness: 380, damping: 22 },
+                        }}
+                        className={`absolute inset-0 z-20 rounded-[28px] pointer-events-none transition-colors duration-200 ${
+                          isLensExpanded
+                            ? "border border-white bg-white/55 backdrop-blur-2xl backdrop-saturate-200 shadow-[0_10px_28px_rgba(0,0,0,0.12),inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(255,255,255,0.65),0_0_16px_rgba(255,255,255,0.75)]"
+                            : "border border-white/85 bg-white/80 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
+                        }`}
+                      />
+                    )}
                     {/* Expanding liquid ripple when droplet arrives at Experience */}
                     {sectionKey === "experience" && transitionDirection === "to-experience" && (
                       <motion.span
@@ -256,9 +385,13 @@ export default function Header() {
                     )}
                     <Icon
                       size={22}
-                      strokeWidth={isActive ? 2.2 : 1.9}
-                      className={`transition-colors duration-200 ${
-                        isActive ? "text-neutral-950 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" : "text-neutral-600 group-hover:text-neutral-950"
+                      strokeWidth={isHighlighted ? 2.2 : 1.9}
+                      className={`relative z-30 transition-all duration-200 ${
+                        isHighlighted
+                          ? `text-neutral-950 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] ${
+                              isLensExpanded ? "scale-110" : "scale-100"
+                            }`
+                          : "text-neutral-600 group-hover:text-neutral-950"
                       }`}
                     />
                   </a>
@@ -308,18 +441,41 @@ export default function Header() {
 
           {/* Paired Crystal Glass Capsule for Contact & Share */}
           <div
-            className="pointer-events-auto flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-all duration-300"
+            className={`flex w-[58px] flex-col p-0.5 gap-0.5 rounded-[32px] border border-white/75 bg-white/60 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.04),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25),inset_0_0_14px_rgba(255,255,255,0.08)] hover:border-white/95 hover:bg-white/70 hover:shadow-[0_20px_50px_rgba(0,0,0,0.11),0_6px_18px_rgba(0,0,0,0.05),inset_0_2px_4px_rgba(255,255,255,0.98),inset_0_-1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl backdrop-saturate-[180%] transform-gpu will-change-transform transition-transform duration-300 ${
+              isLensExpanded && highlightedSection === "contact" ? "scale-[1.04]" : "scale-100"
+            }`}
           >
             <a
               href="#contact"
+              data-nav-section="contact"
+              onMouseEnter={() => setHoveredSection("contact")}
               onClick={() => handleNavClick("contact")}
-              className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-all duration-200 ${
-                activeSection === "contact"
-                  ? "border border-white/85 bg-white/80 text-neutral-950 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
-                  : "border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/40 hover:border-white/40"
+              className={`group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] transition-colors duration-200 ${
+                highlightedSection === "contact"
+                  ? "text-neutral-950"
+                  : "border border-transparent text-neutral-600 hover:text-neutral-950"
               }`}
               aria-label="Contact"
             >
+              {highlightedSection === "contact" && (
+                <motion.span
+                  layoutId="activeNavBubble"
+                  animate={{
+                    scaleX: isLensExpanded ? 1.22 : 1,
+                    scaleY: isLensExpanded ? 1.14 : 1,
+                  }}
+                  transition={{
+                    layout: { type: "spring", stiffness: 420, damping: 28, mass: 0.7 },
+                    scaleX: { type: "spring", stiffness: 380, damping: 22 },
+                    scaleY: { type: "spring", stiffness: 380, damping: 22 },
+                  }}
+                  className={`absolute inset-0 z-20 rounded-[28px] pointer-events-none transition-colors duration-200 ${
+                    isLensExpanded
+                      ? "border border-white bg-white/55 backdrop-blur-2xl backdrop-saturate-200 shadow-[0_10px_28px_rgba(0,0,0,0.12),inset_0_2px_4px_rgba(255,255,255,1),inset_0_-2px_4px_rgba(255,255,255,0.65),0_0_16px_rgba(255,255,255,0.75)]"
+                      : "border border-white/85 bg-white/80 shadow-[0_4px_14px_rgba(0,0,0,0.05),inset_0_1.5px_2px_rgba(255,255,255,0.95),inset_0_-1.5px_2px_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.25)]"
+                  }`}
+                />
+              )}
               {/* Expanding liquid ripple when droplet arrives at Contact */}
               {transitionDirection === "to-contact" && (
                 <motion.span
@@ -331,15 +487,20 @@ export default function Header() {
               )}
               <Mail
                 size={22}
-                strokeWidth={activeSection === "contact" ? 2.2 : 1.9}
-                className={`transition-colors duration-200 ${
-                  activeSection === "contact" ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] text-neutral-950" : "text-neutral-600 group-hover:text-neutral-950"
+                strokeWidth={highlightedSection === "contact" ? 2.2 : 1.9}
+                className={`relative z-30 transition-all duration-200 ${
+                  highlightedSection === "contact"
+                    ? `drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] text-neutral-950 ${
+                        isLensExpanded ? "scale-110" : "scale-100"
+                      }`
+                    : "text-neutral-600 group-hover:text-neutral-950"
                 }`}
               />
             </a>
 
             <button
               onClick={handleShare}
+              onMouseEnter={() => setHoveredSection(null)}
               className="group relative flex h-[54px] w-full flex-col items-center justify-center rounded-[28px] border border-transparent text-neutral-600 hover:text-neutral-950 hover:bg-white/[0.14] hover:border-white/40 transition-all duration-200 active:scale-95"
               aria-label="Share portfolio"
             >
