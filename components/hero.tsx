@@ -291,17 +291,29 @@ export default function Hero() {
         isCvPreviewOpen &&
         createPortal(
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-3 backdrop-blur-md sm:p-6"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/75 p-3 pt-[max(0.75rem,env(safe-area-inset-top,0px))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-2xl backdrop-saturate-150 sm:p-6"
             onClick={() => setIsCvPreviewOpen(false)}
             role="dialog"
             aria-modal="true"
             aria-labelledby="cv-preview-title"
           >
+            {/* Top Status Bar Blur & Soft White Fade */}
             <div
-              className="relative flex h-[88dvh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/80 bg-white shadow-2xl"
+              className="pointer-events-none fixed inset-x-0 top-0 h-16 bg-gradient-to-b from-white via-white/90 to-transparent backdrop-blur-xl"
+              aria-hidden="true"
+            />
+
+            {/* Bottom Navigation Bar Blur & Soft White Fade */}
+            <div
+              className="pointer-events-none fixed inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white via-white/90 to-transparent backdrop-blur-xl"
+              aria-hidden="true"
+            />
+
+            <div
+              className="relative z-10 flex h-[86dvh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-neutral-200/80 bg-white/95 shadow-[0_24px_60px_rgba(15,23,42,0.12),0_4px_20px_rgba(15,23,42,0.06)] backdrop-blur-xl"
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-neutral-200/80 bg-white px-4 py-3 sm:px-6 sm:py-3.5">
+              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-neutral-200/80 bg-white/90 px-4 py-3 backdrop-blur-md sm:px-6 sm:py-3.5">
                 <h2
                   id="cv-preview-title"
                   className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground sm:text-base"

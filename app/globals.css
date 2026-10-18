@@ -107,8 +107,8 @@
 }
 
 body[data-cv-modal-open="true"] #top .fixed {
-  opacity: 0 !important;
   pointer-events: none !important;
 }
+
 
 
