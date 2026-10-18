@@ -5,7 +5,14 @@ import type React from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
-import { Download, ArrowRight, Share2, Check, Eye, X, ExternalLink, Loader2 } from "lucide-react"
+import { Download, ArrowRight, Share2, Check, Eye, X, ExternalLink, Loader2, Heart } from "lucide-react"
+
+interface FloatingHeart {
+  id: number
+  x: number
+  y: number
+  rotation: number
+}
 
 interface PdfViewport {
   width: number
@@ -110,8 +117,11 @@ export default function Hero() {
   const [isLoadingCv, setIsLoadingCv] = useState(false)
   const [cvRenderFailed, setCvRenderFailed] = useState(false)
   const [portraitSrc, setPortraitSrc] = useState("/OUENNUPHEA-3D.jpg")
+  const [floatingHearts, setFloatingHearts] = useState<FloatingHeart[]>([])
 
   const cardRef = useRef<HTMLDivElement>(null)
+  const lastTapTimeRef = useRef<number>(0)
+  const heartIdCounterRef = useRef<number>(0)
   const pointerX = useMotionValue(0)
   const pointerY = useMotionValue(0)
 
@@ -130,6 +140,36 @@ export default function Hero() {
     ([latestX, latestY]: number[]) =>
       `radial-gradient(circle at ${latestX}% ${latestY}%, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0) 65%)`
   )
+
+  const spawnHeartAtClientPoint = (clientX: number, clientY: number) => {
+    const rect = cardRef.current?.getBoundingClientRect()
+    if (!rect) return
+    const x = clientX - rect.left
+    const y = clientY - rect.top
+    const rotation = Math.round((Math.random() - 0.5) * 44)
+    heartIdCounterRef.current += 1
+    const newHeartId = Date.now() + heartIdCounterRef.current
+
+    setFloatingHearts((prev) => [...prev, { id: newHeartId, x, y, rotation }])
+
+    window.setTimeout(() => {
+      setFloatingHearts((prev) => prev.filter((heart) => heart.id !== newHeartId))
+    }, 950)
+  }
+
+  const handleCardDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    spawnHeartAtClientPoint(event.clientX, event.clientY)
+  }
+
+  const handleCardTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0]
+    if (!touch) return
+    const now = Date.now()
+    if (now - lastTapTimeRef.current < 300) {
+      spawnHeartAtClientPoint(touch.clientX, touch.clientY)
+    }
+    lastTapTimeRef.current = now
+  }
 
   const handleCardPointerMove = (clientX: number, clientY: number) => {
     const rect = cardRef.current?.getBoundingClientRect()
@@ -375,6 +415,8 @@ export default function Hero() {
           >
             <motion.div
               ref={cardRef}
+              onDoubleClick={handleCardDoubleClick}
+              onTouchStart={handleCardTouchStart}
               onMouseMove={handleMouseMove}
               onMouseLeave={resetCardTilt}
               onTouchMove={handleTouchMove}
@@ -386,7 +428,7 @@ export default function Hero() {
                 rotateY,
                 transformStyle: "preserve-3d",
               }}
-              className="relative group select-none"
+              className="relative group select-none cursor-pointer"
             >
               {/* Deep 3D Back Ambient Glow Layer */}
               <div
@@ -418,6 +460,54 @@ export default function Hero() {
                   style={{ background: glareBackground }}
                   className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 />
+              </div>
+
+              {/* TikTok-Style Double-Click / Double-Tap Floating Hearts (3D Layer Above Portrait) */}
+              <div
+                style={{ transform: "translateZ(48px)" }}
+                className="pointer-events-none absolute inset-0 overflow-visible"
+              >
+                <AnimatePresence>
+                  {floatingHearts.map((heart) => (
+                    <motion.div
+                      key={heart.id}
+                      initial={{
+                        opacity: 0,
+                        scale: 0,
+                        x: heart.x - 36,
+                        y: heart.y - 36,
+                        rotate: heart.rotation - 12,
+                      }}
+                      animate={{
+                        opacity: [0, 1, 1, 0],
+                        scale: [0, 1.35, 1, 1.15],
+                        x: heart.x - 36,
+                        y: [heart.y - 36, heart.y - 46, heart.y - 115],
+                        rotate: [heart.rotation - 10, heart.rotation + 6, heart.rotation],
+                      }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        duration: 0.9,
+                        times: [0, 0.22, 0.55, 1],
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      className="pointer-events-none absolute top-0 left-0 flex h-[72px] w-[72px] items-center justify-center"
+                    >
+                      {/* Expanding Burst Ring */}
+                      <motion.span
+                        initial={{ scale: 0.3, opacity: 0.85 }}
+                        animate={{ scale: 1.75, opacity: 0 }}
+                        transition={{ duration: 0.45, ease: "easeOut" }}
+                        className="absolute inset-2 rounded-full border-2 border-[#FE2C55]/70"
+                      />
+                      <Heart
+                        size={64}
+                        strokeWidth={1.5}
+                        className="fill-[#FE2C55] text-[#FF4D79] drop-shadow-[0_10px_24px_rgba(254,44,85,0.55)]"
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </motion.div>
           </motion.div>
