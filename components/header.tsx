@@ -458,36 +458,36 @@ export default function Header() {
             onMouseLeave={handleMouseLeave}
             className="relative flex h-[64px] items-center p-[4px] rounded-full touch-none"
           >
-            {/* Layer 1A (z-0): Prismatic RGB Optical Refraction + 3D Beveled Meniscus Capsule */}
+            {/* Layer 1A (z-0): Ultra-Clear Prismatic Optical Refraction Glass Capsule (-20% opacity/blur) */}
             <div
               style={{
                 backdropFilter:
-                  "url(#ios-liquid-glass-refraction) blur(1.4px) saturate(210%) contrast(1.05) brightness(1.03)",
-                WebkitBackdropFilter: "blur(2.5px) saturate(210%) contrast(1.05) brightness(1.03)",
+                  "url(#ios-liquid-glass-refraction) blur(0.8px) saturate(200%) contrast(1.04) brightness(1.02)",
+                WebkitBackdropFilter: "blur(1.5px) saturate(200%) contrast(1.04) brightness(1.02)",
                 background:
-                  "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.05) 60%, rgba(255, 255, 255, 0.34) 100%)",
+                  "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.03) 70%, rgba(255, 255, 255, 0.18) 100%)",
                 boxShadow:
-                  "0 14px 36px -4px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 0 18px rgba(255, 255, 255, 0.52), inset 2px 2.5px 2px rgba(255, 255, 255, 1), inset -2px -2px 2px rgba(255, 255, 255, 0.88), inset 3px 0 6px rgba(56, 189, 248, 0.14), inset -3px 0 6px rgba(168, 85, 247, 0.14), inset 0 0 0 1.5px rgba(255, 255, 255, 0.65)",
+                  "0 10px 28px -4px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.28), inset 1.5px 1.5px 1.5px rgba(255, 255, 255, 0.85), inset -1.5px -1.5px 1.5px rgba(255, 255, 255, 0.7), inset 2.5px 0 5px rgba(56, 189, 248, 0.1), inset -2.5px 0 5px rgba(168, 85, 247, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.45)",
               }}
               className="pointer-events-none absolute inset-0 z-0 rounded-full transform-gpu"
               aria-hidden="true"
             />
 
-            {/* Layer 1B (z-0): Curved Upper Glass Cylinder Reflection & Pointer-Reactive Caustic Rim Glint */}
+            {/* Layer 1B (z-0): Subtle Pointer-Reactive Rim Glint (Zero Center Haze) */}
             <div
               style={{
-                background: `radial-gradient(110px 44px at ${lensCenterX}px 0px, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(110px 44px at ${lensCenterX}px 64px, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.06) 44%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.18) 100%)`,
+                background: `radial-gradient(90px 24px at ${lensCenterX}px 0px, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(90px 24px at ${lensCenterX}px 64px, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%)`,
               }}
               className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-full"
               aria-hidden="true"
             >
               {/* Top Specular Filament */}
-              <div className="absolute inset-x-6 top-[1px] h-[1.5px] rounded-full bg-gradient-to-r from-transparent via-white to-transparent opacity-95" />
+              <div className="absolute inset-x-8 top-[1px] h-[1px] rounded-full bg-gradient-to-r from-transparent via-white/80 to-transparent opacity-75" />
               {/* Bottom Caustic Reflection Line */}
-              <div className="absolute inset-x-8 bottom-[1px] h-[1px] rounded-full bg-gradient-to-r from-transparent via-white/90 to-transparent opacity-80" />
+              <div className="absolute inset-x-10 bottom-[1px] h-[1px] rounded-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-65" />
             </div>
 
-            {/* Layer 2 (z-10): 3D Convex Water-Droplet Active / Sliding Lens */}
+            {/* Layer 2 (z-10): Ultra-Clear 3D Water-Droplet Active / Sliding Tab Lens (-20% opacity) */}
             <motion.div
               style={{
                 x: springLensLeft,
@@ -495,24 +495,24 @@ export default function Header() {
                 scaleX: dropletScaleX,
                 scaleY: dropletScaleY,
                 background: isLensActive
-                  ? "radial-gradient(54% 54% at 50% 50%, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.12) 55%, rgba(255, 255, 255, 0.58) 100%)"
-                  : "radial-gradient(58% 58% at 50% 50%, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.15) 58%, rgba(255, 255, 255, 0.52) 100%)",
+                  ? "radial-gradient(62% 62% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 68%, rgba(255, 255, 255, 0.32) 100%)"
+                  : "radial-gradient(64% 64% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.06) 72%, rgba(255, 255, 255, 0.28) 100%)",
                 boxShadow: isLensActive
-                  ? "0 14px 32px -4px rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.1), inset 0 0 18px rgba(255, 255, 255, 0.8), inset 2.5px 3px 3px rgba(255, 255, 255, 1), inset -2.5px -2.5px 3px rgba(255, 255, 255, 0.95), inset 3.5px 0 7px rgba(56, 189, 248, 0.24), inset -3.5px 0 7px rgba(168, 85, 247, 0.24), inset 0 0 0 1.5px rgba(255, 255, 255, 0.95)"
-                  : "0 6px 16px rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.07), inset 0 0 14px rgba(255, 255, 255, 0.65), inset 2px 2.5px 2px rgba(255, 255, 255, 1), inset -2px -2px 2px rgba(255, 255, 255, 0.9), inset 2.5px 0 5px rgba(56, 189, 248, 0.16), inset -2.5px 0 5px rgba(168, 85, 247, 0.16), inset 0 0 0 1.5px rgba(255, 255, 255, 0.88)",
+                  ? "0 10px 24px -4px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.05), 0 0 0 0.5px rgba(0, 0, 0, 0.08), inset 0 0 10px rgba(255, 255, 255, 0.42), inset 2px 2px 2px rgba(255, 255, 255, 0.92), inset -2px -2px 2px rgba(255, 255, 255, 0.8), inset 2.5px 0 5px rgba(56, 189, 248, 0.16), inset -2.5px 0 5px rgba(168, 85, 247, 0.16), inset 0 0 0 1px rgba(255, 255, 255, 0.72)"
+                  : "0 4px 12px rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(0, 0, 0, 0.05), inset 0 0 8px rgba(255, 255, 255, 0.35), inset 1.5px 2px 1.5px rgba(255, 255, 255, 0.88), inset -1.5px -1.5px 1.5px rgba(255, 255, 255, 0.72), inset 2px 0 4px rgba(56, 189, 248, 0.12), inset -2px 0 4px rgba(168, 85, 247, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.62)",
               }}
               className="pointer-events-none absolute top-[4px] left-0 z-10 h-[56px] overflow-hidden rounded-full transform-gpu will-change-transform transition-shadow duration-200"
             >
-              {/* Upper Convex Dome Specular Crescent */}
+              {/* Thin Upper Rim Specular Crescent */}
               <div
-                className={`pointer-events-none absolute inset-x-2.5 top-[2px] h-[15px] rounded-t-full bg-gradient-to-b from-white/95 via-white/30 to-transparent transition-opacity duration-200 ${
-                  isLensActive ? "opacity-100" : "opacity-80"
+                className={`pointer-events-none absolute inset-x-3 top-[1.5px] h-[6px] rounded-t-full bg-gradient-to-b from-white/55 to-transparent transition-opacity duration-200 ${
+                  isLensActive ? "opacity-90" : "opacity-60"
                 }`}
               />
-              {/* Lower Internal Caustic Focus Arc */}
+              {/* Thin Lower Caustic Rim Arc */}
               <div
-                className={`pointer-events-none absolute inset-x-3.5 bottom-[2px] h-[9px] rounded-b-full bg-gradient-to-t from-white/90 via-white/25 to-transparent transition-opacity duration-200 ${
-                  isLensActive ? "opacity-100" : "opacity-65"
+                className={`pointer-events-none absolute inset-x-4 bottom-[1.5px] h-[4px] rounded-b-full bg-gradient-to-t from-white/45 to-transparent transition-opacity duration-200 ${
+                  isLensActive ? "opacity-85" : "opacity-50"
                 }`}
               />
             </motion.div>
