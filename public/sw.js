@@ -1,5 +1,5 @@
 // Portfolio Service Worker for PWA Installation and Offline Support
-const CACHE_NAME = "portfolio-pwa-v7"
+const CACHE_NAME = "portfolio-pwa-v8"
 
 const PRECACHE_ASSETS = [
   "/",
@@ -39,7 +39,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url)
   if (!url.protocol.startsWith("http")) return
 
-  // Skip Next.js dev server WebSocket and HMR requests
+  // Skip Next.js dev server WebSocket, HMR, and API requests
   if (
     url.pathname.includes("/_next/webpack-hmr") ||
     url.pathname.startsWith("/api/")
@@ -47,49 +47,29 @@ self.addEventListener("fetch", (event) => {
     return
   }
 
-  // Navigation requests: Network-first, fallback to cached HTML
-  if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone()
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseClone)
-            })
-          }
-          return networkResponse
-        })
-        .catch(async () => {
-          const cachedResponse = await caches.match(event.request)
-          if (cachedResponse) return cachedResponse
+  // Network-first for all navigation and asset requests, fallback to cache when offline
+  event.respondWith(
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone()
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone)
+          })
+        }
+        return networkResponse
+      })
+      .catch(async () => {
+        const cachedResponse = await caches.match(event.request)
+        if (cachedResponse) return cachedResponse
+        if (event.request.mode === "navigate") {
           const fallbackHome = await caches.match("/")
           if (fallbackHome) return fallbackHome
-          return new Response("Offline. Please reconnect to the internet.", {
-            status: 503,
-            headers: { "Content-Type": "text/plain" },
-          })
+        }
+        return new Response("Offline. Please reconnect to the internet.", {
+          status: 503,
+          headers: { "Content-Type": "text/plain" },
         })
-    )
-    return
-  }
-
-  // Static assets (styles, scripts, images, fonts): Cache-first with background revalidation
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone()
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseClone)
-            })
-          }
-          return networkResponse
-        })
-        .catch(() => cachedResponse)
-
-      return cachedResponse || fetchPromise
-    })
+      })
   )
 })
