@@ -1,11 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
-import { Download, ArrowRight, Share2, Check } from "lucide-react"
+import { Download, ArrowRight, Share2, Check, Eye, X, ExternalLink } from "lucide-react"
 
 export default function Hero() {
   const [copied, setCopied] = useState(false)
+  const [isCvPreviewOpen, setIsCvPreviewOpen] = useState(false)
+
+  useEffect(() => {
+    if (!isCvPreviewOpen) return
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsCvPreviewOpen(false)
+      }
+    }
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    window.addEventListener("keydown", handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [isCvPreviewOpen])
 
   const handleShare = async () => {
     const shareData = {
@@ -66,16 +86,14 @@ export default function Hero() {
                 View Projects
               </a>
 
-              <a
-                href="/OEUN NUPHEA.pdf"
-                download="OEUN NUPHEA.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => setIsCvPreviewOpen(true)}
                 className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground active:scale-[0.98]"
               >
-                <Download size={15} />
-                Download CV
-              </a>
+                <Eye size={15} />
+                Preview CV
+              </button>
 
               <button
                 onClick={handleShare}
@@ -107,6 +125,66 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
+      {isCvPreviewOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm sm:p-6"
+          onClick={() => setIsCvPreviewOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cv-preview-title"
+        >
+          <div
+            className="glass-panel relative flex h-[85dvh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-white/90 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-3 border-b border-black/5 px-5 py-3.5 sm:px-6">
+              <h2 id="cv-preview-title" className="truncate text-sm font-semibold text-foreground sm:text-base">
+                Oeun Nuphea — Curriculum Vitae
+              </h2>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href="/OEUN NUPHEA.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass-button hidden items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground sm:inline-flex"
+                >
+                  <ExternalLink size={14} />
+                  Open in Tab
+                </a>
+
+                <a
+                  href="/OEUN NUPHEA.pdf"
+                  download="OEUN NUPHEA.pdf"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-1.5 text-xs font-medium text-background transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+                >
+                  <Download size={14} />
+                  Download CV
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCvPreviewOpen(false)}
+                  className="glass-button inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:text-foreground"
+                  aria-label="Close CV preview"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 bg-neutral-100/80">
+              <iframe
+                src="/OEUN NUPHEA.pdf"
+                title="Oeun Nuphea CV Preview"
+                className="h-full w-full border-0"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
+
