@@ -11,8 +11,9 @@ export default function PwaInstallPrompt(): React.ReactNode {
   useEffect(() => {
     if (typeof window === "undefined") return
 
-    // Check if already running in standalone PWA mode
+    // Check if already running in fullscreen or standalone PWA mode
     const isStandalone =
+      window.matchMedia("(display-mode: fullscreen)").matches ||
       window.matchMedia("(display-mode: standalone)").matches ||
       window.navigator.standalone === true
 

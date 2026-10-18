@@ -425,17 +425,6 @@ export default function Header() {
         aria-hidden="true"
       />
 
-      {/* Bottom Android PWA Navigation Bar Seamless Blend (z-40: strictly 0px-20px below the navbar so it never blocks the glass bar) */}
-      <div
-        style={{
-          height: "calc(20px + env(safe-area-inset-bottom, 0px))",
-          background:
-            "linear-gradient(to top, #ffffff 0%, #ffffff 38%, rgba(255, 255, 255, 0.85) 70%, rgba(255, 255, 255, 0) 100%)",
-        }}
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-40"
-        aria-hidden="true"
-      />
-
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b border-black/[0.03] bg-gradient-to-b from-white via-white/95 to-white/80 backdrop-blur-2xl backdrop-saturate-150 pt-[env(safe-area-inset-top,0px)] shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300 transform-gpu will-change-transform md:translate-y-0 md:opacity-100 md:pointer-events-auto ${
           isVisible ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-full opacity-0 pointer-events-none"
@@ -460,8 +449,8 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* Bottom-Center 3D Optical Liquid Glass Menu Bar (sits at 20px above bottom so its shadow never clips against the Android bar at 0px) */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] z-50 flex items-center justify-center px-4">
+      {/* Bottom-Center 3D Optical Liquid Glass Menu Bar */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] z-50 flex items-center justify-center px-4">
         <div className="pointer-events-auto flex items-center select-none">
           <nav
             ref={navBarRef}
@@ -485,7 +474,7 @@ export default function Header() {
                 background:
                   "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.03) 70%, rgba(255, 255, 255, 0.18) 100%)",
                 boxShadow:
-                  "0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.28), inset 1.5px 1.5px 1.5px rgba(255, 255, 255, 0.85), inset -1.5px -1.5px 1.5px rgba(255, 255, 255, 0.7), inset 2.5px 0 5px rgba(56, 189, 248, 0.1), inset -2.5px 0 5px rgba(168, 85, 247, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.45)",
+                  "0 10px 28px -4px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.28), inset 1.5px 1.5px 1.5px rgba(255, 255, 255, 0.85), inset -1.5px -1.5px 1.5px rgba(255, 255, 255, 0.7), inset 2.5px 0 5px rgba(56, 189, 248, 0.1), inset -2.5px 0 5px rgba(168, 85, 247, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.45)",
               }}
               className="pointer-events-none absolute inset-0 z-0 rounded-full transform-gpu"
               aria-hidden="true"
