@@ -52,13 +52,13 @@ export default function Header() {
   })
   const lensVelocityX = useVelocity(springLensLeft)
 
-  // Subtle iOS Liquid Glass swell while dragging so edge tabs ("About" / "Contact") never overflow the capsule
-  const baseScaleX = useSpring(1, { stiffness: 400, damping: 28, mass: 0.5 })
-  const baseScaleY = useSpring(1, { stiffness: 400, damping: 28, mass: 0.5 })
+  // iOS Liquid Glass swell on hover / swipe: expands bigger and taller than the bar capsule
+  const baseScaleX = useSpring(1, { stiffness: 380, damping: 26, mass: 0.5 })
+  const baseScaleY = useSpring(1, { stiffness: 380, damping: 26, mass: 0.5 })
 
   // Velocity-driven horizontal liquid stretch & vertical tension while swiping
-  const velocityStretchX = useTransform(lensVelocityX, [-1200, 0, 1200], [0.12, 0, 0.12])
-  const velocitySquashY = useTransform(lensVelocityX, [-1200, 0, 1200], [-0.05, 0, -0.05])
+  const velocityStretchX = useTransform(lensVelocityX, [-1200, 0, 1200], [0.18, 0, 0.18])
+  const velocitySquashY = useTransform(lensVelocityX, [-1200, 0, 1200], [-0.08, 0, -0.08])
 
   const dropletScaleX = useTransform(
     [baseScaleX, velocityStretchX],
@@ -71,8 +71,8 @@ export default function Header() {
 
   useEffect(() => {
     if (isLensActive) {
-      baseScaleX.set(1.05)
-      baseScaleY.set(1.08)
+      baseScaleX.set(1.18)
+      baseScaleY.set(1.28)
     } else {
       baseScaleX.set(1)
       baseScaleY.set(1)
@@ -238,26 +238,23 @@ export default function Header() {
     if (isTouchDeviceRef.current) return
     isPointerDraggingRef.current = true
     dragStartXRef.current = event.clientX
+    updateLensFromClientX(event.clientX, true, true)
+  }
+
+  const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+    if (isTouchDeviceRef.current) return
+    updateLensFromClientX(event.clientX, false, true)
   }
 
   const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
     if (isTouchDeviceRef.current) return
-    if (!isPointerDraggingRef.current) return
-    if (dragStartXRef.current !== null && Math.abs(event.clientX - dragStartXRef.current) < 6 && !isLensActive) {
-      return
-    }
-    updateLensFromClientX(event.clientX, true, true)
+    updateLensFromClientX(event.clientX, isPointerDraggingRef.current, true)
   }
 
   const handleMouseUp = () => {
     if (isTouchDeviceRef.current) return
     isPointerDraggingRef.current = false
     dragStartXRef.current = null
-    setIsLensActive(false)
-    setHoveredSection(null)
-    const metrics = getSectionMetrics(activeSection)
-    setPillWidth(metrics.width)
-    rawLensLeft.set(metrics.left)
   }
 
   const handleMouseLeave = () => {
@@ -270,14 +267,14 @@ export default function Header() {
     rawLensLeft.set(metrics.left)
   }
 
-  // Continuous optical magnification as the liquid glass lens passes over a tab
+  // Continuous optical magnification as the liquid glass lens hovers/passes over a tab
   const getTabMagnification = (sectionKey: string): number => {
     if (!isLensActive) return 1
     const metrics = getSectionMetrics(sectionKey)
     const itemCenterX = metrics.left + metrics.width / 2
     const distance = Math.abs(lensCenterX - itemCenterX)
     const proximity = Math.max(0, 1 - distance / (metrics.width * 0.9))
-    return 1 + proximity * 0.1
+    return 1 + proximity * 0.16
   }
 
   useEffect(() => {
@@ -340,22 +337,22 @@ export default function Header() {
 
   return (
     <>
-      {/* SVG Optical Refraction Filter for Chromium + 3D Cylindrical Glass Specular Layers for Safari/iOS */}
+      {/* SVG Liquid Glass Wavy Optical Refraction Filter (matches reference demo) */}
       <svg className="pointer-events-none fixed h-0 w-0" aria-hidden="true">
         <defs>
           <filter id="ios-liquid-glass-refraction" x="-20%" y="-20%" width="140%" height="140%">
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.014 0.024"
+              baseFrequency="0.015 0.04"
               numOctaves="2"
-              seed="7"
+              seed="3"
               result="refractionNoise"
             />
-            <feGaussianBlur in="refractionNoise" stdDeviation="1.2" result="smoothNoise" />
+            <feGaussianBlur in="refractionNoise" stdDeviation="1.5" result="smoothNoise" />
             <feDisplacementMap
               in="SourceGraphic"
               in2="smoothNoise"
-              scale="12"
+              scale="18"
               xChannelSelector="R"
               yChannelSelector="G"
             />
@@ -363,19 +360,9 @@ export default function Header() {
         </defs>
       </svg>
 
-      {/* Top Status Bar Soft Fade so scrolled content and header blend invisibly into Android 15 / iOS status bar */}
+      {/* Top Status Bar Soft Fade */}
       <div
-        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-12 bg-gradient-to-b from-white via-white/85 to-transparent"
-        aria-hidden="true"
-      />
-
-      {/* Bottom Gesture Navigation Bar Seamless Shield so scrolled text/cards never poke out below the navbar */}
-      <div
-        style={{
-          background:
-            "linear-gradient(to top, #ffffff 0%, #ffffff 28%, rgba(255, 255, 255, 0.92) 55%, rgba(255, 255, 255, 0) 100%)",
-        }}
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-24"
+        className="pointer-events-none fixed inset-x-0 top-0 z-40 h-10 bg-gradient-to-b from-white via-white/80 to-transparent"
         aria-hidden="true"
       />
 
@@ -403,61 +390,54 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* iPhone iOS 26/27 Bottom-Center Liquid Glass Tab Bar */}
+      {/* Bottom-Center Liquid Glass Menu Bar (Matches Reference Screenshot) */}
       <div className="pointer-events-none fixed inset-x-0 bottom-3 sm:bottom-6 z-50 flex items-center justify-center px-4 pb-[env(safe-area-inset-bottom,0px)]">
         <div className="pointer-events-auto flex items-center select-none">
-          {/* 4-Tab Horizontal Liquid Glass Capsule (About, Stack, Experience, Contact) */}
           <nav
             ref={navBarRef}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onTouchCancel={handleTouchEnd}
+            onMouseEnter={handleMouseEnter}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
             className="relative flex h-[64px] items-center p-[4px] rounded-full touch-none"
           >
-            {/* Layer 1 (z-0): Single Backdrop-Filter 3D Cylindrical Optical Glass Shell */}
+            {/* Layer 1 (z-0): Clear Wavy-Refraction Liquid Glass Bar with Radial White Inner Rim Glow */}
             <div
               style={{
                 backdropFilter:
-                  "url(#ios-liquid-glass-refraction) blur(4px) saturate(210%) contrast(1.05) brightness(1.03)",
-                WebkitBackdropFilter: "blur(4px) saturate(210%) contrast(1.05) brightness(1.03)",
+                  "url(#ios-liquid-glass-refraction) blur(1.2px) saturate(185%) brightness(1.02)",
+                WebkitBackdropFilter: "blur(2px) saturate(185%) brightness(1.02)",
                 background:
-                  "linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.1) 36%, rgba(255, 255, 255, 0.02) 48%, rgba(255, 255, 255, 0.04) 80%, rgba(255, 255, 255, 0.28) 100%)",
+                  "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.06) 65%, rgba(255, 255, 255, 0.24) 100%)",
                 boxShadow:
-                  "0 14px 36px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05), 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 2px 1px rgba(255, 255, 255, 1), inset 0 -2px 1px rgba(255, 255, 255, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.65), inset 0 6px 10px -2px rgba(255, 255, 255, 0.55), inset 0 -6px 10px -2px rgba(255, 255, 255, 0.35)",
+                  "0 10px 30px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.12), inset 0 0 14px rgba(255, 255, 255, 0.42), inset 0 1.5px 2px rgba(255, 255, 255, 0.95), inset 0 -1.5px 2px rgba(255, 255, 255, 0.8), inset 0 0 0 1.5px rgba(255, 255, 255, 0.55)",
               }}
               className="pointer-events-none absolute inset-0 z-0 rounded-full transform-gpu"
               aria-hidden="true"
-            >
-              {/* Top curved specular reflection line */}
-              <div className="absolute inset-x-5 top-[1px] h-[1.5px] rounded-full bg-gradient-to-r from-transparent via-white to-transparent" />
-              {/* Left & Right internal curved glass lens crescents */}
-              <div className="absolute left-[3.5px] top-1/2 -translate-y-1/2 h-9 w-3.5 rounded-l-full bg-gradient-to-r from-white/70 via-white/25 to-transparent" />
-              <div className="absolute right-[3.5px] top-1/2 -translate-y-1/2 h-9 w-3.5 rounded-r-full bg-gradient-to-l from-white/70 via-white/25 to-transparent" />
-            </div>
+            />
 
-            {/* Layer 2 (z-10): 3D Convex Glass Active Pill (Zero nested backdrop-filter so it never whites out) */}
+            {/* Layer 2 (z-10): Active / Sliding Liquid Glass Bubble (Clear Center + Glowing White Radial Meniscus Rim) */}
             <motion.div
               style={{
                 x: springLensLeft,
                 width: pillWidth,
                 scaleX: dropletScaleX,
                 scaleY: dropletScaleY,
-                background: isLensActive
-                  ? "linear-gradient(180deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.14) 46%, rgba(255, 255, 255, 0.04) 54%, rgba(255, 255, 255, 0.38) 100%)"
-                  : "linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(135, 138, 150, 0.14) 48%, rgba(120, 122, 134, 0.18) 100%)",
+                background:
+                  "radial-gradient(58% 58% at 50% 50%, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.14) 60%, rgba(255, 255, 255, 0.48) 100%)",
                 boxShadow: isLensActive
-                  ? "0 10px 26px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.08), inset 0 2px 1.5px rgba(255, 255, 255, 1), inset 0 -2px 1.5px rgba(255, 255, 255, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.8)"
-                  : "0 2px 6px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(0, 0, 0, 0.05), inset 0 1.5px 1px rgba(255, 255, 255, 0.9), inset 0 -1px 1px rgba(255, 255, 255, 0.55)",
+                  ? "0 8px 24px rgba(0, 0, 0, 0.14), 0 0 0 0.5px rgba(0, 0, 0, 0.08), inset 0 0 14px rgba(255, 255, 255, 0.7), inset 0 2px 2.5px rgba(255, 255, 255, 1), inset 0 -2px 2.5px rgba(255, 255, 255, 0.95), inset 0 0 0 1.5px rgba(255, 255, 255, 0.9)"
+                  : "0 4px 14px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.06), inset 0 0 12px rgba(255, 255, 255, 0.58), inset 0 2px 2px rgba(255, 255, 255, 0.98), inset 0 -2px 2px rgba(255, 255, 255, 0.88), inset 0 0 0 1.5px rgba(255, 255, 255, 0.82)",
               }}
-              className="pointer-events-none absolute top-[4px] left-0 z-10 h-[56px] rounded-full transform-gpu will-change-transform transition-[background,box-shadow] duration-200"
+              className="pointer-events-none absolute top-[4px] left-0 z-10 h-[56px] rounded-full transform-gpu will-change-transform transition-shadow duration-200"
             />
 
-            {/* Layer 3 (z-20): Crisp Apple Tab Items (Icon + Label) */}
+            {/* Layer 3 (z-20): Tab Items (Icon + Label) */}
             {navItems.map((item) => {
               const Icon = item.icon
               const sectionKey = item.href.substring(1)
