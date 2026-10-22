@@ -27,6 +27,58 @@
   will-change: opacity, transform;
 }
 
+/* ---------- Camera / depth ---------- */
+/* perspective must match PERSPECTIVE in montfort.tsx (depth scale compensation). */
+.camera {
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.depth {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Oversized plane so camera parallax / roll never exposes an edge. */
+.bleed {
+  inset: -6%;
+}
+
+/* Ship plane is screen-blended as a whole, so its black sky drops out over the clouds. */
+.screen {
+  mix-blend-mode: screen;
+}
+
+/* Individual `translate` / `rotate` compose with the inline depth transform instead of replacing it. */
+.drift {
+  animation: cloudDrift 38s ease-in-out infinite alternate;
+}
+
+@keyframes cloudDrift {
+  from { translate: -1.2% 0.4%; }
+  to { translate: 1.2% -0.4%; }
+}
+
+.orbit {
+  animation: orbit 48s ease-in-out infinite alternate;
+}
+
+@keyframes orbit {
+  from { rotate: -1.6deg; }
+  to { rotate: 1.6deg; }
+}
+
+.flash {
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
 .cover {
   position: absolute;
   inset: 0;
@@ -110,8 +162,46 @@
 .ink {
   opacity: 0;
   filter: grayscale(1) invert(1) contrast(1.25) brightness(1.1) sepia(0.12);
+  /* Fallback for browsers without mask-mode: soft vignette only. */
   -webkit-mask-image: radial-gradient(ellipse 62% 66% at 38% 55%, #000 55%, transparent 100%);
-  mask-image: radial-gradient(ellipse 62% 66% at 38% 55%, #000 55%, transparent 100%);
+  /*
+   * 1) Vignette sized with closest-side, so it reaches full transparency at every frame edge
+   *    (no visible box when the hero shrinks).
+   * 2) Luminance mask from the original photo: only the lit rock/snow (the ink strokes) is drawn,
+   *    the dark sky becomes transparent and the real cream background shows through, so colours match.
+   */
+  mask-image:
+    radial-gradient(closest-side at 45% 52%, #000 50%, transparent 100%),
+    url("/montfort/mountain_night.jpg");
+  mask-mode: alpha, luminance;
+  mask-size: 100% 100%, cover;
+  mask-position: center, center;
+  mask-repeat: no-repeat;
+  mask-composite: intersect;
+}
+
+/* Light column behind the peak, aligned to the beam in mountain_night.jpg. */
+.beamFrame {
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.beam {
+  position: absolute;
+  left: 35%;
+  top: -6%;
+  width: 12%;
+  height: 52%;
+  background: linear-gradient(180deg, rgba(110, 160, 255, 0), rgba(130, 180, 255, 0.4) 55%, rgba(150, 195, 255, 0));
+  filter: blur(22px);
+  transform-origin: 50% 100%;
+  animation: beam 7s ease-in-out infinite alternate;
+}
+
+@keyframes beam {
+  0% { opacity: 0.35; scale: 0.85 1; }
+  45% { opacity: 0.8; }
+  100% { opacity: 0.5; scale: 1.12 1; }
 }
 
 .wordmark {
@@ -613,5 +703,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .grain, .mistBlob, .leaves, .hint span { animation: none; }
+  .grain, .mistBlob, .leaves, .hint span, .drift, .orbit, .beam { animation: none; }
 }
