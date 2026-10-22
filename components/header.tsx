@@ -1,9 +1,10 @@
 "use client"
 
-import { User, Layers, Briefcase, Mail } from "lucide-react"
+import { User, Layers, Briefcase, Mail, Box } from "lucide-react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import type React from "react"
 import Image from "next/image"
+import Link from "next/link"
 import {
   motion,
   useMotionValue,
@@ -576,6 +577,16 @@ export default function Header() {
               )
             })}
           </nav>
+
+          {/* Link to the Montfort scroll experience (separate route, not an in-page section) */}
+          <Link
+            href="/montfort"
+            aria-label="Open Montfort cinematic experience"
+            className="ml-3 flex h-[64px] w-[64px] flex-col items-center justify-center gap-1 rounded-full bg-white/40 text-neutral-600 shadow-[0_10px_28px_-4px_rgba(0,0,0,0.12),0_0_0_0.5px_rgba(0,0,0,0.1)] backdrop-blur-md transition-colors duration-150 hover:text-[#09090B]"
+          >
+            <Box size={21} strokeWidth={1.9} />
+            <span className="text-[11px] font-medium leading-none tracking-[-0.01em]">3D</span>
+          </Link>
         </div>
       </div>
     </>
