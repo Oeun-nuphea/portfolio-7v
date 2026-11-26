@@ -300,6 +300,26 @@ export default function Hero() {
     }
   }
 
+  const handleSectionNavigation = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    sectionId: string
+  ) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+      return
+    }
+    event.preventDefault()
+    if (typeof window !== "undefined") {
+      const nextPath = `/${sectionId}`
+      if (window.location.pathname !== nextPath || window.location.hash) {
+        window.history.pushState(null, "", nextPath)
+      }
+    }
+    const sectionEl = document.getElementById(sectionId)
+    if (sectionEl) {
+      sectionEl.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
     <section className="min-h-[80vh] flex items-center px-6 pt-28 pb-10 sm:pt-32 sm:pb-12 lg:pb-12 lg:px-8">
       <div className="mx-auto w-full max-w-5xl">
@@ -373,7 +393,8 @@ export default function Hero() {
               className="flex flex-wrap items-center gap-3"
             >
               <a
-                href="#contact"
+                href="/contact"
+                onClick={(event) => handleSectionNavigation(event, "contact")}
                 className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-all duration-200 shadow-md shadow-black/10 hover:shadow-lg active:scale-[0.98]"
               >
                 Get In Touch
@@ -381,7 +402,8 @@ export default function Hero() {
               </a>
 
               <a
-                href="#projects"
+                href="/projects"
+                onClick={(event) => handleSectionNavigation(event, "projects")}
                 className="glass-button inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-foreground active:scale-[0.98]"
               >
                 View Projects
